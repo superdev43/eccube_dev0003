@@ -1,0 +1,684 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+{% extends 'default_frame.twig' %}
+
+{% set body_class = 'product_page' %}
+
+{% block stylesheet %}
+    <style>
+
+        .slick-slider {
+            margin-bottom: 30px;
+        }
+
+        .slick-dots {
+            position: absolute;
+            bottom: -45px;
+            display: block;
+            width: 100%;
+            padding: 0;
+            list-style: none;
+            text-align: center;
+        }
+
+        .slick-dots li {
+            position: relative;
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin: 0 5px;
+            padding: 0;
+
+            cursor: pointer;
+        }
+
+        .slick-dots li button {
+            font-size: 0;
+            line-height: 0;
+            display: block;
+            width: 20px;
+            height: 20px;
+            padding: 5px;
+            cursor: pointer;
+            color: transparent;
+            border: 0;
+            outline: none;
+            background: transparent;
+        }
+
+        .slick-dots li button:hover,
+        .slick-dots li button:focus {
+            outline: none;
+        }
+
+        .slick-dots li button:hover:before,
+        .slick-dots li button:focus:before {
+            opacity: 1;
+        }
+
+        .slick-dots li button:before {
+            content: " ";
+            line-height: 20px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 12px;
+            height: 12px;
+            text-align: center;
+            opacity: .25;
+            background-color: black;
+            border-radius: 50%;
+
+        }
+
+        .slick-dots li.slick-active button:before {
+            opacity: .75;
+            background-color: black;
+        }
+
+        .slick-dots li button.thumbnail img {
+            width: 0;
+            height: 0;
+        }
+
+    </style>
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        function prem_customer(){
+        var data = {};
+        if (document.getElementById('cc-number')) {
+        data.card_number = document.getElementById('cc-number').value;
+        }
+        if (document.getElementById('token_api_key')) {
+        data.token_api_key = document.getElementById('token_api_key').value;
+        }
+        if (document.getElementById('cc-exp-month') && document.getElementById('cc-exp-year') ) {
+        data.card_expire = document.getElementById('cc-exp-month').value + "/" + document.getElementById('cc-exp-year').value;
+        }
+        if (document.getElementById('cc-csc')) {
+        data.security_code = document.getElementById('cc-csc').value;
+        }   
+        if (document.getElementById('cc-name')) {
+        data.cardholder_name = document.getElementById('cc-name').value;
+        }
+        data.lang = "ja";
+
+
+        if(data.card_number!="" && data.token_api_key != "" && document.getElementById('cc-exp-month').value != "" && document.getElementById('cc-exp-year').value != "" && data.security_code != "" && data.cardholder_name != "" ){
+            
+            const rawResponse = fetch('https://api.veritrans.co.jp/4gtoken', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+            }).then(resonse => resonse.json()).then(content => {
+                document.getElementById('credit_token').value = content.token;
+                
+                $('#customer_form').submit(); 
+            });
+        }
+        else if (data.card_number == ""){
+            alert("クレジットカード番号を記入してください。");
+            document.getElementById('cc-number').focus();
+            return false;
+        }
+        else if(document.getElementById('cc-exp-month').value == ""){
+            alert("カード有効期限を記入してください。");
+            document.getElementById('cc-exp-month').focus();
+            return false;
+        }
+        else if(document.getElementById('cc-exp-year').value == ""){
+            alert("カード有効期限を記入してください。");
+            document.getElementById('cc-exp-year').focus();
+            return false;
+        }
+        else if(data.security_code == ""){
+            alert("セキュリティコードを記入してください。");
+            document.getElementById('cc-csc').focus();
+            return false;
+        }
+        else {
+            alert("カード名義人名を記入してください。");
+            document.getElementById('cc-name').focus();
+            return false;
+        }
+        
+    }
+    $(document).ready(function(){
+        $('#product_review_area').hide()
+    })
+    </script>
+    <script>
+        eccube.classCategories = {{ class_categories_as_json(Product)|raw }};
+
+        // 規格2に選択肢を割り当てる。
+        function fnSetClassCategories(form, classcat_id2_selected) {
+            var $form = $(form);
+            var product_id = $form.find('input[name=product_id]').val();
+            var $sele1 = $form.find('select[name=classcategory_id1]');
+            var $sele2 = $form.find('select[name=classcategory_id2]');
+            eccube.setClassCategories($form, product_id, $sele1, $sele2, classcat_id2_selected);
+        }
+
+        {% if form.classcategory_id2 is defined %}
+        fnSetClassCategories(
+            $('#form1'), {{ form.classcategory_id2.vars.value|json_encode|raw }}
+        );
+        {% elseif form.classcategory_id1 is defined %}
+        eccube.checkStock($('#form1'), {{ Product.id }}, {{ form.classcategory_id1.vars.value|json_encode|raw }}, null);
+        {% endif %}
+    </script>
+    <script>
+        $(function() {
+            // bfcache無効化
+            $(window).bind('pageshow', function(event) {
+                if (event.originalEvent.persisted) {
+                    location.reload(true);
+                }
+            });
+
+            $('.item_visual').slick({
+                dots: false,
+                arrows: false,
+                responsive: [{
+                    breakpoint: 768,
+                    settings: {
+                        dots: true
+                    }
+                }]
+            });
+
+            $('.slideThumb').on('click', function() {
+                var index = $(this).attr('data-index');
+                $('.item_visual').slick('slickGoTo', index, false);
+            })
+            function f_change_num2(select, pType, pMinNum, pStockNum) {
+                if( select.value.match(/[^0-9]/)){ select.value = pMinNum; return; }
+                wNum = parseInt(select.value);
+                if (pType == "0" && wNum > pMinNum) {
+                    select.value = String(wNum-1);
+                }
+                if (pType == "1") {
+                    if (pStockNum) {
+                        if (wNum >= pStockNum) return;
+                    }
+                    select.value = String(wNum+1);
+                }
+            }
+        });
+    </script>
+    <script>
+        $(function() {
+            $('.add-cart').on('click', function(event) {
+                {% if form.classcategory_id1 is defined %}
+                // 規格1フォームの必須チェック
+                if ($('#classcategory_id1').val() == '__unselected' || $('#classcategory_id1').val() == '') {
+                    $('#classcategory_id1')[0].setCustomValidity("{{ '項目が選択されていません'|trans }}");
+                    return true;
+                } else {
+                    $('#classcategory_id1')[0].setCustomValidity('');
+                }
+                {% endif %}
+
+                {% if form.classcategory_id2 is defined %}
+                // 規格2フォームの必須チェック
+                if ($('#classcategory_id2').val() == '__unselected' || $('#classcategory_id2').val() == '') {
+                    $('#classcategory_id2')[0].setCustomValidity("{{ '項目が選択されていません'|trans }}");
+                    return true;
+                } else {
+                    $('#classcategory_id2')[0].setCustomValidity('');
+                }
+                {% endif %}
+
+                // 個数フォームのチェック
+                if ($('#quantity').val() < 1) {
+                    $('#quantity')[0].setCustomValidity('{{ '1以上で入力してください。'|trans }}');
+                    return true;
+                } else {
+                    $('#quantity')[0].setCustomValidity('');
+                }
+
+                event.preventDefault();
+                $form = $('#form1');
+                $.ajax({
+                    url: $form.attr('action'),
+                    type: $form.attr('method'),
+                    data: $form.serialize(),
+                    dataType: 'json',
+                    beforeSend: function(xhr, settings) {
+                        // Buttonを無効にする
+                        $('.add-cart').prop('disabled', true);
+                    }
+                }).done(function(data) {
+                    // レスポンス内のメッセージをalertで表示
+                    $.each(data.messages, function() {
+                        $('#ec-modal-header').html(this);
+                    });
+
+                    $('.ec-modal').show()
+
+                    // カートブロックを更新する
+                    $.ajax({
+                        url: "{{ url('block_cart') }}",
+                        type: 'GET',
+                        dataType: 'html'
+                    }).done(function(html) {
+                        $('.ec-headerRole__cart').html(html);
+                    });
+                }).fail(function(data) {
+                    console.log(data.responseText);
+                    alert('{{ 'カートへの追加に失敗しました。'|trans }}');
+                }).always(function(data) {
+                    // Buttonを有効にする
+                    $('.add-cart').prop('disabled', false);
+                });
+            });
+            $('#toPrem').on('click', function(){
+                $('.to-prem-input-card').show();
+            })
+            
+        });
+
+        $('.ec-modal-overlay, .ec-modal .ec-inlineBtn--cancel').on('click', function() {
+            $('.ec-modal').hide()
+        });
+        $('#cancel, .ec-icon').on('click', function(){
+            $('.to-prem-input-card').hide();
+        })
+    </script>
+{% endblock %}
+
+{% block main %}
+{# {% if Customer %}
+{% if Customer.cus_customer_level == 1 %}
+<a  data-id="{{ Customer.id }}" id="toPrem"  style="width: auto;margin: auto;margin-top: 0;font-weight: bold;position: fixed;top: 5px;right: 5px;height: auto;line-height: 100%;padding: 10px;border-radius: 5px;" class="ec-blockBtn--action">
+{{ '有料会員へ'|trans }}</a>
+{% endif %}
+{% endif %} #}
+    <div class="ec-role">
+        <div class="site-name">{{ Product.name }}</div>
+    </div>
+    <div class="ec-productRole">
+    
+        <div class="ec-grid2">
+        
+            <div class="ec-grid2__cell">
+            
+                <div class="ec-sliderItemRole">
+
+                    <div class="item_visual">
+                        {% for ProductImage in Product.ProductImage %}
+                            <div class="slide-item"><img src="{{ asset(ProductImage, 'save_image') }}"></div>
+                        {% else %}
+                            <div class="slide-item"><img src="{{ asset(''|no_image_product, 'save_image') }}"/></div>
+                        {% endfor %}
+                    </div>
+                    {# <div class="item_nav">
+                        {% for ProductImage in Product.ProductImage %}
+                            <div class="slideThumb" data-index="{{ loop.index0 }}"><img src="{{ asset(ProductImage, 'save_image') }}"></div>
+                        {% endfor %}
+                    </div> #}
+                </div>
+            </div>
+            <div class="ec-role">
+                <div class="top-main">
+                    <a href="{{ url('user_data', {route:'f_10'} ) }}" target="_blank">
+                        <img src="{{ asset('assets/img/top/product_detail_common.jpg') }}" />
+                    </a>
+                </div>
+            </div>
+            <div class="ec-role">
+                <div class="ec-productRole__description">{{ Product.description_detail|raw|nl2br }}
+                </div>
+            </div>
+            <div class="ec-grid2__cell">
+            <div class="row">
+                <div class="col">
+                    <table class="price-table table-bordered">
+                        <tbody>
+                            <tr>
+                                <th>販売価格</th>
+                                <td>
+                                    {% if Customer %}
+
+                                        {% if Customer.cus_customer_level == 2 %}
+                                            {% if Product.hasProductClass -%}
+                                                {% if Product.getPrice02IncTaxMin == Product.getPrice02IncTaxMax %}
+                                                    {{ Product.getPrice02IncTaxMin|number_format }}円(税込)
+                                                {% else %}
+                                                    {{ Product.getPrice02IncTaxMin|number_format }}円 ～ {{ Product.getPrice02IncTaxMax|number_format }}円(税込)
+                                                {% endif %}
+                                            {% else %}
+                                                {{ Product.getPrice02IncTaxMin|number_format }}円(税込)
+                                            {% endif %}
+                                        {% endif %}
+                                    {% else %}
+                                        {% if Product.only_prem_price_display != 1 %}
+                                            {% if Product.hasProductClass -%}
+                                                {% if Product.getPrice02IncTaxMin == Product.getPrice02IncTaxMax %}
+                                                    {{ Product.getPrice02IncTaxMin|number_format }}円(税込)
+                                                {% else %}
+                                                        {{ Product.getPrice02IncTaxMin|number_format }}円 ～ {{ Product.getPrice02IncTaxMax|number_format }}円(税込)
+                                                {% endif %}
+                                            {% else %}
+                                                    {{ Product.getPrice02IncTaxMin|number_format }}円(税込)
+                                            {% endif %}
+                                        {% else %}
+                                            {% if Product.hasProductClass -%}
+                                                {% if Product.getPrice02IncTaxMin == Product.getPrice02IncTaxMax %}
+                                                    *****
+                                                {% else %}
+                                                    <div class="ec-price">
+                                                        *****
+                                                    </div>
+                                                {% endif %}
+                                            {% else %}
+                                                *****
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>型番</th>
+                                <td>
+                                    {# 商品コード #}
+                                    {% if Product.code_min is not empty %}
+                                        
+                                          {{ Product.code_min }}{% if Product.code_min != Product.code_max %} ～ {{ Product.code_max }}{% endif %}
+                                      
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col">
+                <ul class="mar_b_20">
+                    <li><a href="{{ url('product_review_list', { id: Product.id }) }}">レビューを見る({{ ProductReviewCount }}件)</a></li>
+                    <li><a href="{{ url('product_review_index', { id: Product.id }) }}">レビューを投稿</a></li>
+                    <li><a href="{{ url('user_data', { route: 'f_con_pay_ship'}) }}#info">特定商取引法に基づく表記（返品等）</a></li>
+                    <li><a href="{{ url('intro_friend', { id: Product.id }) }}">この商品を友達に教える</a></li>
+                    <li><a href="{{ url('contact_product', {id: Product.id}) }}">この商品について問い合わせる</a></li>
+                    <li><a href="{{ url('product_list') }}?category_id={{ cateogryId }}">買い物を続ける</a></li>
+                </ul>
+                <ul class="unstyled">
+                    <li>
+                    <div class="line-it-button" data-lang="ja" data-type="share-a" data-ver="3" data-color="default" data-size="small" data-count="false" style="display: none;"></div>
+                            <script src="https://www.line-website.com/social-plugins/js/thirdparty/loader.min.js" async="async" defer="defer"></script>
+                    <iframe src="//www.facebook.com/plugins/like.php?href=https%3A%2F%2Fapparel-oroshitonya.com%2F%3Fpid%3D156972288&amp;layout=button_count&amp;show_faces=true&amp;width=110&amp;action=like&amp;colorscheme=light&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:110px; height:21px;" allowtransparency="true"></iframe>
+                    <a href="https://twitter.com/share" class="twitter-share-button" data-url="https://apparel-oroshitonya.com/?pid=156972288" data-text="" data-lang="ja">ツイート</a>
+                        <script charset="utf-8">!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+                    </li>
+                    <li>
+                                    
+                    </li>
+                </ul>
+                </div>
+            </div>
+            <div class="product-order mar_b_50">
+        <div>
+        
+        
+        <p class="stock_error hide mar_t_20 mar_b_20"></p>
+    </div>
+            </div>
+                <div class="ec-productRole__profile">
+                    <form action="{{ url('product_add_cart', {id:Product.id}) }}" method="post" id="form1" name="form1">
+                        {% if Product.stock_find %}
+                            <div class="ec-productRole__actions">
+                                {% if form.classcategory_id1 is defined %}
+                                    <div class="ec-select">
+                                        {{ form_widget(form.classcategory_id1) }}
+                                        {{ form_errors(form.classcategory_id1) }}
+                                    </div>
+                                    {% if form.classcategory_id2 is defined %}
+                                        <div class="ec-select">
+                                            {{ form_widget(form.classcategory_id2) }}
+                                            {{ form_errors(form.classcategory_id2) }}
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                                <div class="ec-numberInput">
+                                <div class="product-order">
+                                    <div class="mar_t_20 mar_b_20 txt_c">
+                                        <span class="input-prepend input-append">
+                                            <a onclick="f_change_num2('1',1,2)" class="btn pad_10"><i class="fas fa-chevron-up fa-fw"></i></a>
+                                            {{ form_widget(form.quantity) }}
+                                            {{ form_errors(form.quantity) }}             
+                                                                
+                                            <a onclick="f_change_num2('0',1,2)" class="btn pad_10"><i class="fas fa-chevron-down fa-fw"></i></a>
+                                            <script>
+                                                function f_change_num2(pType, pMinNum, pStockNum) {
+                                                var select = document.getElementById('quantity');
+                                                    if( select.value.match(/[^0-9]/)){ select.value = pMinNum; return; }
+                                                    wNum = parseInt(select.value);
+                                                    if (pType == "0" && wNum > pMinNum) {
+                                                        select.value = String(wNum-1);
+                                                    }
+                                                    if (pType == "1") {
+                                                        if (pStockNum) {
+                                                            if (wNum >= pStockNum) return;
+                                                        }
+                                                        select.value = String(wNum+1);
+                                                    }
+                                                }
+                                            </script>
+                                        </span>
+                                    </div>
+                                    
+                                </div>
+                                </div>
+                            </div>
+                            <div class="" style="text-align:center">
+
+                            {% if Customer %}
+                                {# {% if Customer.cus_customer_level == 1 %}
+                                    {% if Product.cus_customer_level_product <= 1 %}
+                                        <button type="submit" class="ec-blockBtn--action add-cart">
+                                        {{ 'カートに入れる'|trans }}
+                                        </button>
+                                    {% else %}
+                                        <button type="submit" class="ec-blockBtn--action add-cart" title="{% if Product.cus_customer_level_product == 1 %}会員登録{% elseif Product.cus_customer_level_product == 2 %}有料会員登録{% endif %}をしなければします。" disabled="disabled">
+                                        {{ 'カートに入れる'|trans }}
+                                        </button>
+                                    {% endif %} #}
+
+                                {% if Customer.cus_customer_level == 2 %}
+                                <div class="product-order">
+                                    <div class="mar_t_20 mar_b_20 txt_c">
+                                        <span class="disable_cartin mar_5">
+                                            <button class="add-cart" type="submit"><i class="fas fa-shopping-cart fa-fw"></i> カートに入れる</button>
+                                        </span>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            {% else %}
+                                {% if Product.only_prem_price_display == 0 %}
+                                <div class="product-order">
+                                    <div class="mar_t_20 mar_b_20 txt_c">
+                                        <span class="disable_cartin mar_5">
+                                            <button class="add-cart" type="submit"><i class="fas fa-shopping-cart fa-fw"></i> カートに入れる</button>
+                                        </span>
+                                    </div>
+                                </div>
+                                {% else %}
+                                <div class="mar_t_20 mar_b_20 txt_c">
+                                    <span class="disable_cartin mar_5">
+                                        <a class="btn btn-lg  add-cart" style="color:#fff" href="{{ url('entry_prem') }}" 
+                                            title="⾦額を⾒るには有料会員の登録が必要です。"  >
+                                            {{ '有料会員登録してカートに⼊れる'|trans }}
+                                        </a>
+                                    </span>
+                                </div>
+                                {% endif %}
+                            {% endif %}
+
+
+
+                                
+                            </div>
+                        {% else %}
+                            <div class="mar_t_20 mar_b_20 txt_c" style="text-align:center;">
+                                <span class="disable_cartin mar_5">
+                                    <button style="border:1px solid" class="btn btn-lg " type="submit"  disabled="disabled"> {{ 'ただいま品切れ中です。'|trans }}</button>
+                                </span>
+                            </div>
+                        {% endif %}
+
+                        {{ form_rest(form) }}
+                    </form>
+                    <div style="font-size:1.6em;font-weight:bold">この商品のレビュー</div>
+                    <div class="ec-role">
+                    
+                        <div class="two1"><a href="{{ url('mypage_change') }}" target="_blank"><img src="https://img21.shop-pro.jp/PA01402/886/etc/%A5%E1%A5%EB%A5%DE%A5%ACSP.png?cmsp_timestamp=20180720162107" alt="メルマガ登録はこちら"></a>
+                        </div>
+                        <div class="two1"><a href="{{ url('user_data', {route:'f_con_17'}) }}" target="_blank"><img src="https://img21.shop-pro.jp/PA01402/886/etc/%A5%E1%A5%EB%A5%DE%A5%AC%A5%D0%A5%C3%A5%AF%A5%CA%A5%F3%A5%D0%A1%BC.png?cmsp_timestamp=20180830030250" alt="メルマガバックナンバー"></a>
+                        </div>
+                    </div>
+                    <div class="ec-modal">
+                        <div class="ec-modal-overlay">
+                            <div class="ec-modal-wrap">
+                                <span class="ec-modal-close"><span class="ec-icon"><img src="{{ asset('assets/icon/cross-dark.svg') }}" alt=""/></span></span>
+                                <div id="ec-modal-header" class="text-center">{{ 'カートに追加しました。'|trans }}</div>
+                                <div class="ec-modal-box">
+                                    <div class="ec-role">
+                                        <span class="ec-inlineBtn--cancel">{{ 'お買い物を続ける'|trans }}</span>
+                                        <a href="{{ url('cart') }}" class="ec-inlineBtn--action">{{ 'カートへ進む'|trans }}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <style>
+                        .to-prem-input-card{
+                            display: none;
+                            position: fixed;
+                            top: 0;
+                            left: 0;
+                            z-index: 99999;
+                            width: 100%;
+                            height: 100%;
+                        }
+                        .to-prem-input-card .to-prem-modal-overlay{
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            background-color: rgba(0, 0, 0, 0.3);
+                            width: 100%;
+                            height: 100%;
+                        }
+                        .to-prem-input-card .to-prem-modal-wrap{
+                            position: relative;
+                            border-radius: 2px;
+                            border: 1px solid #333;
+                            background-color: #fff;
+                            width: 50%;
+                            margin: auto;
+                            padding: 40px 25px;
+                            top: 10px;
+
+                        }
+                        .to-prem-input-card .to-prem-modal-close{
+                            cursor: pointer;
+                            position: absolute;
+                            right: 20px;
+                            top: 10px;
+                            font-size: 20px;
+                            height: 30px;
+                            width: 20px;
+                        }
+                    </style>
+                    <div class="to-prem-input-card">
+                        <div class="to-prem-modal-overlay">
+                            <div class="to-prem-modal-wrap">
+                                <span class="to-prem-modal-close"><span class="ec-icon"><img src="{{ asset('assets/icon/cross-dark.svg') }}" alt=""/></span></span>
+                                <form id="customer_form" method="post" action="{{ url('common_to_prem', { id:Product.id }) }}" novalidate class="h-adr">
+                                    <span class="p-country-name" style="display:none;">Japan</span>
+                                    {{ form_widget(form._token) }}
+                                    <div class="ec-borderedDefs">
+                                        <h3 class="text-center">有料会員登録</h3>
+                                        <dl>
+                                            <dt>
+                                                <label class="ec-label" for "cc-number" >クレジットカード番号</label>
+                                            </dt>
+                                            <dd>
+                                                <input placeholder="4111111111111111" class="form-control" name="customer_cus[card_number]" id="cc-number" type="text" maxLength="16" />
+                                            </dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>
+                                            <label class="ec-label" >カード有効期限</label>
+                                            </dt>
+                                            <dd>
+                                                <input placeholder="MM" class="form-control" style="width:60px;display:initial" type="text" name="customer_cus[card_expire_month]" id="cc-exp-month" maxLength="2" /> 月 / 20 <input placeholder="YY" class="form-control" style="width:60px;display:initial" type="text" name="customer_cus[card_expire_year]" id="cc-exp-year" maxLength="2" /> 年
+                                            </dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>
+                                            <label class="ec-label" for="cc-csc">セキュリティコード</label>
+                                            </dt>
+                                            <dd>
+                                                <input placeholder="123" class="form-control" type="text" name="customer_cus[card_sec]" id="cc-csc" />
+                                            </dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>
+                                            <label for="cc-name" class="ec-label">カード名義人名</label>
+                                            </dt>
+                                            <dd>
+                                                <input placeholder="TARO ADDO" class="form-control" type="text" name="customer_cus[card_owner]" id="cc-name" />
+                                            </dd>
+                                        </dl>
+                                        <br>
+                                        
+
+                                        <input type="hidden" name="token_api_key" id="token_api_key" value="{{ tokenApiKey }}" />
+                                        <input type="hidden" name="customer_cus[credit_token]" id="credit_token" value="" />
+                                    </div>
+                                    <div class="text-center">
+                                        <button style="width: auto;margin: auto;display: inline-block;line-height: 100%;height: auto;   background-color: blue;border: 1px solid blue;padding: 8px;" class="ec-blockBtn--action" type="button" id="cancel" >{{ 'キャンセル'|trans }}</button>
+                                        <button style="width: auto;margin: auto;display: inline-block;line-height: 100%;height: auto;padding: 8px;margin-left:10px" class="ec-blockBtn--action" type="button" onclick="prem_customer()"  name="mode" value="confirm">{{ '登録'|trans }}</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {# {% if BaseInfo.option_favorite_product %}
+                        <form action="{{ url('product_add_favorite', {id:Product.id}) }}" method="post">
+                            <div class="ec-productRole__btn">
+                                {% if is_favorite == false %}
+                                    <button type="submit" id="favorite" class="ec-blockBtn--cancel">
+                                        {{ 'お気に入りに追加'|trans }}
+                                    </button>
+                                {% else %}
+                                    <button type="submit" id="favorite" class="ec-blockBtn--cancel"
+                                            disabled="disabled">{{ 'お気に入りに追加済です。'|trans }}
+                                    </button>
+                                {% endif %}
+                            </div>
+                        </form>
+                    {% endif %} #}
+                    
+                </div>
+            </div>
+        </div>
+        {% if Product.freearea %}
+             <div class="ec-productRole__description">
+                 {{ include(template_from_string(Product.freearea)) }}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

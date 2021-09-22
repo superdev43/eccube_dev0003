@@ -1,0 +1,8 @@
+<?php
+/*   __________________________________________________
+    |  Obfuscated by YAK Pro - Php Obfuscator  2.0.3   |
+    |              on 2021-07-20 10:45:26              |
+    |    GitHub: https://github.com/pk-fr/yakpro-po    |
+    |__________________________________________________|
+*/
+namespace Plugin\AmazonPayV2\Repository;use Eccube\Common\EccubeConfig;use Eccube\Repository\AbstractRepository;use Plugin\AmazonPayV2\Entity\Config;use Symfony\Bridge\Doctrine\RegistryInterface;class ConfigRepository extends AbstractRepository{public function __construct(EccubeConfig $eccubeConfig, RegistryInterface $registry){parent::__construct($registry, Config::class);$this->eccubeConfig = $eccubeConfig;}public function get($setting = false){goto rOMoz;ds4_4:if (!($setting === false && $Config->getAmazonAccountMode() == $this->eccubeConfig['amazon_pay_v2']['account_mode']['shared'])) {goto i0sg3;}goto quljX;quljX:$Config->setSellerId($this->eccubeConfig['amazon_pay_v2']['test_account']['seller_id']);goto Tozlg;Tozlg:$Config->setPublicKeyId($this->eccubeConfig['amazon_pay_v2']['test_account']['public_key_id']);goto bKNVs;PtnCf:i0sg3:goto Qo6cm;rOMoz:$Config = $this->find(1);goto ds4_4;uxRyO:$Config->setClientId($Config->getTestClientId());goto PtnCf;bKNVs:$Config->setPrivateKeyPath($this->eccubeConfig['amazon_pay_v2']['test_account']['private_key_path']);goto uxRyO;Qo6cm:return $Config;goto wX_nK;wX_nK:}}

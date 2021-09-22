@@ -1,0 +1,88 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+{% set Categories = repository('Eccube\\Entity\\Category').getList() %}
+
+{% macro tree(Category) %}
+    {% from _self import tree %}
+    <a href="{{ url('product_list') }}?category_id={{ Category.id }}">
+        <img src="{{ asset('assets/img/top/cat_r_'~ Category.id ~'.jpg') }}" alt="{{ Category.name }}" />
+        {{ Category.name }}
+    </a>
+    {# {% if Category.children|length > 0 %}
+        <ul>
+            
+            {% for ChildCategory in Category.children %}
+                <li>
+                    {{ tree(ChildCategory) }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %} #}
+{% endmacro %}
+
+{# @see https://github.com/bolt/bolt/pull/2388 #}
+{% from _self import tree %}
+
+<div class="ec-categoryNaviRole">
+    <div class="ec-itemNav">
+    <div class="side-bar-content-title">価格から探す</div>
+        
+            
+                <hr>
+                  
+                        <form id="form" method="get" onsubmit="return validate()" class="searchform" action="http://localhost/eccube_shop/products/list">                        
+                        <div class="ec-headerSearch__price">
+                            <div class="ec-input">
+                                <input type="number" name="low_price" maxlength="50" min="0" id="low" class="search-name" placeholder="円">~
+                                <input type="number" name="high_price" maxlength="50" min="0" id="high" class="search-name" placeholder="円">
+                            </div>
+                            <button class="ec-headerSearch__price_btn" type="submit">
+                                <div class="ec-icon">
+                                    <img src="/eccube_shop/html/template/default/assets/icon/search-dark.svg" alt="">
+                                </div>
+                            </button>
+                        </div>
+                    </form>
+                  
+                <hr>        
+      
+    </div>
+</div>
+<script>
+function validate(){
+
+    var low = document.getElementById('low');
+    var high = document.getElementById('high');
+    var form = document.getElementById('form');
+    
+    if(low.value != "" && high.value != ""){
+        if(low.value > high.value){
+            alert("下限値が上限値よりも大きい。");
+            $('.bg-load-overlay').remove();            
+            return false;
+        }else{
+
+            form.submit();
+        }
+    }else if(low.value == ""){
+        alert("下限金額を入力してください。");
+        $('.bg-load-overlay').remove();
+        low.focus();
+        return false;
+    }else if(high.value == ""){
+        alert("上限金額を入力してください。");
+        high.focus();
+        $('.bg-load-overlay').remove();
+        return false;
+    }
+}
+
+</script>

@@ -1,0 +1,58 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<body bgcolor="#F0F0F0" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" style="margin-top:0;margin-bottom:0;margin-right:0;margin-left:0;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;">
+<br>
+<br>
+<div align="center"><a href="{{ url('homepage') }}" style="font-family:Helvetica, Arial, sans-serif;font-size:30px;color:#333333;text-decoration:none;">{{ BaseInfo.shop_name }}</a></div>
+<!-- 100% background wrapper (grey background) -->
+<table border="0" width="100%" height="100%" cellpadding="0" cellspacing="0" bgcolor="#F0F0F0" style="border-spacing:0;mso-table-lspace:0pt;mso-table-rspace:0pt;">
+    <tr>
+        <td align="center" valign="top" bgcolor="#F0F0F0" style="background-color:#F0F0F0;border-collapse:collapse;">
+            <br>
+            <!-- 600px container (white background) -->
+            <table id="html-mail-table1" border="0" width="600px" cellpadding="10" cellspacing="0" class="container" style="border-spacing:0;mso-table-lspace:0pt;mso-table-rspace:0pt;">
+                <tr>
+                    <td class="container-padding content" align="left" style="border-collapse:collapse;padding-left:24px;padding-right:24px;padding-top:12px;padding-bottom:12px;background-color:#ffffff;">
+                        =================================================<br>
+                        このメールは<a href="http://xn--u8jvdude5ismigh2200e16eeqak3r7yghp2a.com">【儲かる仕入れはアパレル卸問屋.com】</a>より送信されています。<br>
+                        URL：<a href="{{ url('homepage')}}">{{ url('homepage')}}</a><br>
+                        =================================================<br>
+                        {{ data.friendname }}
+                        <br><br>
+                        {{ data.yourname }}さんより、おすすめの商品があります。<br>
+                        <br>
+                        ［おすすめコメント］<br>
+                        {{ data.comment }}<br><br>
+
+                        ■商品 「{{ data.subject }}」の　URL<br>
+                        <a href="{{ url('product_detail', { id: Product.id }) }}">{{ url('product_detail', { id: Product.id }) }}</a>
+                        <br><br>
+                        ■ショップのURL<br>
+                        <a href="{{ url('homepage')}}">{{ url('homepage')}}</a><br>
+                    </td>
+                </tr>
+            </table>
+            <!--/600px container -->
+            <br>
+            <br>
+        </td>
+    </tr>
+</table>
+<!--/100% background wrapper-->
+<br>
+<br>
+</body>
+
+</html>
+

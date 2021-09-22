@@ -1,0 +1,7 @@
+/vendor
+/var
+/.vscode
+cache
+.listing
+/tests
+.env

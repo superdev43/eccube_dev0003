@@ -1,0 +1,171 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+{% extends '@admin/default_frame.twig' %}
+{% set menus = ['setting', 'calendar', 'holiday'] %}
+
+{% block title %}{{ '休日管理'|trans }}{% endblock %}
+{% block sub_title %}{{ '営業日管理'|trans }}{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/tempusdominus-bootstrap-4.min.css', 'admin') }}">
+    <style>
+        .week-holiday-title{
+            padding:20px;
+            font-size:20px;
+            border-bottom: 1px solid #c1c1c1;
+        }
+        .week-holiday-body{
+            padding:20px;
+            font-size:20px;
+        }
+        .week-holiday-body table {
+            border:1px solid #000;
+            width:100%;
+            text-align:center;
+        }
+        .week-holiday-body th,.week-holiday-body td{
+            border:1px solid #000;
+        }
+        .week-holiday-body th{
+            background-color:#eee;
+        }
+        .holiday_form label{
+            margin-right:50px;
+        }
+        
+    </style>
+{% endblock stylesheet %}
+{% block javascript %}
+    <script>
+        $(document).ready(function(){
+            $('#register').on('click', function(){
+                
+                if($('#title').val() == ""){
+                    alert("休日名を入力してください。")
+                    $('#title').focus()
+                    return false;
+                }
+                else{
+                    let count = 0;
+                    $('.holiday-item').each((k,v)=>{
+                        let mon_day_array = $(v).find('.mon-day').text().split(" ");
+                            if(parseInt($('#year').val()) === parseInt(mon_day_array[0]) && parseInt($('#month').val()) === parseInt(mon_day_array[1]) && parseInt($('#day').val()) === parseInt(mon_day_array[2])){
+                                count++;
+                            }         
+
+                    })
+                    if(count != 0){
+                        alert("日付が重複します。")
+                        return false;
+                    }else{
+
+                        $('#holiday_form').attr('method', "post");
+                        $('#holiday_form').submit();
+                    }
+
+                }
+            })
+        });
+       
+    </script>
+{% endblock javascript %}
+{% block main %}     
+<div>
+    <div class="c-contentsArea__cols">
+        <div class="c-contentsArea__primaryCol">
+            <div class="bg-white">
+                <div class="week-holiday-title">休日設定</div>
+            </div>
+            <div class="bg-white">
+                <div class="week-holiday-body">
+                    <form id="holiday_form" class="holiday_form" action="{{ url('admin_holiday') }}">
+                        <label for="title"><input type="text" id="title" name="title" value="" /> 休日名</label>
+                        <label for="year"><select id="year" name="year">
+                        {% for year in "now"|date('Y')-5.."now"|date('Y')+20 %}    
+                            <option value="{{ year }}" {% if year == "now"|date('Y') %}} selected {% endif %}}>{{ year }}</option>
+                        {% endfor %}
+                        </select> 月</label>
+                        <label for="month"><select id="month" name="month">
+                            <option value="01">1</option>
+                            <option value="02">2</option>
+                            <option value="03">3</option>
+                            <option value="04">4</option>
+                            <option value="05">5</option>
+                            <option value="06">6</option>
+                            <option value="07">7</option>
+                            <option value="08">8</option>
+                            <option value="09">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                        </select> 月</label>
+                        <label for="day"><select id="day" name="day">
+                        <option value="01">1</option>
+                        <option value="02">2</option>
+                        <option value="03">3</option>
+                        <option value="04">4</option>
+                        <option value="05">5</option>
+                        <option value="06">6</option>
+                        <option value="07">7</option>
+                        <option value="08">8</option>
+                        <option value="09">9</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                        <option value="16">16</option>
+                        <option value="17">17</option>
+                        <option value="18">18</option>
+                        <option value="19">19</option>
+                        <option value="20">20</option>
+                        <option value="21">21</option>
+                        <option value="22">22</option>
+                        <option value="23">23</option>
+                        <option value="24">24</option>
+                        <option value="25">25</option>
+                        <option value="26">26</option>
+                        <option value="27">27</option>
+                        <option value="28">28</option>
+                        <option value="29">29</option>
+                        <option value="30">30</option>
+                        <option value="31">31</option>
+                    </select> 日</label>
+                    <input type="button" id="register" value="この内容で登録する" />
+                    </form>
+                </div>
+                <div class="week-holiday-body">
+                    <table id="table">
+                        <thead>
+                            <tr>
+                                <th>休日名</th>
+                                <th>休日日付</th>
+                                <th>キャンセル</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for LiveHoliday in LiveHolidays %}
+                            <tr class="holiday-item">
+                                <td>{{ LiveHoliday.title }}</td>
+                                <td class="mon-day">{{ LiveHoliday.year }}年 {{ LiveHoliday.month }}月 {{ LiveHoliday.day }}日</td>
+                                <td><a data-id="{{ LiveHoliday.id }} " href="{{ url('admin_cancel_holiday', { id: LiveHoliday.id }) }}">削除</a></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+{% endblock %}
+

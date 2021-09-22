@@ -1,0 +1,39 @@
+{#
+Copyright (c) 2018 VeriTrans Inc., a Digital Garage company. All rights reserved.
+http://www.veritrans.co.jp/
+#}
+<script>
+$(function() {
+$('div.card.rounded.border-0.mb-4').append(
+'<div class="card rounded border-0 mb-4">'+
+'    <div class="card-header"><span>ベリトランス4G設定</span></div>'+
+'    <div class="card-body">'+
+'        <div class="row">'+
+'            <div class="col-3">'+
+'                <span>処理区分</span><span class="badge badge-primary ml-1">必須</span>'+
+'            </div>'+
+'            <div class="col mb-2">'+
+'                {% spaceless %}{{ form_widget(form.withCapture) }}{% endspaceless %}'+
+'                {% spaceless %}{{ form_errors(form.withCapture) }}{% endspaceless %}'+
+'            </div>'+
+'        </div>'+
+'        <div class="row">'+
+'            <div class="col-3"><span>決済完了案内タイトル</span></div>'+
+'            <div class="col mb-2">'+
+'                {{ form_widget(form.order_mail_title1) }}<span class="text-danger">（上限50文字）</span>'+
+'                {% spaceless %}{{ form_errors(form.order_mail_title1) }}{% endspaceless %}'+
+'                <p class="small text-danger">ご注文完了画面とご注文完了メールに、支払いに関する案内文を入れる場合にはタイトルと本文を入れて下さい。(両方入っていない場合は有効になりません。)</p>'+
+'            </div>'+
+'        </div>'+
+'        <div class="row">'+
+'            <div class="col-3"><span>決済完了案内本文</span></div>'+
+'            <div class="col mb-2">'+
+'                {{ form_widget(form.order_mail_body1) }}<span class="text-danger">（上限1000文字）</span>'+
+'                {% spaceless %}{{ form_errors(form.order_mail_body1) }}{% endspaceless %}'+
+'            </div>'+
+'        </div>'+
+'    </div>'+
+'</div>'
+);
+});
+</script>

@@ -1,0 +1,22 @@
+{%- block form_row -%}
+<div class="row">
+
+    <div class="col mb-2">
+        <div class="form-inline">
+            <label style="padding-left: 20px">
+                <input type="checkbox" id="is_prem_member" class="{{ id }}" name="{{ full_name }}" value='1' {% if value == '1' %} checked="checked"{% endif %} />
+                &nbsp;有料会員のみに表⽰する
+            </label>
+            {# {% for letter in 'a'..'h' %}
+                <label style="padding-right: 20px">
+                    <input type="radio" class="{{ id }}" name="{{ full_name }}" value="{{ letter }}"{% if value == letter %} checked="checked"{% endif %} />
+                    &nbsp;{{ letter|upper }}
+                </label>
+            {% endfor %} #}
+            {{ form_errors(form) }}
+        </div>
+    </div>
+</div>
+
+{%- endblock form_row -%}
+

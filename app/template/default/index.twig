@@ -1,0 +1,120 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+{% extends 'default_frame_top.twig' %}
+
+{% set body_class = 'front_page' %}
+
+{% block stylesheet %}
+    <style>
+        .slick-slider {
+            margin-bottom: 30px;
+        }
+
+        .slick-dots {
+            position: absolute;
+            bottom: -45px;
+            display: block;
+            width: 100%;
+            padding: 0;
+            list-style: none;
+            text-align: center;
+        }
+
+        .slick-dots li {
+            position: relative;
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin: 0 5px;
+            padding: 0;
+
+            cursor: pointer;
+        }
+
+        .slick-dots li button {
+            font-size: 0;
+            line-height: 0;
+            display: block;
+            width: 20px;
+            height: 20px;
+            padding: 5px;
+            cursor: pointer;
+            color: transparent;
+            border: 0;
+            outline: none;
+            background: transparent;
+        }
+
+        .slick-dots li button:hover,
+        .slick-dots li button:focus {
+            outline: none;
+        }
+
+        .slick-dots li button:hover:before,
+        .slick-dots li button:focus:before {
+            opacity: 1;
+        }
+
+        .slick-dots li button:before {
+            content: " ";
+            line-height: 20px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 12px;
+            height: 12px;
+            text-align: center;
+            opacity: .25;
+            background-color: black;
+            border-radius: 50%;
+
+        }
+
+        .slick-dots li.slick-active button:before {
+            opacity: .75;
+            background-color: black;
+        }
+
+        .slick-dots li button.thumbnail img {
+            width: 0;
+            height: 0;
+        }
+    </style>
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        $(function() {
+            $('.main_visual').slick({
+                dots: true,
+                arrows: false,
+                autoplay: true,
+                speed: 300,
+                fade: true,
+            });
+        });
+    </script>
+{% endblock javascript %}
+
+{% block main %}
+    <div class="ec-sliderRole">
+        <div class="main_visual">
+            <div class="item slick-slide"><a href="{{ url('user_data', { route:'f_18' }) }}"><img src="{{ asset('assets/img/top/img_hero_pc01.jpg') }}"></a></div>
+            <div class="item slick-slide"><a href="{{ url('user_data', { route:'f139' }) }}"><img src="{{ asset('assets/img/top/img_hero_pc02.jpg') }}"></a></div>
+            <div class="item slick-slide"><a href="{{ url('user_data', { route:'f_8' }) }}"><img src="{{ asset('assets/img/top/img_hero_pc03.jpg') }}"></a></div>
+            <div class="item slick-slide"><a href="{{ url('user_data', { route:'f_10' }) }}"><img src="{{ asset('assets/img/top/img_hero_pc04.jpg') }}"></a></div>
+            <div class="item slick-slide"><a href="{{ url('user_data', { route:'f_8' }) }}"><img src="{{ asset('assets/img/top/img_hero_pc05.jpg') }}"></a></div>
+            <div class="item slick-slide"><a href="https://shoichi.jp/"><img src="{{ asset('assets/img/top/img_hero_pc06.jpg') }}"></a></div>
+            <div class="item slick-slide"><a href="{{ url('product_detail', {id: 149672902 }) }}"><img src="{{ asset('assets/img/top/img_hero_pc07.jpg') }}"></a></div>
+            <div class="item slick-slide"><a href="{{ url('user_data', { route:'f_9' }) }}"><img src="{{ asset('assets/img/top/img_hero_pc08.jpg') }}"></a></div>
+        </div>
+    </div>
+{% endblock %}

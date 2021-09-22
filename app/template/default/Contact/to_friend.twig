@@ -1,0 +1,135 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+{% extends 'default_frame.twig' %}
+
+{% form_theme form 'Form/form_div_layout.twig' %}
+
+{% block javascript %}
+    <script src="//yubinbango.github.io/yubinbango/yubinbango.js" charset="UTF-8"></script>
+{% endblock javascript %}
+
+{% block main %}
+
+    <div class="ec-contactRole">
+        <div class="ec-pageHeader">
+            <h1>{{ '友達に教える'|trans }}</h1>
+        </div>
+        <div class="ec-off1Grid">
+            <div class="ec-off1Grid__cell">
+                <form method="post" action="{{ url('intro_friend', {id:Product.id}) }}" class="h-adr" novalidate>
+                    <span class="p-country-name" style="display:none;">Japan</span>
+                    {{ form_widget(form._token) }}
+                    <p class="ec-para-normal">{{ 'おすすめ商品の情報を送信します。以下のフォームに入力して、送信ボタンをクリックしてください。'|trans|nl2br }}</p>
+                    <div class="ec-borderedDefs">
+                        <dl>
+                            <dt>
+                                {{ form_label(form.friendname, 'お友達のお名前', { 'label_attr': { 'class': 'ec-label' }}) }}
+                            </dt>
+                            <dd>
+                                <div class="ec-halfInput{{ has_errors(form.friendname) ? ' error' }}">
+                                    {{ form_widget(form.friendname) }}
+                                    {{ form_errors(form.friendname) }}
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>
+                                {{ form_label(form.friendemail, 'お友達のメールアドレス', { 'label_attr': { 'class': 'ec-label' }}) }}
+                            </dt>
+                            <dd>
+                                <div class="ec-halfInput{{ has_errors(form.friendemail) ? ' error' }}">
+                                    {{ form_widget(form.friendemail) }}
+                                    {{ form_errors(form.friendemail) }}
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>
+                                {{ form_label(form.yourname, 'あなたのお名前', { 'label_attr': { 'class': 'ec-label' }}) }}
+                            </dt>
+                            <dd>
+                                <div class="ec-halfInput{{ has_errors(form.yourname) ? ' error' }}">
+                                    {{ form_widget(form.yourname) }}
+                                    {{ form_errors(form.yourname) }}
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>
+                                {{ form_label(form.youremail, 'あなたのメールアドレス', { 'label_attr': { 'class': 'ec-label' }}) }}
+                            </dt>
+                            <dd>
+                                <div class="ec-halfInput{{ has_errors(form.youremail) ? ' error' }}">
+                                    {{ form_widget(form.youremail) }}
+                                    {{ form_errors(form.youremail) }}
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>
+                                {{ form_label(form.subject, 'タイトル ', { 'label_attr': { 'class': 'ec-label' }}) }}
+                            </dt>
+                            <dd>
+                                <div class="ec-input{{ has_errors(form.subject) ? ' error' }}">
+                                {% if Product is defined %}
+                                    {{ form_widget(form.subject, {'value' : Product.name}) }}
+                                {% else %}
+                                    {{ form_widget(form.subject) }}
+                                {% endif %}
+                                    {{ form_errors(form.subject) }}
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>
+                                {{ form_label(form.comment, 'コメント ', { 'label_attr': { 'class': 'ec-label' }}) }}
+                            </dt>
+                            <dd>
+                                <div class="ec-input{{ has_errors(form.comment) ? ' error' }}">                            
+                                    {{ form_widget(form.comment) }}
+                                    {{ form_errors(form.comment) }}
+                                </div>
+                            </dd>
+                        </dl>
+                        {# エンティティ拡張の自動出力 #}
+                        {% for f in form if f.vars.eccube_form_options.auto_render %}
+                            {% if f.vars.eccube_form_options.form_theme %}
+                                {% form_theme f f.vars.eccube_form_options.form_theme %}
+                                {{ form_row(f) }}
+                            {% else %}
+                                <dl>
+                                    <dt>
+                                        {{ form_label(f) }}
+                                    </dt>
+                                    <dd>
+                                        <div class="{{ f.vars.eccube_form_options.style_class }}{{ has_errors(f) ? ' error' }}">
+                                            {{ form_widget(f) }}
+                                            {{ form_errors(f) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div class="ec-RegisterRole__actions">
+                        <div class="ec-off4Grid">
+                            <div class="ec-off4Grid__cell">
+                                <button type="submit" class="ec-blockBtn--action" name="mode" value="confirm">{{ '送信する'|trans }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

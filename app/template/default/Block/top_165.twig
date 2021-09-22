@@ -1,0 +1,141 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+{% set Page = repository('Eccube\\Entity\\Page').getPageByRoute('f_165') %}
+{% set recommendProducts = repository('Eccube\\Entity\\Product').getRecommendList() %}
+{% set hitProducts = repository('Eccube\\Entity\\Product').getHitList() %}
+<div class="ec-role">
+    <div class="top-165">
+        <a href="{{ url('user_data', { route:Page.url }) }}">
+        <strong>{{ Page.name }}</strong>        
+        </a>
+    </div>
+</div>
+<div class="ec-role">
+    <div class="site-name">「儲かる問屋サイト　アパレル卸問屋.com」</div>
+    <div class="top-main-2">
+        <a href="https://secure.shop-pro.jp/?mode=mailmaga&shop_id=PA01402886&_ga=2.88442203.1986388440.1630719917-2107182036.1630514608">
+            <img src="{{ asset('assets/img/top/top_main_2.jpg') }}" />
+        </a>
+    </div>
+    <div class="center-3-imgs">
+        <a href="{{ url('product_list') }}?category_id=1" target="_blank">
+            <img src="{{ asset('assets/img/top/top_main_cat_1.jpg') }}" />
+        </a>
+        <a href="{{ url('product_list') }}?category_id=5" target="_blank">
+            <img src="{{ asset('assets/img/top/top_main_cat_5.jpg') }}" />
+        </a>
+        <a href="{{ url('product_list') }}?category_id=7" target="_blank">
+            <img src="{{ asset('assets/img/top/top_main_cat_7.jpg') }}" />
+        </a>
+    </div>
+</div>
+<div class="ec-role">
+    <div class="site-name">毎月開催無料セミナーのお知らせ</div>
+        <a href="https://shoichi.co.jp/info/setsumeikai.php">
+            <img class="w-40" src="{{ asset('assets/img/top/ResaleSeminar.jpg') }}" />
+        </a>
+</div>
+<div class="ec-role">
+    <div class="site-name">新商品のお知らせはSNSから</div>
+        <a href="https://www.facebook.com/%E3%82%A2%E3%83%91%E3%83%AC%E3%83%AB%E5%8D%B8%E5%95%8F%E5%B1%8B-198069337724749/?modal=admin_todo_tour" target="_blank">
+            <img class="social" src="{{ asset('assets/img/top/FB.png') }}" />
+        </a>
+        <a href="https://twitter.com/com72482496" target="_blank">
+            <img class="social" src="{{ asset('assets/img/top/tw.png') }}" />
+        </a>
+        <a href="https://www.instagram.com/appareloroshitonya/?hl=ja" target="_blank">
+            <img class="social" src="{{ asset('assets/img/top/insuta.png') }}" />
+        </a>
+</div>
+<div class="ec-role">
+    <div class="site-name">新着記事</div>
+    <div class="center-2-imgs">
+        <a href="{{ url('user_data', { route:'f_con_1' }) }}">
+            <img src="{{ asset('assets/img/top/n01.png') }}" />
+        </a>
+        <a href="{{ url('user_data', { route:'f_con_15' }) }}">
+            <img src="{{ asset('assets/img/top/n15.png') }}" />
+        </a>
+        
+    </div>
+</div>
+<div class="ec-role">
+    <div class="site-name">おすすめ商品</div>
+    <div class="center-4-imgs">
+        <ul class="ec-shelfGrid">
+        {% for Product in recommendProducts %}
+            <li class="ec-shelfGrid__item">
+                <a href="{{ url('product_detail', {id: Product.id }) }}">
+                    <img src="{{ asset(Product.main_list_image|no_image_product, 'save_image') }}" />
+                </a>
+                <b>{{ Product.price02_max|number_format}}円(税込)</b>  <br>
+                <a href="{{ url('product_detail', {id: Product.id }) }}">
+                    <span>{{ Product.name }}</span>
+                </a>         
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+   
+</div>
+<div class="ec-role">
+    <div class="site-name">売れ筋商品</div>
+    <div class="center-4-imgs">
+        <ul class="ec-shelfGrid">
+        {% for Product in hitProducts %}
+            <li class="ec-shelfGrid__item">
+                <a href="{{ url('product_detail', {id: Product.id }) }}">
+                    <img src="{{ asset(Product.main_list_image|no_image_product, 'save_image') }}" />
+                </a> <br> <br>        
+                <a href="{{ url('product_detail', {id: Product.id }) }}">
+                    <span>{{ Product.name }}</span>
+                </a>           
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+</div>
+{# {% macro tree(Category) %}
+    {% from _self import tree %}
+    <a href="{{ url('product_list') }}?category_id={{ Category.id }}">
+        <img src="{{ asset('assets/img/top/cat_r_'~ Category.id ~'.jpg') }}" alt="{{ Category.name }}" />
+        {{ Category.name }}
+    </a>
+    {# {% if Category.children|length > 0 %}
+        <ul>
+            
+            {% for ChildCategory in Category.children %}
+                <li>
+                    {{ tree(ChildCategory) }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %} #}
+{# {% endmacro %} #}
+
+{# @see https://github.com/bolt/bolt/pull/2388 #}
+{# {% from _self import tree %}
+
+<div class="ec-categoryNaviRole">
+    <div class="ec-itemNav">
+        <ul class="ec-itemNav__nav">
+            
+                {% for Category in Categories %}
+                <hr>
+                    <li>
+                        {{ tree(Category) }}
+                    </li>
+                {% endfor %}
+                <hr>
+           
+        </ul>
+    </div>
+</div> #}

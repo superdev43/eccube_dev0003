@@ -1,0 +1,43 @@
+{%- block form_row -%}
+<div class="row">
+    <div class="col-3">
+        <div class="d-inline-block" data-tooltip="true" data-placement="top">
+            <span>{{ form.vars.label|trans }}</span>
+        </div>
+    </div>
+    <div class="col mb-2">
+        <div class="form-inline">
+            <label style="padding-right: 20px">
+                <input type="checkbox" id="no_fee" class="{{ id }}" name="{{ full_name }}" value='1' {% if value == '1' %} checked="checked"{% endif %} />
+                &nbsp;送料無料対象商品
+            </label>
+            {# {% for letter in 'a'..'h' %}
+                <label style="padding-right: 20px">
+                    <input type="radio" class="{{ id }}" name="{{ full_name }}" value="{{ letter }}"{% if value == letter %} checked="checked"{% endif %} />
+                    &nbsp;{{ letter|upper }}
+                </label>
+            {% endfor %} #}
+            {{ form_errors(form) }}
+        </div>
+    </div>
+</div>
+<script>
+    $("#no_fee").on('click',function(){
+        if($(this).is(':checked')){
+            $("#admin_product_shipping_charge").val('').prop('readonly', true);
+            }
+        else{
+            $("#admin_product_shipping_charge").prop('readonly', false);
+        }
+    })
+    $(document).ready(function(){
+        if($("#no_fee").is(':checked')){
+            $("#admin_product_shipping_charge").val('').prop('readonly', true);
+            }
+        else{
+            $("#admin_product_shipping_charge").prop('readonly', false);
+        }
+    })
+</script>
+{%- endblock form_row -%}
+

@@ -1,0 +1,109 @@
+{#
+Copyright (c) 2018 VeriTrans Inc., a Digital Garage company. All rights reserved.
+http://www.veritrans.co.jp/
+#}
+<script>
+    // 名前空間を設定
+    window.VeriTrans4G = window.VeriTrans4G || {};
+
+    VeriTrans4G.isProcessing = false;
+    VeriTrans4G.unloadMessage = 'この画面を離れるとご注文は取消となりますがよろしいですか？';
+
+    // 支払方法のバリデーション
+    VeriTrans4G.validateOneClickPaymentType = function(formKey) {
+        var paymentTypeSelect = document.querySelector('select[name="'+formKey+'[payment_type]"]');
+        VeriTrans4G.hideErrorMessage(paymentTypeSelect);
+
+        return VeriTrans4G.validateNotBlank('payment_type', 'お支払い方法', null, formKey);
+    }
+
+    VeriTrans4G.setSubmit = function(targetId, mode) {
+        var $target = $('#'+targetId);
+
+        if (!$target.length) {
+            return false;
+        }
+
+        $target.on('click', function(e) {
+            e.preventDefault();
+
+            var elm = e.currentTarget;
+            var $form = $(elm).parents('form');
+            var $modeInput = $form.find('input[name="mode"]');
+
+            if (!$modeInput.length) {
+                return false;
+            }
+
+            $modeInput.val(mode);
+
+            if (VeriTrans4G.isProcessing) {
+                alert('只今、処理中です。しばらくお待ちください。');
+                return false;
+            }
+
+            VeriTrans4G.isProcessing = false;
+            switch (targetId) {
+                case 'vt4g_btn_token':
+                    VeriTrans4G.fetchMdkToken();
+                    return true;
+                case 'vt4g_btn_account':
+                case 'vt4g_btn_retrade':
+                    var formKey = {
+                        'vt4g_btn_account': 'payment_credit_account',
+                        'vt4g_btn_retrade': 'payment_credit_one_click'
+                    }[targetId];
+                    if (!VeriTrans4G.validateOneClickPaymentType(formKey)) {
+                        return false;
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            $form.submit();
+            // EC-CUBE側で定義されているオーバーレイ表示 実行
+            window.loadingOverlay();
+
+            return true;
+        });
+    }
+
+    $(function() {
+        VeriTrans4G.setSubmit('vt4g_btn_token', 'token');
+        VeriTrans4G.setSubmit('vt4g_btn_account', 'account');
+        VeriTrans4G.setSubmit('vt4g_btn_retrade', 'retrade');
+
+        {% if error.payment is empty %}
+            $('a').each(function(idx, elm) {
+                var linkId = elm.getAttribute('id');
+                var href = elm.getAttribute('href');
+                // ページ内リンク以外の場合
+                if (!href || (href.substr(0, 1) !== '#' && !/vt4g_btn_(.+)_back/.test(linkId))) {
+                    $(elm).on('click', function() {
+                        var isConfirm = window.confirm(VeriTrans4G.unloadMessage);
+                        if (!isConfirm) {
+                            $('.bg-load-overlay').remove();
+                        }
+                        return isConfirm;
+                    })
+                }
+            });
+
+            $('form').each(function(idx, elm) {
+                var formId = elm.getAttribute('id');
+
+                // 除外するフォームのIDを設定
+                if (!formId || !/vt4g_form_credit/.test(formId)) {
+                    $(elm).on('submit', function(e) {
+                        var isConfirm = window.confirm(VeriTrans4G.unloadMessage);
+                        if (!isConfirm) {
+                            $('.bg-load-overlay').remove();
+                        }
+                        return isConfirm;
+                    });
+                }
+            });
+        {% endif %}
+    })
+</script>

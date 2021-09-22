@@ -1,0 +1,60 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+{% extends '@admin/default_frame.twig' %}
+{% set menus = ['setting', 'calendar', 'week_holiday'] %}
+
+{% block title %}{{ '定休日管理'|trans }}{% endblock %}
+{% block sub_title %}{{ '営業日管理'|trans }}{% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/tempusdominus-bootstrap-4.min.css', 'admin') }}">
+    <style>
+        .week-holiday-title{
+            padding:20px;
+            font-size:20px;
+            border-bottom: 1px solid #c1c1c1;
+        }
+        .week-holiday-body{
+            padding:20px;
+            font-size:20px;
+        }
+        .holiday_form label{
+            margin-right:50px;
+        }
+        
+    </style>
+{% endblock stylesheet %}
+{% block main %}
+    <!--検索条件設定テーブルここから-->
+    <div class="c-contentsArea__cols">
+        <div class="c-contentsArea__primaryCol">
+            <div class="bg-white">
+                <div class="week-holiday-title">定休日設定</div>
+            </div>
+            <div class="bg-white">
+                <div class="week-holiday-body">
+                    <form class="holiday_form" method="post" action="{{ url('admin_week_holiday') }}">
+                        <label for="chk1"><input id="chk1" type="checkbox" name="Sun" value="0" {% for key, value in StatusOkIds %}{% if value == 0 %} checked {% endif %}{% endfor %} /> &nbsp;日</label>
+                        <label for="chk2"><input id="chk2" type="checkbox" name="Mon" value="1" {% for key, value in StatusOkIds %}{% if value == 1 %} checked {% endif %}{% endfor %} /> &nbsp;月</label>
+                        <label for="chk3"><input id="chk3" type="checkbox" name="Tue" value="2" {% for key, value in StatusOkIds %}{% if value == 2 %} checked {% endif %}{% endfor %} /> &nbsp;火</label>
+                        <label for="chk4"><input id="chk4" type="checkbox" name="Wed" value="3" {% for key, value in StatusOkIds %}{% if value == 3 %} checked {% endif %}{% endfor %} /> &nbsp;水</label>
+                        <label for="chk5"><input id="chk5" type="checkbox" name="Thu" value="4" {% for key, value in StatusOkIds %}{% if value == 4 %} checked {% endif %}{% endfor %} /> &nbsp;木</label>
+                        <label for="chk6"><input id="chk6" type="checkbox" name="Fri" value="5" {% for key, value in StatusOkIds %}{% if value == 5 %} checked {% endif %}{% endfor %} /> &nbsp;金</label>
+                        <label for="chk7"><input id="chk7" type="checkbox" name="Sat" value="6" {% for key, value in StatusOkIds %}{% if value == 6 %} checked {% endif %}{% endfor %} /> &nbsp;土</label>
+                        <br>
+                        <input type="submit" value="この内容で登録する" />
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

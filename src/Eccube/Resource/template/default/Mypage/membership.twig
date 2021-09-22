@@ -1,0 +1,308 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+{% extends 'default_frame.twig' %}
+
+{% set mypageno = 'membership' %}
+
+{% set body_class = 'mypage' %}
+
+{% block main %}
+
+    <div class="ec-layoutRole__main">
+        <div class="ec-mypageRole">
+            <div class="ec-pageHeader">
+                <h1>{{ 'マイページ'|trans }}/{{ '有料会員'|trans }}</h1>
+            </div>
+            {% include 'Mypage/navi.twig' %}
+        </div>
+        {% if toPremCompleteMark == 0 and updateCardCompleteMark == 0 %}
+            {% if Customer.cus_customer_level == 1 or (Customer.cus_customer_level == 2 and Customer.vt4g_account_id == null) %}
+                <div class="text-center">
+            <h3>現在のプラン：<span style="font-weight:bold;color:darkblue">無料会員</span>　</h3>
+                    <h4>有料会員に登録するには、以下のフォームに記入してください。</h4>
+                    <div class="ec-off1Grid">
+                        <div class="ec-off1Grid__cell">
+                                <form id="customer_form" method="post" action="{{ url('mypage_membership') }}" novalidate class="h-adr">
+                                    <span class="p-country-name" style="display:none;">Japan</span>
+                                    {{ form_widget(form._token) }}
+                                    <div class="ec-borderedDefs">
+                                        <dl>
+                                            <dt>
+                                                <label class="ec-label" for "cc-number" >クレジットカード番号</label>
+                                            </dt>
+                                            <dd>
+                                                <input placeholder="4111111111111111" class="form-control" name="customer_cus[card_number]" id="cc-number" type="text" maxLength="16" />
+                                            </dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>
+                                            <label class="ec-label" >カード有効期限</label>
+                                            </dt>
+                                            <dd style="text-align:left">
+                                                <input placeholder="MM" class="form-control" style="width:60px;display:initial" type="text" name="customer_cus[card_expire_month]" id="cc-exp-month" maxLength="2" /> 月 / 20 <input placeholder="YY" class="form-control" style="width:60px;display:initial" type="text" name="customer_cus[card_expire_year]" id="cc-exp-year" maxLength="2" /> 年
+                                            </dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>
+                                            <label class="ec-label" for="cc-csc">セキュリティコード</label>
+                                            </dt>
+                                            <dd>
+                                                <input placeholder="123" class="form-control" type="text" name="customer_cus[card_sec]" id="cc-csc" />
+                                            </dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>
+                                            <label for="cc-name" class="ec-label">カード名義人名</label>
+                                            </dt>
+                                            <dd>
+                                                <input placeholder="TARO ADDO" class="form-control" type="text" name="customer_cus[card_owner]" id="cc-name" />
+                                            </dd>
+                                        </dl>
+                                        <br>
+                                        {# <dl>
+                                            <dt>
+                                            <label class="ec-label">課金開始日</label>
+                                            </dt>
+                                            <dd>
+                                                <input placeholder="YYYYMMDD" id="startDate" class="form-control" type="text" name="customer_cus[startDate]" maxLength="8" />
+                                            </dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>
+                                            <label class="ec-label">課金終了日</label>
+                                            </dt>
+                                            <dd>
+                                                <input placeholder="YYYYMMDD" id="endDate" class="form-control" type="text" name="customer_cus[endDate]" maxLength="8" />
+                                            </dd>
+                                        </dl> #}
+
+                                        <input type="hidden" name="token_api_key" id="token_api_key" value="{{ tokenApiKey }}" />
+                                        <input type="hidden" name="customer_cus[credit_token]" id="credit_token" value="" />
+                                    </div>
+                                <button style="width:30%;margin:auto" class="ec-blockBtn--action" type="button" onclick="prem_customer()"  name="mode" value="confirm">{{ '有料会員へ'|trans }}</button>
+                                </form>
+                            </div>
+                        </div>
+                </div>
+            {% elseif Customer.cus_customer_level == 2  and Customer.vt4g_account_id != null %}
+            <div class="text-center">
+            <h3>現在のプラン：<span style="font-weight:bold;color:darkblue">有料会員</span>　<span style="font-size:16px">有料会員を解約するには、<a style="width:30%;margin:auto;margin-top:20px;font-weight:bold"  data-id="{{ Customer.id }}" href="{{ url('common_customer_prem_canel', {'id' : Customer.id}) }}">
+                    こちら</a>をクリックしてください。</span></h3>
+                    <h4>カード情報を変更するには、以下のフォームに記入してください。</h4>
+                    <div class="ec-off1Grid">
+                        <div class="ec-off1Grid__cell">
+                                <form id="customer_form_update_card" method="post" action="{{ url('mypage_membership_update_card') }}" novalidate class="h-adr">
+                                    <span class="p-country-name" style="display:none;">Japan</span>
+                                    {{ form_widget(form._token) }}
+                                    <div class="ec-borderedDefs">
+                                        <dl>
+                                            <dt>
+                                                <label class="ec-label" for "update-cc-number" >クレジットカード番号</label>
+                                            </dt>
+                                            <dd>
+                                                <input placeholder="4111111111111111" class="form-control" name="customer_cus_update_card[card_number]" id="update-cc-number" type="text" maxLength="16" />
+                                            </dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>
+                                            <label class="ec-label" >カード有効期限</label>
+                                            </dt>
+                                            <dd style="text-align:left">
+                                                <input placeholder="MM" class="form-control" style="width:60px;display:initial" type="text" name="customer_cus_update_card[card_expire_month]" id="update-cc-exp-month" maxLength="2" /> 月 / 20 <input placeholder="YY" class="form-control" style="width:60px;display:initial" type="text" name="customer_cus_update_card[card_expire_year]" id="update-cc-exp-year" maxLength="2" /> 年
+                                            </dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>
+                                            <label class="ec-label" for="update-cc-csc">セキュリティコード</label>
+                                            </dt>
+                                            <dd>
+                                                <input placeholder="123" class="form-control" type="text" name="customer_cus_update_card[card_sec]" id="update-cc-csc" />
+                                            </dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>
+                                            <label for="update-cc-name" class="ec-label">カード名義人名</label>
+                                            </dt>
+                                            <dd>
+                                                <input placeholder="TARO ADDO" class="form-control" type="text" name="customer_cus_update_card[card_owner]" id="update-cc-name" />
+                                            </dd>
+                                        </dl>
+                                        <br>
+                                        {# <dl>
+                                            <dt>
+                                            <label class="ec-label">課金開始日</label>
+                                            </dt>
+                                            <dd>
+                                                <input placeholder="YYYYMMDD" id="update-startDate" class="form-control" type="text" name="customer_cus_update_card[startDate]" maxLength="8" />
+                                            </dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>
+                                            <label class="ec-label">課金終了日</label>
+                                            </dt>
+                                            <dd>
+                                                <input placeholder="YYYYMMDD" id="update-endDate" class="form-control" type="text" name="customer_cus_update_card[endDate]" maxLength="8" />
+                                            </dd>
+                                        </dl> #}
+
+                                        <input type="hidden" name="token_api_key" id="update-token_api_key" value="{{ tokenApiKey }}" />
+                                        <input type="hidden" name="customer_cus_update_card[credit_token]" id="update-credit_token" value="" />
+                                    </div>
+                                <button style="width:30%;margin:auto; background-color: #0530ff;border: 1px solid #0530ff;" class="ec-blockBtn--action" type="button" onclick="prem_customer_update_card()"  name="mode" value="confirm">{{ 'カード情報変更'|trans }}</button>
+                                
+                                </form>
+                            </div>
+                        </div>
+                </div>
+            {% endif %}
+        {% elseif toPremCompleteMark == 1 %}
+        <div class="text-center">
+            <h2>有料会員登録ありがとうございます</h2>
+        </div>   
+
+        {% elseif updateCardCompleteMark == 1 %}
+           
+            <div class="text-center">
+                <h2>クレジットカード情報が成功に変更しました。</h2>
+            </div>     
+            
+        {% endif %}
+        
+    </div>
+{% endblock %}
+{% block javascript %}
+<script>
+    function prem_customer(){
+        var data = {};
+        if (document.getElementById('cc-number')) {
+        data.card_number = document.getElementById('cc-number').value;
+        }
+        if (document.getElementById('token_api_key')) {
+        data.token_api_key = document.getElementById('token_api_key').value;
+        }
+        if (document.getElementById('cc-exp-month') && document.getElementById('cc-exp-year') ) {
+        data.card_expire = document.getElementById('cc-exp-month').value + "/" + document.getElementById('cc-exp-year').value;
+        }
+        if (document.getElementById('cc-csc')) {
+        data.security_code = document.getElementById('cc-csc').value;
+        }   
+        if (document.getElementById('cc-name')) {
+        data.cardholder_name = document.getElementById('cc-name').value;
+        }
+        data.lang = "ja";
+
+
+        if(data.card_number!="" && data.token_api_key != "" && document.getElementById('cc-exp-month').value != "" && document.getElementById('cc-exp-year').value != "" && data.security_code != "" && data.cardholder_name != "" ){
+            
+            const rawResponse = fetch('https://api.veritrans.co.jp/4gtoken', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+            }).then(resonse => resonse.json()).then(content => {
+                document.getElementById('credit_token').value = content.token;
+                $('#customer_form').attr('action', "{{ url('mypage_membership') }}");
+                $('#customer_form').submit(); 
+            });
+        }
+        else if (data.card_number == ""){
+            alert("クレジットカード番号を記入してください。");
+            document.getElementById('cc-number').focus();
+            return false;
+        }
+        else if(document.getElementById('cc-exp-month').value == ""){
+            alert("カード有効期限を記入してください。");
+            document.getElementById('cc-exp-month').focus();
+            return false;
+        }
+        else if(document.getElementById('cc-exp-year').value == ""){
+            alert("カード有効期限を記入してください。");
+            document.getElementById('cc-exp-year').focus();
+            return false;
+        }
+        else if(data.security_code == ""){
+            alert("セキュリティコードを記入してください。");
+            document.getElementById('cc-csc').focus();
+            return false;
+        }
+        else {
+            alert("カード名義人名を記入してください。");
+            document.getElementById('cc-name').focus();
+            return false;
+        }
+        
+    }
+
+    function prem_customer_update_card(){
+        var data = {};
+        if (document.getElementById('update-cc-number')) {
+        data.card_number = document.getElementById('update-cc-number').value;
+        }
+        if (document.getElementById('update-token_api_key')) {
+        data.token_api_key = document.getElementById('update-token_api_key').value;
+        }
+        if (document.getElementById('update-cc-exp-month') && document.getElementById('update-cc-exp-year') ) {
+        data.card_expire = document.getElementById('update-cc-exp-month').value + "/" + document.getElementById('update-cc-exp-year').value;
+        }
+        if (document.getElementById('update-cc-csc')) {
+        data.security_code = document.getElementById('update-cc-csc').value;
+        }   
+        if (document.getElementById('update-cc-name')) {
+        data.cardholder_name = document.getElementById('update-cc-name').value;
+        }
+        data.lang = "ja";
+
+
+        if(data.card_number!="" && data.token_api_key != "" && document.getElementById('update-cc-exp-month').value != "" && document.getElementById('update-cc-exp-year').value != "" && data.security_code != "" && data.cardholder_name != "" ){
+            const rawResponse = fetch('https://api.veritrans.co.jp/4gtoken', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+            }).then(resonse => resonse.json()).then(content => {
+                document.getElementById('update-credit_token').value = content.token;
+                $('#customer_form_update_card').attr('action', "{{ url('mypage_membership_update_card') }}");
+                $('#customer_form_update_card').submit(); 
+            });
+        }
+        else if (data.card_number == ""){
+            alert("クレジットカード番号を記入してください。");
+            document.getElementById('update-cc-number').focus();
+            return false;
+        }
+        else if(document.getElementById('update-cc-exp-month').value == ""){
+            alert("カード有効期限を記入してください。");
+            document.getElementById('update-cc-exp-month').focus();
+            return false;
+        }
+        else if(document.getElementById('update-cc-exp-year').value == ""){
+            alert("カード有効期限を記入してください。");
+            document.getElementById('update-cc-exp-year').focus();
+            return false;
+        }
+        else if(data.security_code == ""){
+            alert("セキュリティコードを記入してください。");
+            document.getElementById('update-cc-csc').focus();
+            return false;
+        }
+        else {
+            alert("カード名義人名を記入してください。");
+            document.getElementById('update-cc-name').focus();
+            return false;
+        }
+       
+    }
+</script>
+{% endblock %}

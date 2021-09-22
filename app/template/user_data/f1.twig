@@ -1,0 +1,103 @@
+{% extends 'default_frame.twig' %}
+
+{% block main %}
+<div class="ec-role">
+    <div class="center-4-imgs">
+        <div class="with-page">
+            <img src="{{ asset('assets/img/top/f1_top.png') }}" />
+        </div>
+        <p class="add-check-normal">
+        厳しい世の中ではあるけれど、ラッキーなのは「さまざまな稼ぎ方」ができるようになったこと。<br>
+        これまで物理的、時間的、金額的にあきらめていたことに、手が届くようになったんです。<br>
+            <br>
+        家事、育児、介護…お金にかえられないけどとても大事な仕事です。<br>
+        働きたくても働きに出られない人もいます。<br>
+            <br>
+        それでもやっぱり「お金を稼ぐ」ことって、その金額に関わらず、その人に自信と少しの余裕、そして未来への元気をもたらしてくれます。<br>
+            <br>
+        私たち「アパレル卸問屋.com」は、あなたにそんな「かせぐよろこび」を知ってほしいと心から思っています。<br>
+        </p>
+        <div class="with-page">
+            <img src="{{ asset('assets/img/top/f1_middle.png') }}"  /><br>
+        <a href="#manga"><img class="auto" align="right" src="https://img21.shop-pro.jp/PA01402/886/etc/%B7%D0%B8%B3%BC%D4%A4%CF%A4%B3%A4%C1%A4%E9.png?cmsp_timestamp=20180910105539"></a>
+        </div>
+        <div class="with-page">
+            <img src="{{ asset('assets/img/top/f1_middle_1.png') }}"  /><br>
+            <img src="{{ asset('assets/img/top/f1_middle_2.png') }}"  /><br>
+            <img src="{{ asset('assets/img/top/f1_middle_3.png') }}"  /><br>
+            <img src="{{ asset('assets/img/top/f1_middle_4.png') }}"  /><br>
+            <img src="{{ asset('assets/img/top/f1_middle_5.png') }}"  /><br>
+        </div>
+
+
+    </div>
+</div>
+<div class="ec-role">
+    <div class="site-name-no-bottom"><img src="{{ asset('assets/img/top/f1_site_name_1.png') }}"  /></div>
+    <div class="center-4-imgs">
+        <p class="add-check-normal">
+            <span class="text-red-bold">初心者のおすすめの人気商品！！</span><br>
+        </p>
+    </div>
+    <div class="top-main">
+        <a href="https://secure.shop-pro.jp/?mode=mailmaga&shop_id=PA01402886&_ga=2.88442203.1986388440.1630719917-2107182036.1630514608">
+            <img src="{{ asset('assets/img/top/top_main_2.jpg') }}" />
+        </a>
+    </div>
+    <div class="center-3-imgs">
+        <a href="{{ url('product_list') }}?category_id=1" target="_blank">
+            <img src="{{ asset('assets/img/top/top_main_cat_1.jpg') }}" />
+        </a>
+        <a href="{{ url('product_list') }}?category_id=5" target="_blank">
+            <img src="{{ asset('assets/img/top/top_main_cat_5.jpg') }}" />
+        </a>
+        <a href="{{ url('product_list') }}?category_id=7" target="_blank">
+            <img src="{{ asset('assets/img/top/top_main_cat_7.jpg') }}" />
+        </a>
+    </div>
+    <div class="center-4-imgs">
+        <p class="add-check-normal">
+            <span class="text-red-bold">まずはこれらの商品で気軽にトライ！クリックして詳細をどうぞ
+        </span><br>
+        </p>
+    </div>
+
+</div>
+<div class="ec-role">
+    <div class="site-name-no-bottom"><img src="{{ asset('assets/img/top/f1_site_name_2.png') }}"  /></div>
+    <div class="center-4-imgs">
+         <div class="with-page">
+            <img src="{{ asset('assets/img/top/f1_middle_6.png') }}"  /><br><br>
+        </div>
+        <p class="add-check-normal">
+            <span class="text-bold">まだまだ商品たくさん！稼げるコツも！詳しくはHPへ</span>
+        </p>
+    </div>
+    <div class="center-33-imgs">
+        <ul>
+            <li>
+                {% set Page_8 = repository('Eccube\\Entity\\Page').getPageByRoute('f_8') %}
+                <a href="{{ url('user_data', { route:Page_8.url }) }}"  target="_blank">
+                    <img src="{{ asset('assets/img/top/f1_to_f8.png') }}">
+                </a>
+                    
+            </li>
+            <li>
+                <a href="{{ url ('homepage') }}" target="_blank">
+                    <img src="{{ asset('assets/img/top/f1_to_top.jpg') }}">
+                </a>
+                       
+            </li>
+            <li>
+                <a href="https://shoichi.co.jp/" target="_blank">
+                    <img src="{{ asset('assets/img/top/f1_to_sochi.png') }}">
+                </a>
+                     
+            </li>          
+           
+        </ul>
+    </div>
+
+</div>
+
+{% endblock %}

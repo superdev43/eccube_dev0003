@@ -1,0 +1,57 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+{% set ContentPages = repository('Eccube\\Entity\\Page').getPageList("p.url LIKE 'f_con%'") %}
+
+{% macro tree(Page) %}
+    {# {% from _self import tree %}   #}
+    <a class="side-bar-content-item" href="{{ url('user_data', { route:Page.url }) }}">
+        {{ Page.name }}
+    </a>    
+{% endmacro %}
+
+{% macro tree_pay(Page) %}
+    {# {% from _self import tree %}   #}
+    <a class="side-bar-content-item" href="{{ url('user_data', { route:Page.url }) }}#payment">
+        お支払い方法について
+    </a>    
+{% endmacro %}
+
+{# @see https://github.com/bolt/bolt/pull/2388 #}
+{% from _self import tree %}
+{% from _self import tree_pay %}
+
+<div class="ec-categoryNaviRole">
+    <div class="ec-itemNav">
+    <div class="side-bar-content-title">コンテンツ</div>
+        <ul class="ec-itemNav__nav">
+            
+                {% for Page in ContentPages %}
+                    {% if Page.url == "f_con_pay_ship" %}
+                        <hr>
+                            <li>
+                                {{ tree_pay(Page) }}
+                            </li>
+                        <hr>
+                            <li>
+                                {{ tree(Page) }}
+                            </li>
+                    {% else %}
+                        <hr>
+                            <li>
+                                {{ tree(Page) }}
+                            </li>
+                    {% endif %}
+                {% endfor %}
+                <hr>
+           
+        </ul>
+    </div>
+</div>

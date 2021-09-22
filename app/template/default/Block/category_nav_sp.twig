@@ -1,0 +1,135 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+{% set Categories = repository('Eccube\\Entity\\Category').getList() %}
+
+{% macro tree(Category) %}
+    {% from _self import tree %}
+    <a href="{{ url('product_list') }}?category_id={{ Category.id }}">
+        {{ Category.name }}
+    </a>
+    {% if Category.children|length > 0 %}
+        <ul>
+            {% for ChildCategory in Category.children %}
+                <li>
+                    {{ tree(ChildCategory) }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endmacro %}
+
+{# @see https://github.com/bolt/bolt/pull/2388 #}
+{% from _self import tree %}
+
+<div class="ec-headerCategoryArea">
+    <div class="ec-headerCategoryArea__heading">ヘッダ</div>
+    <div class="ec-itemNav">
+        <ul class="ec-itemNav__nav">
+            <li>
+                <a href="{{ url('homepage') }}">{{ 'ホーム'|trans }}</a>
+            </li>
+            <li><a title="支払・配送について" href="{{ url('user_data', { route: 'f_con_pay_ship' }) }}" ><span>支払・配送について</span></a></li>
+            <li><a title="お問い合わせ" href="{{ url('contact') }}" ><span>お問い合わせ</span></a></li>
+            <li><a title="カートを見る" href="{{ url('cart') }}" ><span>カートを見る</span></a></li>
+        </ul>
+    </div>       
+    <div class="ec-headerCategoryArea__heading">
+        <p>{{ 'カテゴリ一覧'|trans }}</p>
+    </div>
+    <div class="ec-itemNav">
+        <ul class="ec-itemNav__nav">
+        <li>
+            <a href="{{ url('mypage_change') }}">
+                <img src="{{ asset('assets/img/top/magazine.png') }}" />
+            </a>
+        </li>
+        <li>
+            <a href="{{ url('user_data', { route:'f139' }) }}">
+                <img src="{{ asset('assets/img/top/f139.jpg') }}" />
+            </a>
+        </li>
+        {# {% for Category in Categories %} #}
+            <li>
+                {# {{ tree(Category) }} #}
+                <a href="{{ url('product_list') }}?category_id=7">
+                    <img src="{{ asset('assets/img/top/cat7.jpg') }}"  />
+                    {# {{ Category.name }} #}
+                </a>
+            </li>
+            <li>
+                {# {{ tree(Category) }} #}
+                <a href="{{ url('product_list') }}?category_id=2">
+                    <img src="{{ asset('assets/img/top/cat2.jpg') }}"  />
+                    {# {{ Category.name }} #}
+                </a>
+            </li>
+            <li>
+                {# {{ tree(Category) }} #}
+                <a href="{{ url('product_list') }}?category_id=33">
+                    <img src="{{ asset('assets/img/top/cat1.jpg') }}"  />
+                    {# {{ Category.name }} #}
+                </a>
+            </li>
+            <li>
+                {# {{ tree(Category) }} #}
+                <a href="{{ url('user_data', { route:'f_con_17' }) }}">
+                    <img src="{{ asset('assets/img/top/f17.png') }}"  />
+                    {# {{ Category.name }} #}
+                </a>
+            </li>
+            <li>
+                {# {{ tree(Category) }} #}
+                <a href="https://auc1.net/">
+                    <img src="{{ asset('assets/img/top/aucken.jpg') }}"  />
+                    {# {{ Category.name }} #}
+                </a>
+            </li>
+            <li>
+                {# {{ tree(Category) }} #}
+                <a href="https://zaikosokuho.com/">
+                    <img src="{{ asset('assets/img/top/inventory.jpg') }}"  />
+                    {# {{ Category.name }} #}
+                </a>
+            </li>
+            <li>
+                {# {{ tree(Category) }} #}
+                <form method="get" class="searchform" action="{{ url('product_list') }}">
+                    <div class="ec-headerSearch__category">
+                        <div class="ec-select ec-select_search">
+                            <select name="category_id" class="category_id">
+                            <option value="" selected="selected">全ての商品</option>
+                            {% for Category in Categories %}    
+                            <option value="{{ Category.id }}">{{ Category.name }}</option>
+                            {% endfor %}
+                    </select>
+                
+                        </div>
+                    </div>
+                    <div class="ec-headerSearch__keyword">
+                        <div class="ec-input">
+                            <input type="search" name="name" maxlength="50" class="search-name" placeholder="キーワードを入力">
+                            <button class="ec-headerSearch__keywordBtn" type="submit">
+                                <div class="ec-icon">
+                                    <img src="{{ asset('assets/icon/search-dark.svg') }}" alt="">
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </li>
+            {% for Category in Categories %}
+                <li>
+                    {{ tree(Category) }}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
