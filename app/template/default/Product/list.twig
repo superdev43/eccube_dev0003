@@ -103,7 +103,7 @@ file that was distributed with this source code.
             <div class="ec-role">
             <div class="site-name">
                 <ol class="ec-topicpath">
-                    {# <li class="ec-topicpath__item"><a href="{{ url('product_list') }}">{{ '全て'|trans }}</a> #}
+                    <li class="ec-topicpath__item"><a href="{{ url('product_list') }}">{{ '全て'|trans }}</a>
                     </li>
                     {% if LowPrice is defined and HighPrice is defined %}
                         <li class="ec-topicpath__divider">| {{ LowPrice|price }} ~ {{ HighPrice|price }}</li>
@@ -129,6 +129,10 @@ file that was distributed with this source code.
                         name="{{ item.vars.full_name }}"
                         {% if item.vars.value is not empty %}value="{{ item.vars.value }}" {% endif %}/>
                 {% endfor %}
+                {% if LowPrice is defined and HighPrice is defined %}
+                        <input type='hidden' name ="low_price" value={{ LowPrice }} />
+                        <input type='hidden' name ="high_price" value={{ HighPrice }} />
+                {% endif %}
             </form>
                 <div class="ec-searchnavRole__infos">
                     <div class="ec-searchnavRole__counter">

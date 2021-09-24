@@ -33,14 +33,13 @@ file that was distributed with this source code.
 
 <div class="ec-categoryNaviRole">
     <div class="ec-itemNav">
-    <div class="side-bar-content-title">価格から探す</div>
-        
+    <div class="side-bar-content-title">価格から探す</div>        
             
                 <hr>
                   
-                        <form id="form" method="get" onsubmit="return validate()" class="searchform" action="http://localhost/eccube_shop/products/list">                        
+                        <form id="form" method="get" onsubmit="return validate()" class="searchform" action="{{ url('product_list') }}">                        
                         <div class="ec-headerSearch__price">
-                            <div class="ec-input">
+                            <div class="ec-input">  
                                 <input type="number" name="low_price" maxlength="50" min="0" id="low" class="search-name" placeholder="円">~
                                 <input type="number" name="high_price" maxlength="50" min="0" id="high" class="search-name" placeholder="円">
                             </div>

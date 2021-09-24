@@ -186,7 +186,7 @@ class ConfigController extends AbstractController
             $product_sub_total += $item->getProductClass()->getPrice02() * $item->getQuantity();
         }
 
-        $htmlBody = $this->render($fileName, [
+        $htmlBody = $this->renderView($fileName, [
             'Order' => $Order,
             'Shipping' => $Shipping,
             'OrderItems' => $OrderItems,
@@ -196,7 +196,7 @@ class ConfigController extends AbstractController
 
        
         $message = (new \Swift_Message())
-            ->setSubject('[' . $this->BaseInfo->getShopName() . '] ' . 'subject')
+            ->setSubject('[' . $this->BaseInfo->getShopName() . '] ' . '商品出荷のお知らせ')
             ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
             ->setTo($Order->getEmail())
             ->setBcc($this->BaseInfo->getEmail01())
