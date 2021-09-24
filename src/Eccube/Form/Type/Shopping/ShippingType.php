@@ -96,6 +96,19 @@ class ShippingType extends AbstractType
                 // 販売種別に紐づく配送業者を取得.
                 $Deliveries = $this->deliveryRepository->getDeliveries($SaleTypes);
 
+                // 2021.09.24 配送方法->通常送料のみ
+                $temps = [];
+                foreach($OrderItems as $OrderItem){
+                    if($OrderItem->getProduct()->no_fee != 1){
+                        if($OrderItem->getProduct()->shipping_charge != Null){
+                            $temps[] = $this->deliveryRepository->find(1);
+                            $Deliveries = $temps;
+                            break;
+                        }
+                    }
+                }
+
+
                 // 配送業者のプルダウンにセット.
                 $form = $event->getForm();
                 $form->add(
