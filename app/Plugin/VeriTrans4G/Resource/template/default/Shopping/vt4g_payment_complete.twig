@@ -15,7 +15,7 @@ http://www.veritrans.co.jp/
             {% for key, item in arrOther.message %}
                 <p style="word-break:break-all;">
                     {% if item.title is defined and item.title != '' %}
-                        {{ item.title }}:
+                        {{ item.title }}
                     {% endif %}
                     {% if item.content is defined and item.content != '' %}
                         {{ item.content|nl2br }}

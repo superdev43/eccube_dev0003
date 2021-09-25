@@ -98,13 +98,17 @@ class ShippingType extends AbstractType
 
                 // 2021.09.24 配送方法->通常送料のみ
                 $temps = [];
-                foreach($OrderItems as $OrderItem){
-                    if($OrderItem->getProduct()->no_fee != 1){
-                        if($OrderItem->getProduct()->shipping_charge != Null){
+                foreach ($OrderItems as $OrderItem) {
+                    if ($OrderItem->getProduct()->no_fee != 1 || $OrderItem->getProduct()->no_fee != '1') {
+                        if ($OrderItem->getProduct()->shipping_charge != Null) {
                             $temps[] = $this->deliveryRepository->find(1);
                             $Deliveries = $temps;
                             break;
                         }
+                    } else {
+                        $temps[] = $this->deliveryRepository->find(1);
+                        $Deliveries = $temps;
+                        break;
                     }
                 }
 
@@ -171,9 +175,9 @@ class ShippingType extends AbstractType
                 // 配送日数が設定されている
                 if ($deliveryDurationFlag) {
                     $period = new \DatePeriod(
-                        new \DateTime($minDate.' day'),
+                        new \DateTime($minDate . ' day'),
                         new \DateInterval('P1D'),
-                        new \DateTime($minDate + $this->eccubeConfig['eccube_deliv_date_end_max'].' day')
+                        new \DateTime($minDate + $this->eccubeConfig['eccube_deliv_date_end_max'] . ' day')
                     );
 
                     // 曜日設定用
@@ -187,7 +191,7 @@ class ShippingType extends AbstractType
                     );
 
                     foreach ($period as $day) {
-                        $deliveryDurations[$day->format('Y/m/d')] = $day->format('Y/m/d').'('.$dateFormatter->format($day).')';
+                        $deliveryDurations[$day->format('Y/m/d')] = $day->format('Y/m/d') . '(' . $dateFormatter->format($day) . ')';
                     }
                 }
 

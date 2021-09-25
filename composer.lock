@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dc11cd60f6b73e87b1f1e3f8ad4cc734",
+    "content-hash": "f8fbf818ca9116ca5f2b4019c7d2930e",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -1807,6 +1807,30 @@
                 "id": 1760
             },
             "description": "メールマガジンプラグイン",
+            "transport-options": {
+                "http": {
+                    "header": [
+                        "X-ECCUBE-KEY: 209I8PAGzOGE9QBYbsrA3ktECdB4RtcFc7iDydbP"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "ec-cube/PostCarrier4",
+            "version": "4.2.0",
+            "dist": {
+                "type": "tar",
+                "url": "https://package-api.ec-cube.net/ec-cube/PostCarrier4/4.2.0/PostCarrier4-4.2.0.tgz"
+            },
+            "require": {
+                "ec-cube/plugin-installer": "~0.0.6"
+            },
+            "type": "eccube-plugin",
+            "extra": {
+                "code": "PostCarrier4",
+                "id": 1940
+            },
+            "description": "ポストキャリアプラグイン",
             "transport-options": {
                 "http": {
                     "header": [
@@ -9848,6 +9872,6 @@
     },
     "platform-dev": [],
     "platform-overrides": {
-        "php": "7.4.13"
+        "php": "7.4.0"
     }
 }
