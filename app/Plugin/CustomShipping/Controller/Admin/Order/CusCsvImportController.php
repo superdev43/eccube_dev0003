@@ -259,6 +259,7 @@ class CusCsvImportController extends AbstractCsvImportController
                 
                 foreach ($OrderItems as $OrderItem) {
                     $OrderItem->setCusShippingStatusId(1);
+                    $OrderItem->setCusOrderStatusId(5);
                     
                     $em = $this->getDoctrine()->getManager();
                     $em->persist($OrderItem);

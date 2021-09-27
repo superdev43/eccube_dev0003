@@ -388,7 +388,7 @@ class CustomOrderController extends AbstractController
             'page_no' => $page_no,
             'page_count' => $page_count,
             'has_errors' => false,
-            'OrderStatuses' => $this->orderStatusRepository->findBy([], ['sort_no' => 'ASC']),
+            'OrderStatuses' => $this->orderStatusRepository->findBy(['id' => [1,3,5,9]], ['sort_no' => 'ASC']),
         ];
     }
 
@@ -546,7 +546,7 @@ class CustomOrderController extends AbstractController
             'page_no' => $page_no,
             'page_count' => $page_count,
             'has_errors' => false,
-            'OrderStatuses' => $this->orderStatusRepository->findBy([], ['sort_no' => 'ASC']),
+            'OrderStatuses' => $this->orderStatusRepository->findBy(['id' => [1,3,5,9]], ['sort_no' => 'ASC']),
         ];
     }
 
