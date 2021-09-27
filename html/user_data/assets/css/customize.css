@@ -162,7 +162,7 @@ body {
     text-align: center;
 }
 .ec-role .center-4-imgs .text-center-img a {
-    font-size: 1.5em;
+    font-size: 1em;
 }
 .ec-role .center-4-imgs .text-center-img img {
     width: auto;
@@ -884,4 +884,7 @@ iframe.about {
 
 #contact_email {
     width:100%;
+}
+.text-black a{
+    color:#000
 }
