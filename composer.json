@@ -36,7 +36,6 @@
         "ec-cube/AmazonPayV2": "^1.1",
         "ec-cube/Coupon4": "^4.1",
         "ec-cube/MailMagazine4": "^4.1",
-        "ec-cube/PostCarrier4": "^4.2",
         "ec-cube/ProductReview4": "^4.1",
         "ec-cube/StockShow4": "^1.0",
         "ec-cube/VeriTrans4G": "^1.2",
