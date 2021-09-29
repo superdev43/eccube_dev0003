@@ -134,13 +134,13 @@ file that was distributed with this source code.
                                     </li>
                                     <li class="ec-cartRow__contentColumn">
                                         <div class="ec-cartRow__img">
-                                            <a target="_blank" href="{{ url('product_detail', {id : Product.id} ) }}">
+                                            <a target="_blank" href="{{ url('homepage', {pid: Product.id }) }}">
                                                 <img src="{{ asset(Product.MainListImage|no_image_product, 'save_image') }}" alt="{{ Product.name }}"/>
                                             </a>
                                         </div>
                                         <div class="ec-cartRow__summary">
                                             <div class="ec-cartRow__name">
-                                                <a target="_blank" href="{{ url('product_detail', {id : Product.id} ) }}">{{ Product.name }}</a>
+                                                <a target="_blank" href="{{ url('homepage', {pid: Product.id }) }}">{{ Product.name }}</a>
                                                 {% if ProductClass.ClassCategory1 and ProductClass.ClassCategory1.id %}
                                                     <br>{{ ProductClass.ClassCategory1.ClassName.name }}：{{ ProductClass.ClassCategory1 }}
                                                 {% endif %}

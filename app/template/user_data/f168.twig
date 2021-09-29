@@ -83,7 +83,7 @@
         そんな方は是非<a href="{{ url('homepage') }}">アパレル卸問屋.com</a> での仕入れをご検討ください。<br>
         </p><br>
         <div class="text-center-img">
-            <a class="dark-blue-bold" href="{{ url('user_data', { route:'f139' }) }}">最先端のカワイイ商品が勢ぞろい！<br>中国アパレル代行仕入れ！アパレル卸問屋.com 
+            <a class="dark-blue-bold" href="{{ url('homepage') }}?mode=f139">最先端のカワイイ商品が勢ぞろい！<br>中国アパレル代行仕入れ！アパレル卸問屋.com 
             <br><img src="{{ asset('assets/img/top/f168_middle_1.jpg') }}" /><br></a><br>            
         </div>    
     </div>
@@ -92,20 +92,20 @@
     <div class="site-name">合わせて読みたい記事</div>
     <div class="center-4-imgs">
         <div class="with-page">
-            {% set Page_171 = repository('Eccube\\Entity\\Page').getPageByRoute('f_con_171') %}
-            <a href="{{ url('user_data', { route:Page_171.url }) }}">
+            {% set Page_171 = repository('Eccube\\Entity\\Page').getPageByRoute('f171') %}
+            <a href="{{ url('homepage') }}?mode={{Page_171.url }}">
             ■{{ Page_171.name }}
             </a>
         </div>
         <div class="with-page">
-            {% set Page_172 = repository('Eccube\\Entity\\Page').getPageByRoute('f_con_172') %}
-            <a href="{{ url('user_data', { route:Page_172.url }) }}">
+            {% set Page_172 = repository('Eccube\\Entity\\Page').getPageByRoute('f172') %}
+            <a href="{{ url('homepage') }}?mode={{Page_172.url }}">
             ■{{ Page_172.name }}
             </a>
         </div>
         <div class="with-page">
-            {% set Page_170 = repository('Eccube\\Entity\\Page').getPageByRoute('f_170') %}
-            <a href="{{ url('user_data', { route:Page_170.url }) }}">
+            {% set Page_170 = repository('Eccube\\Entity\\Page').getPageByRoute('f170') %}
+            <a href="{{ url('homepage') }}?mode={{Page_170.url }}">
             ■{{ Page_170.name }}
             </a>
         </div>

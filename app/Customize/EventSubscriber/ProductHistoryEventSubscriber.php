@@ -89,12 +89,12 @@ class ProductHistoryEventSubscriber implements EventSubscriberInterface
         if (false === $event->isMasterRequest()) {
             return;
         }
-
-        if ($event->getRequest()->get('_route') !== 'product_detail') {
+        
+        if ($event->getRequest()->get('_route') !== 'homepage') {
             return;
         }
-
-        if ($product_id = $event->getRequest()->get('id')) {
+        if (isset($_GET['pid'])) {
+            $product_id = $_GET['pid'];
             $product = $this->productRepository->find($product_id);
             if (null === $product) {
                 return;

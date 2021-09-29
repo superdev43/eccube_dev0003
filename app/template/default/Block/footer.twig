@@ -15,16 +15,16 @@ file that was distributed with this source code.
                 <a href="{{ url('homepage') }}">{{ 'ホーム'|trans }}</a>
             </li>
              <li class="ec-footerNavi__link">
-                <a href="{{ url('user_data', { route: 'f_con_pay_ship' }) }}">{{ '支払・配送について'|trans }}</a>
+                <a href="{{ url('homepage') }}?mode=sk">{{ '支払・配送について'|trans }}</a>
             </li>
              <li class="ec-footerNavi__link">
-                <a href="{{ url('user_data', { route: 'f_con_pay_ship'}) }}#info">{{ '特定商取引法に基づく表記'|trans }}</a>
+                <a href="{{ url('homepage') }}?mode=sk#info">{{ '特定商取引法に基づく表記'|trans }}</a>
             </li>
              <li class="ec-footerNavi__link">
-                <a href="{{ url('help_privacy') }}">{{ 'プライバシーポリシー'|trans }}</a>
+                <a href="{{ url('homepage') }}?mode=privacy">{{ 'プライバシーポリシー'|trans }}</a>
             </li>
             <li class="ec-footerNavi__link">
-                <a href="{{ url('help_about') }}">{{ '会社概要'|trans }}</a>
+                <a href="{{ url('homepage') }}?mode=f11">{{ '会社概要'|trans }}</a>
             </li>
             
             <li class="ec-footerNavi__link">

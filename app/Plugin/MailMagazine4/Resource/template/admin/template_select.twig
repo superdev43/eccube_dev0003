@@ -22,6 +22,15 @@
 {% form_theme form '@admin/Form/bootstrap_4_horizontal_layout.html.twig' %}
 
 {% block javascript %}
+    <script type="text/javascript" src="{{ asset('MailMagazine4/assets/ckeditor/ckeditor.js', 'plugin') }}"></script>
+    <script type="text/javascript">
+    CKEDITOR.replace('mail_magazine_htmlBody', {
+        language: 'ja',
+        removeButtons: 'About',
+        extraPlugins: [ 'uploadimage' ],
+    
+    });
+    </script>
     <script>
         $(function(){
             $("#mail_magazine_template").on("change", function(){

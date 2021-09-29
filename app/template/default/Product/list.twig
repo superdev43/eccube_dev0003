@@ -112,7 +112,7 @@ file that was distributed with this source code.
                         {% for Path in Category.path %}
                             <li class="ec-topicpath__divider">|</li>
                             <li class="ec-topicpath__item{% if loop.last %}--active{% endif %}"><a
-                                        href="{{ url('product_list') }}?category_id={{ Path.id }}">{{ Path.name }}</a>
+                                        href="{{ url('homepage') }}?mode=cate&category_id={{ Path.id }}">{{ Path.name }}</a>
                             </li>
                         {% endfor %}
                     {% endif %}
@@ -159,7 +159,7 @@ file that was distributed with this source code.
                         <ul class="category-list">
                         {% for ChildCategory in Category.children %}
                             <li class="col col-lg-2 col-sm-4 col-xs-6 txt_c">
-                                <a href="{{ url('product_list') }}?category_id={{ ChildCategory.id }}">
+                                <a href="{{ url('homepage') }}?mode=cate&category_id={{ ChildCategory.id }}">
                                     <img src="{{ asset('assets/img/top/asoto_'~ ChildCategory.id ~'.jpg') }}">            {{ ChildCategory.name }}
                                 </a>
                             </li>
@@ -202,7 +202,7 @@ file that was distributed with this source code.
                     {% for Product in pagination %}
                         {% if Customer %}                            
                             <li class="ec-shelfGrid__item">
-                                <a href="{{ url('product_detail', {'id': Product.id}) }}">
+                                <a href="{{ url('homepage', {pid: Product.id }) }}">
                                     <p class="ec-shelfGrid__item-image">
                                         <img src="{{ asset(Product.main_list_image|no_image_product, 'save_image') }}">
                                     </p>
@@ -265,7 +265,7 @@ file that was distributed with this source code.
                             {% if Product.only_prem_product_display != 1 %}
                                 {% if Product.only_prem_price_display != 1 %}
                                     <li class="ec-shelfGrid__item">
-                                        <a href="{{ url('product_detail', {'id': Product.id}) }}">
+                                        <a href="{{ url('homepage', {pid: Product.id }) }}">
                                             <p class="ec-shelfGrid__item-image">
                                                 <img src="{{ asset(Product.main_list_image|no_image_product, 'save_image') }}">
                                             </p>
@@ -326,7 +326,7 @@ file that was distributed with this source code.
 
                                 {% else %}
                                     <li class="ec-shelfGrid__item">
-                                        <a href="{{ url('product_detail', {'id': Product.id}) }}">
+                                        <a href="{{ url('homepage', {pid: Product.id }) }}">
                                             <p class="ec-shelfGrid__item-image">
                                                 <img src="{{ asset(Product.main_list_image|no_image_product, 'save_image') }}">
                                             </p>

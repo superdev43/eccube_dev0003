@@ -8,11 +8,11 @@ http://www.ec-cube.co.jp/
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 #}
-{% set Page = repository('Eccube\\Entity\\Page').getPageByRoute('f_10') %}
+{% set Page = repository('Eccube\\Entity\\Page').getPageByRoute('f10') %}
 
 <div class="ec-role">
     <div class="top-165">
-        <a href="{{ url('user_data', { route:Page.url }) }}">
+        <a href="{{ url('homepage') }}?mode={{Page.url }}">
            <img src="{{ asset('assets/img/top/f10.jpg') }}" />   
         </a>
     </div>

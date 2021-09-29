@@ -75,7 +75,7 @@ file that was distributed with this source code.
                                     <div class="ec-imageGrid__content">
                                         <p>
                                             {% if orderItem.Product is not null and orderItem.Product.Status.id == constant('Eccube\\Entity\\Master\\ProductStatus::DISPLAY_SHOW') %}
-                                                <a href="{{ url('product_detail', {'id': orderItem.Product.id}) }}">{{ orderItem.productName }}</a>
+                                                <a href="{{ url('homepage', {pid: orderItem.Product.id }) }}">{{ orderItem.productName }}</a>
                                             {% else %}
                                                 {{ orderItem.productName }}
                                             {% endif %} ×{{ orderItem.quantity }} {% if is_reduced_tax_rate(orderItem) %}{{ '※'|trans }}{% set isShowReducedTaxMess = true %}{% endif %}

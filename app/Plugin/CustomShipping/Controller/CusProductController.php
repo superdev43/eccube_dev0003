@@ -353,7 +353,7 @@ class CusProductController extends \Eccube\Controller\AbstractController
     /**
      * 商品詳細画面.
      *
-     * @Route("/products/detail/{id}", name="product_detail", methods={"GET"}, requirements={"id" = "\d+"})
+     * @Route("/pid={id}", name="product_detail", methods={"GET"}, requirements={"id" = "\d+"})
      * @Template("Product/detail.twig")
      * @ParamConverter("Product", options={"repository_method" = "findWithSortedClassCategories"})
      *
@@ -460,7 +460,7 @@ class CusProductController extends \Eccube\Controller\AbstractController
             );
             $this->eventDispatcher->dispatch(EccubeEvents::FRONT_PRODUCT_FAVORITE_ADD_COMPLETE, $event);
 
-            return $this->redirectToRoute('product_detail', ['id' => $Product->getId()]);
+            return $this->redirectToRoute('homepage');
         } else {
             // 非会員の場合、ログイン画面を表示
             //  ログイン後の画面遷移先を設定

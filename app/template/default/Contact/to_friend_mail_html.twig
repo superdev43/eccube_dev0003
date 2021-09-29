@@ -36,7 +36,7 @@ file that was distributed with this source code.
                         {{ data.comment }}<br><br>
 
                         ■商品 「{{ data.subject }}」の　URL<br>
-                        <a href="{{ url('product_detail', { id: Product.id }) }}">{{ url('product_detail', { id: Product.id }) }}</a>
+                        <a href="{{ url('homepage', {pid: Product.id }) }}">{{ url('homepage', {pid: Product.id }) }}</a>
                         <br><br>
                         ■ショップのURL<br>
                         <a href="{{ url('homepage')}}">{{ url('homepage')}}</a><br>

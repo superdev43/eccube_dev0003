@@ -12,7 +12,7 @@ file that was distributed with this source code.
 
 {% macro tree(Category) %}
     {% from _self import tree %}
-    <a href="{{ url('product_list') }}?category_id={{ Category.id }}">
+    <a href="{{ url('homepage') }}?mode=cate&category_id={{ Category.id }}">
         <img src="{{ asset('assets/img/top/cat_r_'~ Category.id ~'.jpg') }}" alt="{{ Category.name }}" />
         {{ Category.name }}
     </a>
@@ -37,9 +37,10 @@ file that was distributed with this source code.
             
                 <hr>
                   
-                        <form id="form" method="get" onsubmit="return validate()" class="searchform" action="{{ url('product_list') }}">                        
+                        <form id="form" method="get" onsubmit="return validate()" class="searchform" action="{{ url('homepage') }}">                        
                         <div class="ec-headerSearch__price">
-                            <div class="ec-input">  
+                            <div class="ec-input">
+                                <input type="hidden" name="mode" value="cate" />  
                                 <input type="number" name="low_price" maxlength="50" min="0" id="low" class="search-name" placeholder="円">~
                                 <input type="number" name="high_price" maxlength="50" min="0" id="high" class="search-name" placeholder="円">
                             </div>

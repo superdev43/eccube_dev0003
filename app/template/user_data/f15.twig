@@ -32,13 +32,13 @@
         </a>
     </div>
     <div class="center-3-imgs">
-        <a href="{{ url('product_list') }}?category_id=1" target="_blank">
+        <a href="{{ url('homepage') }}?mode=cate&category_id=1" target="_blank">
             <img src="{{ asset('assets/img/top/top_main_cat_1.jpg') }}" />
         </a>
-        <a href="{{ url('product_list') }}?category_id=5" target="_blank">
+        <a href="{{ url('homepage') }}?mode=cate&category_id=5" target="_blank">
             <img src="{{ asset('assets/img/top/top_main_cat_5.jpg') }}" />
         </a>
-        <a href="{{ url('product_list') }}?category_id=7" target="_blank">
+        <a href="{{ url('homepage') }}?mode=cate&category_id=7" target="_blank">
             <img src="{{ asset('assets/img/top/top_main_cat_7.jpg') }}" />
         </a>
     </div>
@@ -63,8 +63,8 @@
     <div class="center-33-imgs">
         <ul>
             <li>
-                {% set Page_8 = repository('Eccube\\Entity\\Page').getPageByRoute('f_8') %}
-                <a href="{{ url('user_data', { route:Page_8.url }) }}"  target="_blank">
+                {% set Page_8 = repository('Eccube\\Entity\\Page').getPageByRoute('f8') %}
+                <a href="{{ url('homepage') }}?mode={{Page_8.url }}"  target="_blank">
                     <img src="{{ asset('assets/img/top/f1_to_f8.png') }}">
                 </a>
                     

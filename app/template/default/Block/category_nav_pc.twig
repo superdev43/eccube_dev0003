@@ -13,7 +13,7 @@ file that was distributed with this source code.
 
 {% macro tree(Category) %}
     {% from _self import tree %}
-    <a href="{{ url('product_list') }}?category_id={{ Category.id }}">
+    <a href="{{ url('homepage') }}?mode=cate&category_id={{ Category.id }}">
         <img src="{{ asset('assets/img/top/cat_r_'~ Category.id ~'.jpg') }}" alt="{{ Category.name }}" />
         {{ Category.name }}
     </a>
@@ -41,35 +41,35 @@ file that was distributed with this source code.
                 </a>
             </li>
             <li>
-                <a href="{{ url('user_data', { route:'f139' }) }}">
+                <a href="{{ url('homepage') }}?mode=f139">
                     <img src="{{ asset('assets/img/top/f139.jpg') }}" />
                 </a>
             </li>
             {# {% for Category in Categories %} #}
                 <li>
                     {# {{ tree(Category) }} #}
-                    <a href="{{ url('product_list') }}?category_id=7">
+                    <a href="{{ url('homepage') }}?mode=cate&category_id=7">
                         <img src="{{ asset('assets/img/top/cat7.jpg') }}"  />
                         {# {{ Category.name }} #}
                     </a>
                 </li>
                 <li>
                     {# {{ tree(Category) }} #}
-                    <a href="{{ url('product_list') }}?category_id=2">
+                    <a href="{{ url('homepage') }}?mode=cate&category_id=2">
                         <img src="{{ asset('assets/img/top/cat2.jpg') }}"  />
                         {# {{ Category.name }} #}
                     </a>
                 </li>
                 <li>
                     {# {{ tree(Category) }} #}
-                    <a href="{{ url('product_list') }}?category_id=33">
+                    <a href="{{ url('homepage') }}?mode=cate&category_id=33">
                         <img src="{{ asset('assets/img/top/cat1.jpg') }}"  />
                         {# {{ Category.name }} #}
                     </a>
                 </li>
                 <li>
                     {# {{ tree(Category) }} #}
-                    <a href="{{ url('user_data', { route:'f_con_17' }) }}">
+                    <a href="{{ url('homepage') }}?mode=f17">
                         <img src="{{ asset('assets/img/top/f17.png') }}"  />
                         {# {{ Category.name }} #}
                     </a>

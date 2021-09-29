@@ -104,7 +104,7 @@ class ReviewControllerTest extends AbstractWebTestCase
 
         $this->actual = $link->getUri();
 
-        $this->expected = $this->generateUrl('product_detail', ['id' => $productId], UrlGeneratorInterface::ABSOLUTE_URL);
+        $this->expected = $this->generateUrl('homepage');
         $this->verify();
     }
 
@@ -179,7 +179,7 @@ class ReviewControllerTest extends AbstractWebTestCase
         $this->createProductReviewByNumber($max, $productId);
         $crawler = $this->client->request(
             'GET',
-            $this->generateUrl('product_detail', ['id' => $productId])
+            $this->generateUrl('homepage')
         );
 
         // review area

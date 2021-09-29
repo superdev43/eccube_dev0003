@@ -334,7 +334,7 @@ file that was distributed with this source code.
             </div>
             <div class="ec-role">
                 <div class="top-main">
-                    <a href="{{ url('user_data', {route:'f_10'} ) }}" target="_blank">
+                    <a href="{{ url('homepage') }}?mode=f10" target="_blank">
                         <img src="{{ asset('assets/img/top/product_detail_common.jpg') }}" />
                     </a>
                 </div>
@@ -409,10 +409,10 @@ file that was distributed with this source code.
                 <ul class="mar_b_20">
                     <li><a href="{{ url('product_review_list', { id: Product.id }) }}">レビューを見る({{ ProductReviewCount }}件)</a></li>
                     <li><a href="{{ url('product_review_index', { id: Product.id }) }}">レビューを投稿</a></li>
-                    <li><a href="{{ url('user_data', { route: 'f_con_pay_ship'}) }}#info">特定商取引法に基づく表記（返品等）</a></li>
+                    <li><a href="{{ url('homepage') }}?mode=sk#info">特定商取引法に基づく表記（返品等）</a></li>
                     <li><a href="{{ url('intro_friend', { id: Product.id }) }}">この商品を友達に教える</a></li>
                     <li><a href="{{ url('contact_product', {id: Product.id}) }}">この商品について問い合わせる</a></li>
-                    <li><a href="{{ url('product_list') }}?category_id={{ cateogryId }}">買い物を続ける</a></li>
+                    <li><a href="{{ url('homepage') }}?mode=cate&category_id={{ categoryId }}">買い物を続ける</a></li>
                 </ul>
                 <ul class="unstyled">
                     <li>
@@ -545,7 +545,7 @@ file that was distributed with this source code.
                     
                         <div class="two1"><a href="{{ url('mypage_change') }}" target="_blank"><img src="https://img21.shop-pro.jp/PA01402/886/etc/%A5%E1%A5%EB%A5%DE%A5%ACSP.png?cmsp_timestamp=20180720162107" alt="メルマガ登録はこちら"></a>
                         </div>
-                        <div class="two1"><a href="{{ url('user_data', {route:'f_con_17'}) }}" target="_blank"><img src="https://img21.shop-pro.jp/PA01402/886/etc/%A5%E1%A5%EB%A5%DE%A5%AC%A5%D0%A5%C3%A5%AF%A5%CA%A5%F3%A5%D0%A1%BC.png?cmsp_timestamp=20180830030250" alt="メルマガバックナンバー"></a>
+                        <div class="two1"><a href="{{ url('homepage') }}?mode=f17" target="_blank"><img src="https://img21.shop-pro.jp/PA01402/886/etc/%A5%E1%A5%EB%A5%DE%A5%AC%A5%D0%A5%C3%A5%AF%A5%CA%A5%F3%A5%D0%A1%BC.png?cmsp_timestamp=20180830030250" alt="メルマガバックナンバー"></a>
                         </div>
                     </div>
                     <div class="ec-modal">

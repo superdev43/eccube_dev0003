@@ -9,52 +9,52 @@
         <p class="add-check-normal text-black">
             <a href="{{ url('homepage') }}">? トップページ</a><br>
             ? カテゴリー<br>
-            &nbsp;<a href="{{ url('product_list') }}?category_id=8">? レディースアパレル</a><br>
-            &nbsp;<a href="{{ url('product_list') }}?category_id=9">・ トップス</a><br>
-            &nbsp;<a href="{{ url('product_list') }}?category_id=10">・ ボトム</a><br>
-            &nbsp;<a href="{{ url('product_list') }}?category_id=11">・ アウター</a><br>
-            &nbsp;<a href="{{ url('product_list') }}?category_id=12">・ インナーウェア</a><br>
-            &nbsp;<a href="{{ url('product_list') }}?category_id=13">? メンズアパレル</a><br>
-            &nbsp;<a href="{{ url('product_list') }}?category_id=14">・ トップス</a><br>
-            &nbsp;<a href="{{ url('product_list') }}?category_id=15">・ ボトム</a><br>
-            &nbsp;<a href="{{ url('product_list') }}?category_id=16">・ アウター</a><br>
-            &nbsp;<a href="{{ url('product_list') }}?category_id=17">・ インナーウェア</a><br>
-            &nbsp;<a href="{{ url('product_list') }}?category_id=18">? 子供服</a><br>
-            &nbsp;<a href="{{ url('product_list') }}?category_id=19">・ トップス</a><br>
-            &nbsp;<a href="{{ url('product_list') }}?category_id=20">・ ボトム</a><br>
-            &nbsp;<a href="{{ url('product_list') }}?category_id=21"> ・ 雑貨</a><br>
-            &nbsp;<a href="{{ url('product_list') }}?category_id=2">? アソート</a><br>
-            &nbsp;<a href="{{ url('product_list') }}?category_id=22">? 服飾雑貨</a><br>
-            &nbsp;<a href="{{ url('product_list') }}?category_id=23">・ バッグ</a><br>
-            &nbsp;<a href="{{ url('product_list') }}?category_id=24">・ シューズ</a><br>
-            &nbsp;<a href="{{ url('product_list') }}?category_id=25">・ アクセサリー</a><br>
-            &nbsp;<a href="{{ url('product_list') }}?category_id=26">・ その他</a><br>
-            &nbsp;<a href="{{ url('product_list') }}?category_id=27">? 生活雑貨</a><br>
-            &nbsp;<a href="{{ url('product_list') }}?category_id=28">・ キッチン雑貨</a><br>
-            &nbsp;<a href="{{ url('product_list') }}?category_id=29">・ その他</a><br>
-            &nbsp;<a href="{{ url('product_list') }}?category_id=30">? 生活雑貨</a><br>
+            &nbsp;<a href="{{ url('homepage') }}?mode=cate&category_id=8">? レディースアパレル</a><br>
+            &nbsp;<a href="{{ url('homepage') }}?mode=cate&category_id=9">・ トップス</a><br>
+            &nbsp;<a href="{{ url('homepage') }}?mode=cate&category_id=10">・ ボトム</a><br>
+            &nbsp;<a href="{{ url('homepage') }}?mode=cate&category_id=11">・ アウター</a><br>
+            &nbsp;<a href="{{ url('homepage') }}?mode=cate&category_id=12">・ インナーウェア</a><br>
+            &nbsp;<a href="{{ url('homepage') }}?mode=cate&category_id=13">? メンズアパレル</a><br>
+            &nbsp;<a href="{{ url('homepage') }}?mode=cate&category_id=14">・ トップス</a><br>
+            &nbsp;<a href="{{ url('homepage') }}?mode=cate&category_id=15">・ ボトム</a><br>
+            &nbsp;<a href="{{ url('homepage') }}?mode=cate&category_id=16">・ アウター</a><br>
+            &nbsp;<a href="{{ url('homepage') }}?mode=cate&category_id=17">・ インナーウェア</a><br>
+            &nbsp;<a href="{{ url('homepage') }}?mode=cate&category_id=18">? 子供服</a><br>
+            &nbsp;<a href="{{ url('homepage') }}?mode=cate&category_id=19">・ トップス</a><br>
+            &nbsp;<a href="{{ url('homepage') }}?mode=cate&category_id=20">・ ボトム</a><br>
+            &nbsp;<a href="{{ url('homepage') }}?mode=cate&category_id=21"> ・ 雑貨</a><br>
+            &nbsp;<a href="{{ url('homepage') }}?mode=cate&category_id=2">? アソート</a><br>
+            &nbsp;<a href="{{ url('homepage') }}?mode=cate&category_id=22">? 服飾雑貨</a><br>
+            &nbsp;<a href="{{ url('homepage') }}?mode=cate&category_id=23">・ バッグ</a><br>
+            &nbsp;<a href="{{ url('homepage') }}?mode=cate&category_id=24">・ シューズ</a><br>
+            &nbsp;<a href="{{ url('homepage') }}?mode=cate&category_id=25">・ アクセサリー</a><br>
+            &nbsp;<a href="{{ url('homepage') }}?mode=cate&category_id=26">・ その他</a><br>
+            &nbsp;<a href="{{ url('homepage') }}?mode=cate&category_id=27">? 生活雑貨</a><br>
+            &nbsp;<a href="{{ url('homepage') }}?mode=cate&category_id=28">・ キッチン雑貨</a><br>
+            &nbsp;<a href="{{ url('homepage') }}?mode=cate&category_id=29">・ その他</a><br>
+            &nbsp;<a href="{{ url('homepage') }}?mode=cate&category_id=30">? 生活雑貨</a><br>
             ? おすすめ商品<br>
             {% for recommendProduct in recommendProducts %}
-                &nbsp;<a href="{{ url('product_detail', { id: recommendProduct.id }) }}" >? {{ recommendProduct.name }}</a><br>
+                &nbsp;<a href="{{ url('homepage', {pid: recommendProduct.id }) }}" >? {{ recommendProduct.name }}</a><br>
             {% endfor %}
             ? 売れ筋商品<br>
             {% for hitProduct in hitProducts %}
-                &nbsp;<a href="{{ url('product_detail', { id: hitProduct.id }) }}" >? {{ hitProduct.name }}</a><br>
+                &nbsp;<a href="{{ url('homepage', {pid: hitProduct.id }) }}" >? {{ hitProduct.name }}</a><br>
             {% endfor %}
-            <a href="{{ url('user_data', { route: 'f_con_pay_ship'}) }}#info">? 特定商取引法に基づく表記</a><br>
-            <a href="{{ url('user_data', { route: 'f_con_pay_ship'}) }}#payment">? お支払い方法について</a><br>
-            <a href="{{ url('user_data', { route: 'f_con_pay_ship'}) }}">? 配送方法・送料について</a><br>
+            <a href="{{ url('homepage') }}?mode=sk#info">? 特定商取引法に基づく表記</a><br>
+            <a href="{{ url('homepage') }}?mode=sk#payment">? お支払い方法について</a><br>
+            <a href="{{ url('homepage') }}?mode=sk">? 配送方法・送料について</a><br>
             <a href="{{ url('help_privacy')}}">? プライバシーポリシー</a><br>
             <a href="{{ url('contact')}}">? お問合せ</a><br>
             <a href="{{ url('mypage')}}">? マイページ</a><br>
             <a href="{{ url('mypage_change')}}">? メルマガ登録・解除</a><br>
-            <a href="{{ url('user_data', { route: 'f_con_1'}) }}">? ドロップシッピングの仕入れについて</a><br>
-            <a href="{{ url('user_data', { route: 'f_con_2'}) }}">? ネット仕入れ・販売のコツ</a><br>
-            <a href="{{ url('user_data', { route: 'f_con_3'}) }}">? ネット仕入れ・卸サイト一覧まとめ</a><br>
-            <a href="{{ url('user_data', { route: 'f_con_5'}) }}">? 通信販売業を始めようとされる方へ</a><br>
-            <a href="{{ url('user_data', { route: 'f_con_6'}) }}">? アパレル在庫の仕入れの掛け率について</a><br>
-            <a href="{{ url('user_data', { route: 'f_con_16'}) }}">? よくある質問</a><br>
-            <a href="{{ url('user_data', { route: 'f_con_17'}) }}">? メールマガジンバックナンバー一覧</a><br>
+            <a href="{{ url('homepage') }}?mode=f1">? ドロップシッピングの仕入れについて</a><br>
+            <a href="{{ url('homepage') }}?mode=f2">? ネット仕入れ・販売のコツ</a><br>
+            <a href="{{ url('homepage') }}?mode=f3">? ネット仕入れ・卸サイト一覧まとめ</a><br>
+            <a href="{{ url('homepage') }}?mode=f5">? 通信販売業を始めようとされる方へ</a><br>
+            <a href="{{ url('homepage') }}?mode=f6">? アパレル在庫の仕入れの掛け率について</a><br>
+            <a href="{{ url('homepage') }}?mode=f16">? よくある質問</a><br>
+            <a href="{{ url('homepage') }}?mode=f17">? メールマガジンバックナンバー一覧</a><br>
         </p>
     </div>
 </div>

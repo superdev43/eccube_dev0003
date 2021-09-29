@@ -13,7 +13,17 @@
 
 {% block title %}{{ 'mailmagazine.history.title'|trans }}{% endblock %}
 {% block sub_title %}{{ 'mailmagazine.title'|trans }}{% endblock %}
+{% block javascript %}
+<script type="text/javascript" src="{{ asset('MailMagazine4/assets/ckeditor/ckeditor.js', 'plugin') }}"></script>
+<script type="text/javascript">
+CKEDITOR.replace('mail_preview', {
+    language: 'ja',
+    removeButtons: 'About',
+    extraPlugins: [ 'uploadimage' ],
 
+});
+</script>
+{% endblock %}
 {% block main %}
 <div class="c-contentsArea__cols">
     <div class="c-contentsArea__primaryCol">
@@ -26,11 +36,11 @@
                 </tr>
                 <tr>
                     <th>{{ 'mailmagazine.select.label_body'|trans }}</th>
-                    <td><xmp>{{ history.body }}</xmp></td>
+                    <td ><xmp>{{ history.body }}</xmp></td>
                 </tr>
                 <tr>
                     <th>{{ 'mailmagazine.select.label_body_html'|trans }}</th>
-                    <td><xmp>{{ history.htmlBody|raw }}</xmp></td>
+                    <td id="mail_preview"><xmp>{{ history.htmlBody|raw }}</xmp></td>
                 </tr>
                 </tbody>
             </table>

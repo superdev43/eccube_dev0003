@@ -8,18 +8,33 @@ http://www.ec-cube.co.jp/
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 #}
-{% set ContentPages = repository('Eccube\\Entity\\Page').getPageList("p.url LIKE 'f_con%'") %}
+{% set ContentPages = [] %}
+{% set ContentPages = ContentPages|merge([repository('Eccube\\Entity\\Page').getPageByRoute('f1')]) %}
+{% set ContentPages = ContentPages|merge([repository('Eccube\\Entity\\Page').getPageByRoute('f2')]) %}
+{% set ContentPages = ContentPages|merge([repository('Eccube\\Entity\\Page').getPageByRoute('f3')]) %}
+{% set ContentPages = ContentPages|merge([repository('Eccube\\Entity\\Page').getPageByRoute('f5')]) %}
+{% set ContentPages = ContentPages|merge([repository('Eccube\\Entity\\Page').getPageByRoute('f6')]) %}
+{% set ContentPages = ContentPages|merge([repository('Eccube\\Entity\\Page').getPageByRoute('f15')]) %}
+{% set ContentPages = ContentPages|merge([repository('Eccube\\Entity\\Page').getPageByRoute('f16')]) %}
+{% set ContentPages = ContentPages|merge([repository('Eccube\\Entity\\Page').getPageByRoute('f17')]) %}
+{% set ContentPages = ContentPages|merge([repository('Eccube\\Entity\\Page').getPageByRoute('f20')]) %}
+{% set ContentPages = ContentPages|merge([repository('Eccube\\Entity\\Page').getPageByRoute('f30')]) %}
+{% set ContentPages = ContentPages|merge([repository('Eccube\\Entity\\Page').getPageByRoute('f31')]) %}
+{% set ContentPages = ContentPages|merge([repository('Eccube\\Entity\\Page').getPageByRoute('f168')]) %}
+{% set ContentPages = ContentPages|merge([repository('Eccube\\Entity\\Page').getPageByRoute('f171')]) %}
+{% set ContentPages = ContentPages|merge([repository('Eccube\\Entity\\Page').getPageByRoute('f172')]) %}
+{% set ContentPages = ContentPages|merge([repository('Eccube\\Entity\\Page').getPageByRoute('sk')]) %}
 
 {% macro tree(Page) %}
     {# {% from _self import tree %}   #}
-    <a class="side-bar-content-item" href="{{ url('user_data', { route:Page.url }) }}">
+    <a class="side-bar-content-item" href="{{ url('homepage') }}?mode={{Page.url }}">
         {{ Page.name }}
     </a>    
 {% endmacro %}
 
 {% macro tree_pay(Page) %}
     {# {% from _self import tree %}   #}
-    <a class="side-bar-content-item" href="{{ url('user_data', { route:Page.url }) }}#payment">
+    <a class="side-bar-content-item" href="{{ url('homepage') }}?mode={{Page.url }}#payment">
         お支払い方法について
     </a>    
 {% endmacro %}
@@ -34,7 +49,7 @@ file that was distributed with this source code.
         <ul class="ec-itemNav__nav">
             
                 {% for Page in ContentPages %}
-                    {% if Page.url == "f_con_pay_ship" %}
+                    {% if Page.url == "sk" %}
                         <hr>
                             <li>
                                 {{ tree_pay(Page) }}
@@ -51,7 +66,11 @@ file that was distributed with this source code.
                     {% endif %}
                 {% endfor %}
                 <hr>
-           
+                    <li>
+                        <a class="side-bar-content-item" href="{{ url('mypage_change')}}">
+                            メルマガ登録・解除
+                        </a> 
+                    </li>
         </ul>
     </div>
 </div>
