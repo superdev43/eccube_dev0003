@@ -14,13 +14,14 @@
 {% block title %}{{ 'mailmagazine.template.title'|trans }}{% endblock %}
 {% block sub_title %}{{ 'mailmagazine.title'|trans }}{% endblock %}
 {% block javascript %}
-<script type="text/javascript" src="{{ asset('MailMagazine4/assets/ckeditor/ckeditor.js', 'plugin') }}"></script>
-<script type="text/javascript">
+<script src="http://cdn.ckeditor.com/4.6.2/standard-all/ckeditor.js"></script>
+<script>
 CKEDITOR.replace('preview', {
-    language: 'ja',
-    removeButtons: 'About',
-    extraPlugins: [ 'uploadimage' ],
-
+    language:'ja',
+    height: 300,
+    uploadUrl: '{{ url("mail_magazine_admin_upload") }}',
+    imageUploadUrl: '{{ url("mail_magazine_admin_upload") }}',
+    filebrowserUploadUrl: '{{ url("mail_magazine_admin_upload") }}'     
 });
 </script>
 {% endblock %}

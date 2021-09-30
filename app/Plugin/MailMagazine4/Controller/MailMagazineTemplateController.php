@@ -14,6 +14,7 @@
 namespace Plugin\MailMagazine4\Controller;
 
 use Eccube\Controller\AbstractController;
+use Plugin\CustomShipping\Repository\ConfigRepository;
 use Plugin\MailMagazine4\Entity\MailMagazineTemplate;
 use Plugin\MailMagazine4\Repository\MailMagazineTemplateRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,9 +22,17 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Plugin\MailMagazine4\Form\Type\MailMagazineTemplateEditType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class MailMagazineTemplateController extends AbstractController
 {
+
+    /**
+     * @var ConfigRepository
+     */
+    protected $configRepository;
+
     /**
      * @var MailMagazineTemplateRepository
      */
@@ -35,9 +44,11 @@ class MailMagazineTemplateController extends AbstractController
      * @param MailMagazineTemplateRepository $mailMagazineTemplateRepository
      */
     public function __construct(
-        MailMagazineTemplateRepository $mailMagazineTemplateRepository
+        MailMagazineTemplateRepository $mailMagazineTemplateRepository,
+        ConfigRepository $configRepository
     ) {
         $this->mailMagazineTemplateRepository = $mailMagazineTemplateRepository;
+        $this->configRepository = $configRepository;
     }
 
     /**
@@ -105,6 +116,45 @@ class MailMagazineTemplateController extends AbstractController
         // メルマガテンプレート一覧へリダイレクト
         return $this->redirect($this->generateUrl('plugin_mail_magazine_template'));
     }
+
+
+    /**
+     * @Route("/%eccube_admin_route%/mail_maga/upload", name="mail_magazine_admin_upload")
+     */
+    public function upload(Request $request)
+    {
+        //upload.php
+        $userDataPath = 'eccube_shop/html/user_data/';
+        $fileRoute = $userDataPath.'/assets/img/';
+        $fieldname = "upload";
+        if (isset($_FILES['upload']['name'])) {
+            $file = $_FILES['upload']['tmp_name'];
+            $file_name = $_FILES['upload']['name'];
+            $file_name_array = explode(".", $file_name);
+            $extension = end($file_name_array);
+            $new_image_name = rand() . '.' . $extension;
+            $fullNamePath = $fileRoute . $new_image_name;
+            if (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] != "off") {
+                $protocol = "https://";
+            } else {
+                $protocol = "http://";
+            }
+            // chmod('upload', 0777);
+            $allowed_extension = array("jpg", "gif", "png");
+            if (in_array($extension, $allowed_extension)) {
+                move_uploaded_file($file, $fullNamePath);
+                $function_number = $_GET['CKEditorFuncNum'];
+                $url = $protocol.$_SERVER["HTTP_HOST"].'/'.$fullNamePath;
+                $message = '';
+                echo "<script type='text/javascript'>window.parent.CKEDITOR.tools.callFunction($function_number, '$url', '$message');</script>";
+            }
+        }
+
+    }
+
+
+
+
 
     /**
      * テンプレート編集画面表示.
