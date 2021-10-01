@@ -131,7 +131,7 @@ http://www.veritrans.co.jp/
                         </div>
                     </div>
                 {% else %}
-                    <p class="ec-color-red ec-para-normal" id="vt4g_form_credit_error">{% if mode == 'token' %}{{ error.credit|raw }}{% endif %}</p>
+                    <p class="ec-color-red ec-para-normal" data-error-url="{{ url('shopping_error') }}" id="vt4g_form_credit_error">{% if mode == 'token' %}{{ error.credit|raw }}{% endif %}</p>
                     <div class="ec-borderedDefs">
                         <dl>
                             <dt><label for="vt4g_card_no" class="ec-label">クレジットカード番号</label><span class="ec-required">必須</span></dt>

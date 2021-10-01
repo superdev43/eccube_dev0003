@@ -20,16 +20,16 @@
 <script src="http://cdn.ckeditor.com/4.6.2/standard-all/ckeditor.js"></script>
 <script>
 CKEDITOR.replace('mail_magazine_template_edit_htmlBody', {
+    extraPlugins: 'preview,colorbutton,font',     
     language:'ja',
     height: 300,
     uploadUrl: '{{ url("mail_magazine_admin_upload") }}',
     imageUploadUrl: '{{ url("mail_magazine_admin_upload") }}',
-    filebrowserUploadUrl: '{{ url("mail_magazine_admin_upload") }}'     
+    filebrowserUploadUrl: '{{ url("mail_magazine_admin_upload") }}',    
 });
 </script>
 {% endblock %}
 {% block main %}
-
     <form role="form" name="content_page_form" id="content_page_form" method="post"
           action="{{ url('plugin_mail_magazine_template_commit', { id: Template.id } ) }}" enctype="multipart/form-data">
         {{ form_widget(form._token) }}

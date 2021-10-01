@@ -124,7 +124,7 @@ class MailMagazineTemplateController extends AbstractController
     public function upload(Request $request)
     {
         //upload.php
-        $userDataPath = 'eccube_shop/html/user_data/';
+        $userDataPath = 'html/user_data';
         $fileRoute = $userDataPath.'/assets/img/';
         $fieldname = "upload";
         if (isset($_FILES['upload']['name'])) {
@@ -144,7 +144,7 @@ class MailMagazineTemplateController extends AbstractController
             if (in_array($extension, $allowed_extension)) {
                 move_uploaded_file($file, $fullNamePath);
                 $function_number = $_GET['CKEditorFuncNum'];
-                $url = $protocol.$_SERVER["HTTP_HOST"].'/'.$fullNamePath;
+                $url = $protocol.$_SERVER["HTTP_HOST"].'/eccube_shop/'.$fullNamePath;
                 $message = '';
                 echo "<script type='text/javascript'>window.parent.CKEDITOR.tools.callFunction($function_number, '$url', '$message');</script>";
             }

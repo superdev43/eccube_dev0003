@@ -77,6 +77,7 @@ var CKBUILDER_CONFIG = {
 		'pastefromword' : 1,
 		'pastetext' : 1,
 		'pastetools' : 1,
+		'preview' : 1,
 		'removeformat' : 1,
 		'resize' : 1,
 		'scayt' : 1,
