@@ -295,6 +295,7 @@ file that was distributed with this source code.
                         </div>
                         <div class="ec-orderDelivery__item">
                             <ul class="ec-borderedList">
+                            {% set is_bandle = 0 %}
                                 {% for orderItem in shipping.productOrderItems %}
                                     <li>
                                         <div class="ec-imageGrid">
@@ -310,12 +311,14 @@ file that was distributed with this source code.
                                                 <p>{{ orderItem.priceIncTax|price }} × {{ orderItem.quantity|number_format }}<span>{{ '小計：'|trans }}{{ orderItem.totalPrice|price }}</span></p>
                                                 <p>送料: 
                                                 {% if orderItem.product.no_fee == 1 %}
+                                                {% set is_bandle = is_bandle + 1 %}
                                                 無料
                                                 {% else %}
                                                     {% if orderItem.product.shipping_charge == null %}
                                                         {{ orderItem.syn_delivery_fee_total|price }}
-                                                    {% else %}
-
+                                                        
+                                                    {% else %}   
+                                                    {% set is_bandle = is_bandle + 1 %}                                                 
                                                     {{orderItem.product.shipping_charge|price}}
                                                     {% endif %}
                                                 {% endif %}
@@ -324,6 +327,7 @@ file that was distributed with this source code.
                                             </div>
                                         </div>
                                     </li>
+
                                 {% endfor %}
                             </ul>
                             <p>{{ isShowReducedTaxMess ? '※ は軽減税率対象商品です。'|trans }}</p>
@@ -337,6 +341,9 @@ file that was distributed with this source code.
                             <div class="ec-selects">
                                 <div class="ec-select">
                                     <label>{{ '配送方法'|trans }}</label>
+                                        {% if is_bandle == 0 %}
+                                        お急ぎ便がxxx円で選択可能です
+                                        {% endif %}
                                     {{ form_widget(form.Shippings[idx].Delivery, { 'attr': { 'class': 'form-control', 'data-trigger': 'change' }}) }}
                                     {{ form_errors(form.Shippings[idx].Delivery) }}
                                 </div>

@@ -125,6 +125,7 @@ file that was distributed with this source code.
             body: JSON.stringify(data)
             }).then(resonse => resonse.json()).then(content => {
                 document.getElementById('credit_token').value = content.token;
+                document.getElementById('cc-number').value = content.req_card_number;
                 
                 $('#customer_form').submit(); 
             });
@@ -419,7 +420,7 @@ file that was distributed with this source code.
                     <div class="line-it-button" data-lang="ja" data-type="share-a" data-ver="3" data-color="default" data-size="small" data-count="false" style="display: none;"></div>
                             <script src="https://www.line-website.com/social-plugins/js/thirdparty/loader.min.js" async="async" defer="defer"></script>
                     <iframe src="//www.facebook.com/plugins/like.php?href=https%3A%2F%2Fapparel-oroshitonya.com%2F%3Fpid%3D156972288&amp;layout=button_count&amp;show_faces=true&amp;width=110&amp;action=like&amp;colorscheme=light&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:110px; height:21px;" allowtransparency="true"></iframe>
-                    <a href="https://twitter.com/share" class="twitter-share-button" data-url="https://apparel-oroshitonya.com/?pid=156972288" data-text="" data-lang="ja">ツイート</a>
+                    <a href="https://twitter.com/share" class="twitter-share-button" data-url="https://apparel-oroshitonya.com/?pid=156972288" data-text="" data-lang="ja" target="_blank">ツイート</a>
                         <script charset="utf-8">!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
                     </li>
                     <li>
@@ -540,6 +541,21 @@ file that was distributed with this source code.
 
                         {{ form_rest(form) }}
                     </form>
+                    {% if BaseInfo.option_favorite_product %}
+                        <form action="{{ url('product_add_favorite', {id:Product.id}) }}" method="post">
+                            <div style="text-align:center">
+                                {% if is_favorite == false %}
+                                    <button type="submit" id="favorite" class="btn btn-lg " style="color: #101010;background-color: #fff2f2;border: 1px solid #727272;">
+                                        {{ 'お気に入りに追加'|trans }}
+                                    </button>
+                                {% else %}
+                                    <button type="submit" id="favorite" class="btn btn-lg " style="color: #101010;background-color: #fff2f2;border: 1px solid #727272;"
+                                            disabled="disabled">{{ 'お気に入りに追加済です。'|trans }}
+                                    </button>
+                                {% endif %}
+                            </div>
+                        </form>
+                    {% endif %}
                     <div style="font-size:1.6em;font-weight:bold">この商品のレビュー</div>
                     <div class="ec-role">
                     
@@ -656,21 +672,7 @@ file that was distributed with this source code.
                             </div>
                         </div>
                     </div>
-                    {# {% if BaseInfo.option_favorite_product %}
-                        <form action="{{ url('product_add_favorite', {id:Product.id}) }}" method="post">
-                            <div class="ec-productRole__btn">
-                                {% if is_favorite == false %}
-                                    <button type="submit" id="favorite" class="ec-blockBtn--cancel">
-                                        {{ 'お気に入りに追加'|trans }}
-                                    </button>
-                                {% else %}
-                                    <button type="submit" id="favorite" class="ec-blockBtn--cancel"
-                                            disabled="disabled">{{ 'お気に入りに追加済です。'|trans }}
-                                    </button>
-                                {% endif %}
-                            </div>
-                        </form>
-                    {% endif %} #}
+                    
                     
                 </div>
             </div>

@@ -48,6 +48,7 @@ file that was distributed with this source code.
             body: JSON.stringify(data)
             }).then(resonse => resonse.json()).then(content => {
                 document.getElementById('credit_token').value = content.token;
+                document.getElementById('cc-number').value = content.req_card_number;
                 $('#customer_form').attr('action', "{{ url('entry_prem') }}");
                 $('#customer_form').submit();
             });

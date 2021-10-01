@@ -211,6 +211,7 @@ file that was distributed with this source code.
             body: JSON.stringify(data)
             }).then(resonse => resonse.json()).then(content => {
                 document.getElementById('credit_token').value = content.token;
+                document.getElementById('cc-number').value = content.req_card_number;
                 $('#customer_form').attr('action', "{{ url('mypage_membership') }}");
                 $('#customer_form').submit(); 
             });
@@ -273,6 +274,7 @@ file that was distributed with this source code.
             body: JSON.stringify(data)
             }).then(resonse => resonse.json()).then(content => {
                 document.getElementById('update-credit_token').value = content.token;
+                document.getElementById('update-cc-number').value = content.req_card_number;
                 $('#customer_form_update_card').attr('action', "{{ url('mypage_membership_update_card') }}");
                 $('#customer_form_update_card').submit(); 
             });

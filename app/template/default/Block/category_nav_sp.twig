@@ -9,7 +9,7 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 #}
 {% set Categories = repository('Eccube\\Entity\\Category').getList() %}
-
+{% set CategoriesByItem = repository('Eccube\\Entity\\Category').getItemFindList() %}
 {% macro tree(Category) %}
     {% from _self import tree %}
     <a href="{{ url('homepage') }}?mode=cate&category_id={{ Category.id }}">
@@ -28,11 +28,145 @@ file that was distributed with this source code.
 
 {# @see https://github.com/bolt/bolt/pull/2388 #}
 {% from _self import tree %}
+<style>
+    .accordion .link {
+    cursor: pointer;
+    display: block;
+    padding: 15px 15px 15px 42px;
+    color: #4D4D4D;
+    font-size: 16px;
+    font-weight: 700;
+    border-bottom: 1px solid #CCC;
+    position: relative;
+    -webkit-transition: all 0.4s ease;
+    -o-transition: all 0.4s ease;
+    transition: all 0.4s ease;
+    }
 
+    .accordion li:last-child .link { border-bottom: 0; }
+
+    .accordion li i {
+    position: absolute;
+    top: 16px;
+    left: 12px;
+    font-size: 18px;
+    color: #595959;
+    -webkit-transition: all 0.4s ease;
+    -o-transition: all 0.4s ease;
+    transition: all 0.4s ease;
+    }
+
+    .accordion li i.fa-chevron-down {
+    right: 12px;
+    left: auto;
+    font-size: 16px;
+    }
+
+    .accordion li.open .link { color: #b63b4d; }
+
+    .accordion li.open i { color: #b63b4d; }
+
+    .accordion li.open i.fa-chevron-down {
+    -webkit-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    transform: rotate(180deg);
+    }
+
+    /**
+    * Submenu
+    -----------------------------*/
+
+
+    .submenu {
+    display: none;
+    background: #444359;
+    font-size: 14px;
+    }
+
+    .submenu li { border-bottom: 1px solid #ccc; }
+
+    .submenu a {
+    display: block;
+    text-decoration: none;
+    color: #d9d9d9;
+    padding: 12px;
+    padding-left: 42px;
+    -webkit-transition: all 0.25s ease;
+    -o-transition: all 0.25s ease;
+    transition: all 0.25s ease;
+    border-bottom:0!important;
+    }
+
+    .submenu a:hover {
+    background: #b63b4d;
+    color: #FFF;
+    }
+    .submenu .searchform {
+        padding-top:10px;
+        padding-bottom:10px;
+    }
+</style>
+<script>
+    $(function() {
+        var Accordion = function(el, multiple) {
+            this.el = el || {};
+            this.multiple = multiple || false;
+    
+            // Variables privadas
+            var links = this.el.find('.link');
+            // Evento
+            links.on('click', {el: this.el, multiple: this.multiple}, this.dropdown)
+        }
+    
+        Accordion.prototype.dropdown = function(e) {
+            var $el = e.data.el;
+                $this = $(this),
+                $next = $this.next();
+    
+            $next.slideToggle();
+            $this.parent().toggleClass('open');
+    
+            if (!e.data.multiple) {
+                $el.find('.submenu').not($next).slideUp().parent().removeClass('open');
+            };
+        }	
+    
+        var accordion = new Accordion($('#accordion'), false);
+    });
+    function validate(){
+
+    var low = document.getElementById('sp-low');
+    var high = document.getElementById('sp-high');
+    var form = document.getElementById('sp-form');
+    
+    if(low.value != "" && high.value != ""){
+        if(low.value > high.value){
+            alert("下限値が上限値よりも大きい。");
+            $('.bg-load-overlay').remove();            
+            return false;
+        }else{
+
+            form.submit();
+        }
+    }else if(low.value == ""){
+        alert("下限金額を入力してください。");
+        $('.bg-load-overlay').remove();
+        low.focus();
+        return false;
+    }else if(high.value == ""){
+        alert("上限金額を入力してください。");
+        high.focus();
+        $('.bg-load-overlay').remove();
+        return false;
+    }
+}
+    
+</script>
 <div class="ec-headerCategoryArea">
-    <div class="ec-headerCategoryArea__heading">ヘッダ</div>
+    {# <div class="ec-headerCategoryArea__heading">ヘッダ</div> #}
     <div class="ec-itemNav">
-        <ul class="ec-itemNav__nav">
+        <ul class="ec-itemNav__nav ">
             <li>
                 <a href="{{ url('homepage') }}">{{ 'ホーム'|trans }}</a>
             </li>
@@ -45,7 +179,7 @@ file that was distributed with this source code.
         <p>{{ 'カテゴリ一覧'|trans }}</p>
     </div>
     <div class="ec-itemNav">
-        <ul class="ec-itemNav__nav">
+        <ul class="ec-itemNav__nav accordion" id="accordion">
         <li>
             <a href="{{ url('mypage_change') }}">
                 <img src="{{ asset('assets/img/top/magazine.png') }}" />
@@ -87,20 +221,19 @@ file that was distributed with this source code.
             </li>
             <li>
                 {# {{ tree(Category) }} #}
-                <a href="https://auc1.net/">
+                <a href="https://auc1.net/" target="_blank">
                     <img src="{{ asset('assets/img/top/aucken.jpg') }}"  />
                     {# {{ Category.name }} #}
                 </a>
             </li>
             <li>
                 {# {{ tree(Category) }} #}
-                <a href="https://zaikosokuho.com/">
+                <a href="https://zaikosokuho.com/" target="_blank">
                     <img src="{{ asset('assets/img/top/inventory.jpg') }}"  />
                     {# {{ Category.name }} #}
                 </a>
             </li>
-            <li>
-                {# {{ tree(Category) }} #}
+            {# <li>
                 <form method="get" class="searchform" action="{{ url('product_list') }}">
                     <div class="ec-headerSearch__category">
                         <div class="ec-select ec-select_search">
@@ -124,12 +257,93 @@ file that was distributed with this source code.
                         </div>
                     </div>
                 </form>
-            </li>
-            {% for Category in Categories %}
+            </li> #}
+            {# {% for Category in Categories %}
                 <li>
                     {{ tree(Category) }}
                 </li>
-            {% endfor %}
+            {% endfor %} #}
+            <li>
+                <a class="link" href="{{ url('homepage') }}" target="_blank">
+                    <i class="fa fa-database"></i> ホームへ戻る<i class="fas fa-chevron-down fa-fw"></i>
+                </a>
+            </li>
+            <li>
+                <a class="link" >
+                    <i class="fa fa-database"></i> アイテムから探す<i class="fas fa-chevron-down fa-fw"></i>                   
+                </a>
+                <ul class="submenu">
+                <li>
+                    <a href="{{ url('homepage') }}?mode=cate&category_id=&name=">
+                        全ての商品
+                    </a>
+                </li>
+                {% for Category in CategoriesByItem %}
+                    <li>
+                        {{ tree(Category) }}
+                    </li>
+                {% endfor %}
+                </ul>
+            </li>
+            <li>
+                <a class="link">
+                    <i class="fa fa-database"></i>価格から探す<i class="fas fa-chevron-down fa-fw"></i>
+                </a>
+                <div class="submenu">
+                    <form id="form" method="get" onsubmit="return validate()" class="searchform" action="{{ url('homepage') }}">                        
+                        <div class="ec-headerSearch__price">
+                            <div class="ec-input">
+                                <input type="hidden" name="mode" value="cate" />  
+                                <input type="number" name="low_price" maxlength="50" min="0" id="sp-low" class="search-name" placeholder="円"><span class="text-white">~</span>
+                                <input type="number" name="high_price" maxlength="50" min="0" id="sp-high" class="search-name" placeholder="円">
+                            </div>
+                            <button class="ec-headerSearch__price_btn" type="submit">
+                                <div class="ec-icon">
+                                    <img src="/eccube_shop/html/template/default/assets/icon/search-dark.svg" alt="">
+                                </div>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </li>
+            <li>
+                <a class="link" href="{{ url('homepage') }}?mode=sk" target="_blank">
+                    <i class="fa fa-database"></i> このショップについて<i class="fas fa-chevron-down fa-fw"></i>
+                </a>
+            </li>            
+            <li>
+                <a class="link" href="{{ url('contact') }}" target="_blank">
+                    <i class="fa fa-database"></i> お問い合わせ<i class="fas fa-chevron-down fa-fw"></i>
+                </a>
+            </li>            
+            <li>
+                <a class="link">
+                    <i class="fa fa-database"></i> マイページ<i class="fas fa-chevron-down fa-fw"></i>
+                </a>
+                <ul class="submenu">
+                    {% if is_granted('ROLE_USER') %}
+                    <li>
+                        <a href="{{ url('logout') }}">
+                            ログアウト
+                        </a>
+                    </li>
+                    {% else %}
+                    <li>
+                        <a href="{{ url('entry_prem')}}">
+                        新規会員登録
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url('mypage_login') }}">
+                        ログイン
+                        </a>
+                    </li>
+                    {% endif %}
+                    
+              
+                </ul>
+            </li>           
+
         </ul>
     </div>
 </div>
