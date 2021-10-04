@@ -61,6 +61,11 @@ file that was distributed with this source code.
     left: auto;
     font-size: 16px;
     }
+    .accordion li i.fa-chevron-right {
+        right: 12px;
+        left: auto;
+        font-size: 16px;        
+    }
 
     .accordion li.open .link { color: #b63b4d; }
 
@@ -264,13 +269,13 @@ file that was distributed with this source code.
                 </li>
             {% endfor %} #}
             <li>
-                <a class="link" href="{{ url('homepage') }}" target="_blank">
-                    <i class="fa fa-database"></i> ホームへ戻る<i class="fas fa-chevron-down fa-fw"></i>
+                <a class="link" href="{{ url('homepage') }}" >
+                    <i class="fas fa-home fa-fw"></i> ホームへ戻る<i class="fas fa-chevron-right fa-fw"></i>
                 </a>
             </li>
             <li>
                 <a class="link" >
-                    <i class="fa fa-database"></i> アイテムから探す<i class="fas fa-chevron-down fa-fw"></i>                   
+                    <i class="fas fa-list-ul fa-fw"></i> アイテムから探す<i class="fas fa-chevron-down fa-fw"></i>                   
                 </a>
                 <ul class="submenu">
                 <li>
@@ -287,7 +292,7 @@ file that was distributed with this source code.
             </li>
             <li>
                 <a class="link">
-                    <i class="fa fa-database"></i>価格から探す<i class="fas fa-chevron-down fa-fw"></i>
+                    <i class="fas fa-tags fa-fw"></i>価格から探す<i class="fas fa-chevron-down fa-fw"></i>
                 </a>
                 <div class="submenu">
                     <form id="form" method="get" onsubmit="return validate()" class="searchform" action="{{ url('homepage') }}">                        
@@ -307,18 +312,18 @@ file that was distributed with this source code.
                 </div>
             </li>
             <li>
-                <a class="link" href="{{ url('homepage') }}?mode=sk" target="_blank">
-                    <i class="fa fa-database"></i> このショップについて<i class="fas fa-chevron-down fa-fw"></i>
+                <a class="link" href="{{ url('homepage') }}?mode=sk" >
+                    <i class="fa fa-question-circle fa-lg ml-1"></i> このショップについて<i class="fas fa-chevron-right fa-fw"></i>
                 </a>
             </li>            
             <li>
-                <a class="link" href="{{ url('contact') }}" target="_blank">
-                    <i class="fa fa-database"></i> お問い合わせ<i class="fas fa-chevron-down fa-fw"></i>
+                <a class="link" href="{{ url('contact') }}" >
+                    <i class="fas fa-envelope fa-fw"></i> お問い合わせ<i class="fas fa-chevron-right fa-fw"></i>
                 </a>
             </li>            
             <li>
                 <a class="link">
-                    <i class="fa fa-database"></i> マイページ<i class="fas fa-chevron-down fa-fw"></i>
+                    <i class="fas fa-user fa-fw"></i> マイページ<i class="fas fa-chevron-down fa-fw"></i>
                 </a>
                 <ul class="submenu">
                     {% if is_granted('ROLE_USER') %}
