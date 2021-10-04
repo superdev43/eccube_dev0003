@@ -41,14 +41,12 @@ class MailMagazineTemplateEditType extends AbstractType
             ])
             ->add('body', TextareaType::class, [
                 'label' => 'mailmagazine.select.label_body',
-                'required' => true,
-                'constraints' => [
-                    new Assert\NotBlank(),
-                ],
+                'required' => false,
+                
             ])
             ->add('htmlBody', TextareaType::class, [
                 'label' => 'mailmagazine.select.label_body_html',
-                'required' => false,
+                'required' => true,
             ]);
     }
 

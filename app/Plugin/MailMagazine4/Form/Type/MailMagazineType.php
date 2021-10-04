@@ -51,12 +51,12 @@ class MailMagazineType extends SearchCustomerType
             ])
             ->add('body', TextareaType::class, [
                 'label' => 'mailmagazine.select.label_body',
-                'required' => true,
-                'constraints' => $constraints ? [new Assert\NotBlank()] : [],
+                'required' => false,
+                
             ])
             ->add('htmlBody', TextareaType::class, [
                 'label' => 'mailmagazine.select.label_body_html',
-                'required' => false,
+                'required' => true,
             ]);
     }
 
