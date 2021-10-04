@@ -37,11 +37,7 @@ CKEDITOR.replace('mail_preview', {
                     <td>{{ history.subject }}</td>
                 </tr>
                 <tr>
-                    <th>{{ 'mailmagazine.select.label_body'|trans }}</th>
-                    <td ><xmp>{{ history.body }}</xmp></td>
-                </tr>
-                <tr>
-                    <th>{{ 'mailmagazine.select.label_body_html'|trans }}</th>
+                    <th style="background-color:white">{{ 'mailmagazine.select.label_body_html'|trans }}</th>
                     <td id="mail_preview"><xmp>{{ history.htmlBody|raw }}</xmp></td>
                 </tr>
                 </tbody>

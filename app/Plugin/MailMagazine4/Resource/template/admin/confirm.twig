@@ -102,19 +102,15 @@ CKEDITOR.replace('mail_confirm', {
                     </div>
                     <div class="card-body mb-lg-5" >
                         <div class="row">
-                            <table class="table table-striped" id="mail_confirm">
+                            <table class="table table-striped" >
                                 <tbody>
                                     <tr>
                                         <th class="w-25">{{ 'mailmagazine.select.label_subject'|trans }}</th>
                                         <td>{{ subject_itm }}</td>
                                     </tr>
                                     <tr>
-                                        <th>{{ 'mailmagazine.select.label_body'|trans }}</th>
-                                        <td><xmp>{{ body_itm }}</xmp></td>
-                                    </tr>
-                                    <tr>
                                         <th>{{ 'mailmagazine.select.label_body_html'|trans }}</th>
-                                        <td><xmp>{{ htmlBody_itm|raw }}</xmp></td>
+                                        <td id="mail_confirm"><xmp>{{ htmlBody_itm|raw }}</xmp></td>
                                     </tr>
                                 </tbody>
                             </table>
