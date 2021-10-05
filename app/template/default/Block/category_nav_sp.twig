@@ -171,15 +171,118 @@ file that was distributed with this source code.
 <div class="ec-headerCategoryArea">
     {# <div class="ec-headerCategoryArea__heading">ヘッダ</div> #}
     <div class="ec-itemNav">
-        <ul class="ec-itemNav__nav ">
+        {# <ul class="ec-itemNav__nav ">
             <li>
                 <a href="{{ url('homepage') }}">{{ 'ホーム'|trans }}</a>
             </li>
             <li><a title="支払・配送について" href="{{ url('homepage') }}?mode=sk" ><span>支払・配送について</span></a></li>
             <li><a title="お問い合わせ" href="{{ url('contact') }}" ><span>お問い合わせ</span></a></li>
             <li><a title="カートを見る" href="{{ url('cart') }}" ><span>カートを見る</span></a></li>
+        </ul> #}
+        <ul class="ec-itemNav__nav accordion" id="accordion">
+            <li>
+                <a class="link" href="{{ url('homepage') }}" >
+                    <i class="fas fa-home fa-fw"></i> ホームへ戻る<i class="fas fa-chevron-right fa-fw"></i>
+                </a>
+            </li>
+            <li>
+                <a class="link" >
+                    <i class="fas fa-list-ul fa-fw"></i> アイテムから探す<i class="fas fa-chevron-down fa-fw"></i>                   
+                </a>
+                <ul class="submenu">
+                <li>
+                    <a href="{{ url('homepage') }}?mode=cate&category_id=&name=">
+                        全ての商品
+                    </a>
+                </li>
+                {% for Category in CategoriesByItem %}
+                    <li>
+                        {{ tree(Category) }}
+                    </li>
+                {% endfor %}
+                </ul>
+            </li>
+            <li>
+                <a class="link">
+                    <i class="fas fa-tags fa-fw"></i>価格から探す<i class="fas fa-chevron-down fa-fw"></i>
+                </a>
+                <div class="submenu">
+                    <form id="form" method="get" onsubmit="return validate()" class="searchform" action="{{ url('homepage') }}">                        
+                        <div class="ec-headerSearch__price">
+                            <div class="ec-input">
+                                <input type="hidden" name="mode" value="cate" />  
+                                <input type="number" name="low_price" maxlength="50" min="0" id="sp-low" class="search-name" placeholder="円"><span class="text-white">~</span>
+                                <input type="number" name="high_price" maxlength="50" min="0" id="sp-high" class="search-name" placeholder="円">
+                            </div>
+                            <button class="ec-headerSearch__price_btn" type="submit">
+                                <div class="ec-icon">
+                                    <img src="/eccube_shop/html/template/default/assets/icon/search-dark.svg" alt="">
+                                </div>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </li>
+            <li>
+                <a class="link" href="{{ url('homepage') }}?mode=sk" >
+                    <i class="fa fa-question-circle fa-lg ml-1"></i> このショップについて<i class="fas fa-chevron-right fa-fw"></i>
+                </a>
+            </li>            
+            <li>
+                <a class="link" href="{{ url('contact') }}" >
+                    <i class="fas fa-envelope fa-fw"></i> お問い合わせ<i class="fas fa-chevron-right fa-fw"></i>
+                </a>
+            </li>            
+            <li>
+                <a class="link" href="{{ url('cart') }}" >
+                    <i class="fas fa-shopping-cart fa-fw"></i> {{ 'カートを見る'|trans }}<i class="fas fa-chevron-right fa-fw"></i>
+                </a>
+            </li>   
+            {% if is_granted('ROLE_USER') %}
+            <li>
+                <a class="link" href="{{ url('mypage') }}" >
+                    <i class="fas fa-user fa-fw"></i> {{ 'マイページ'|trans }}<i class="fas fa-chevron-right fa-fw"></i>
+                </a>
+            </li>  
+                {% if BaseInfo.option_favorite_product %}
+                <li>
+                    <a class="link" href="{{ url('mypage_favorite') }}" >
+                        <i class="fas fa-heart fa-fw"></i> {{ 'お気に入り'|trans }}<i class="fas fa-chevron-right fa-fw"></i>
+                    </a>
+                </li>  
+                {% endif %}
+                <li>
+                    <a class="link" href="{{ url('logout') }}" >
+                        <i class="fas fa-lock fa-fw"></i> {{ 'ログアウト'|trans }}<i class="fas fa-chevron-right fa-fw"></i>
+                    </a>
+                </li>  
+
+            {% else %}
+            <li>
+                <a class="link" href="{{ url('entry_prem') }}" >
+                    <i class="fas fa-user fa-fw"></i> {{ '新規会員登録'|trans }}<i class="fas fa-chevron-right fa-fw"></i>
+                </a>
+            </li>  
+                {% if BaseInfo.option_favorite_product %}
+                <li>
+                    <a class="link" href="{{ url('mypage_favorite') }}" >
+                        <i class="fas fa-heart fa-fw"></i> {{ 'お気に入り'|trans }}<i class="fas fa-chevron-right fa-fw"></i>
+                    </a>
+                </li>  
+                {% endif %}
+                <li>
+                    <a class="link" href="{{ url('mypage_login') }}" >
+                        <i class="fas fa-lock fa-fw"></i> {{ 'ログイン'|trans }}<i class="fas fa-chevron-right fa-fw"></i>
+                    </a>
+                </li> 
+            {% endif %}
         </ul>
-    </div>       
+
+
+
+    </div>    
+    
+    
     <div class="ec-headerCategoryArea__heading">
         <p>{{ 'カテゴリ一覧'|trans }}</p>
     </div>
@@ -268,86 +371,6 @@ file that was distributed with this source code.
                     {{ tree(Category) }}
                 </li>
             {% endfor %} #}
-            <li>
-                <a class="link" href="{{ url('homepage') }}" >
-                    <i class="fas fa-home fa-fw"></i> ホームへ戻る<i class="fas fa-chevron-right fa-fw"></i>
-                </a>
-            </li>
-            <li>
-                <a class="link" >
-                    <i class="fas fa-list-ul fa-fw"></i> アイテムから探す<i class="fas fa-chevron-down fa-fw"></i>                   
-                </a>
-                <ul class="submenu">
-                <li>
-                    <a href="{{ url('homepage') }}?mode=cate&category_id=&name=">
-                        全ての商品
-                    </a>
-                </li>
-                {% for Category in CategoriesByItem %}
-                    <li>
-                        {{ tree(Category) }}
-                    </li>
-                {% endfor %}
-                </ul>
-            </li>
-            <li>
-                <a class="link">
-                    <i class="fas fa-tags fa-fw"></i>価格から探す<i class="fas fa-chevron-down fa-fw"></i>
-                </a>
-                <div class="submenu">
-                    <form id="form" method="get" onsubmit="return validate()" class="searchform" action="{{ url('homepage') }}">                        
-                        <div class="ec-headerSearch__price">
-                            <div class="ec-input">
-                                <input type="hidden" name="mode" value="cate" />  
-                                <input type="number" name="low_price" maxlength="50" min="0" id="sp-low" class="search-name" placeholder="円"><span class="text-white">~</span>
-                                <input type="number" name="high_price" maxlength="50" min="0" id="sp-high" class="search-name" placeholder="円">
-                            </div>
-                            <button class="ec-headerSearch__price_btn" type="submit">
-                                <div class="ec-icon">
-                                    <img src="/eccube_shop/html/template/default/assets/icon/search-dark.svg" alt="">
-                                </div>
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </li>
-            <li>
-                <a class="link" href="{{ url('homepage') }}?mode=sk" >
-                    <i class="fa fa-question-circle fa-lg ml-1"></i> このショップについて<i class="fas fa-chevron-right fa-fw"></i>
-                </a>
-            </li>            
-            <li>
-                <a class="link" href="{{ url('contact') }}" >
-                    <i class="fas fa-envelope fa-fw"></i> お問い合わせ<i class="fas fa-chevron-right fa-fw"></i>
-                </a>
-            </li>            
-            <li>
-                <a class="link">
-                    <i class="fas fa-user fa-fw"></i> マイページ<i class="fas fa-chevron-down fa-fw"></i>
-                </a>
-                <ul class="submenu">
-                    {% if is_granted('ROLE_USER') %}
-                    <li>
-                        <a href="{{ url('logout') }}">
-                            ログアウト
-                        </a>
-                    </li>
-                    {% else %}
-                    <li>
-                        <a href="{{ url('entry_prem')}}">
-                        新規会員登録
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ url('mypage_login') }}">
-                        ログイン
-                        </a>
-                    </li>
-                    {% endif %}
-                    
-              
-                </ul>
-            </li>           
 
         </ul>
     </div>

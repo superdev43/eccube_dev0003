@@ -377,4 +377,19 @@ class MailMagazineController extends AbstractController
 
         return $this->json(['status' => true]);
     }
+
+    /**
+     * テストメール送信
+     *
+     * @Route("/mail_magazine/history/{id}", name="show_mailmaga_history", methods={"GET"})
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function show_mail_history(Request $request, MailMagazineSendHistory $mailMagazineSendHistory)
+    {
+        return $this->render('MailMagazine4/Resource/template/default/sent_history.twig', [
+            'MailHistory' => $mailMagazineSendHistory
+        ]);
+    }
 }

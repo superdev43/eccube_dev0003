@@ -118,6 +118,7 @@ body {
     border-bottom: 1px solid lightgray;
     border-left: 5px solid #28b3a8;
     padding: 10px;
+    padding-left: 20px;
     color: #000;
     margin-top: 30px;
     margin-bottom: 30px;
@@ -183,13 +184,13 @@ body {
 }
 
 .ec-role .center-4-imgs p.text-title {
-    font-size: 18px;
+    font-size: 16px;
     line-height: 2;
     text-indent: 0.5em;
 }
 
 .ec-role .center-4-imgs p.text-con {
-    font-size: 12px;
+    font-size: 16px;
     line-height: 1.5;
     text-indent: 0.5em;
 }

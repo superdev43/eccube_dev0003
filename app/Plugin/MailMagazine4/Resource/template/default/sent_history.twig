@@ -1,0 +1,20 @@
+{% extends 'default_frame.twig' %}
+
+{% block main %}
+
+
+<div class="ec-role">
+    <div class="site-name" style="border-bottom:0"><h1 style="margin:0;font-weight:bold;color:red">{{ MailHistory.create_date|date('m/d')}}({{ MailHistory.create_date |date('l')|replace({'Sunday':'日','Monday':'月','Tuesday':'火','Wednesday':'水','Thursday':'木','Friday':'金','saturday':'土',})}})配信　メルマガ情報</h1>
+    <br><img src="{{ asset('assets/img/top/f17_top.jpg') }}" />
+</div>
+    <div class="center-4-imgs">
+        <p class="add-check-normal">        
+        ★{{ MailHistory.create_date|date('m')}}月 {{ MailHistory.create_date|date('d')}}日　お得なメールマガジン★<br><br>
+        {{ MailHistory.htmlBody |raw}}
+        </p><br>
+    </div>
+    <div class="center-4-imgs">
+    </div>
+    
+</div>
+{% endblock %}
