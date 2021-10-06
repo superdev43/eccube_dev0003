@@ -209,6 +209,7 @@ file that was distributed with this source code.
                                     {# {% if Product.description_list %}
                                         <p>{{ Product.description_list|raw|nl2br }}</p>
                                     {% endif %} #}
+                                    <span>{{ Product.name }}</span>
                                     <b class="price02-default">
                                         {% if Product.hasProductClass %}
                                             {% if Product.getPrice02Min == Product.getPrice02Max %}
@@ -220,7 +221,7 @@ file that was distributed with this source code.
                                             {{ Product.getPrice02IncTaxMin|price }}
                                         {% endif %}
                                     </b>
-                                    <span>{{ Product.name }}</span>
+                                   
                                 </a>
         
                                 {# {% if Product.stock_find %}
@@ -273,6 +274,7 @@ file that was distributed with this source code.
                                             {# {% if Product.description_list %}
                                                 <p>{{ Product.description_list|raw|nl2br }}</p>
                                             {% endif %} #}
+                                            <span>{{ Product.name }}</span><br>
                                             <b>
                                                 {% if Product.hasProductClass %}
                                                     {% if Product.getPrice02Min == Product.getPrice02Max %}
@@ -284,7 +286,7 @@ file that was distributed with this source code.
                                                     {{ Product.getPrice02IncTaxMin|price }}
                                                 {% endif %}
                                             </b><br>
-                                            <span>{{ Product.name }}</span><br>
+                                            
                                         </a>
                 
                                         {# {% if Product.stock_find %}
@@ -334,11 +336,12 @@ file that was distributed with this source code.
                                             {# {% if Product.description_list %}
                                                 <p>{{ Product.description_list|raw|nl2br }}</p>
                                             {% endif %} #}
+                                            <span>{{ Product.name }}</span><br>
                                             <b class="price02-default">
                                                 ***** 
                                             {# <h5>⾦額を⾒るには有料会員の登録が必要です</h5> #}
                                             </b><br>
-                                            <span>{{ Product.name }}</span><br>
+                                            
                                         </a>
                 
                                         {# {% if Product.stock_find %}

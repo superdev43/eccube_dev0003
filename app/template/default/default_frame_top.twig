@@ -174,10 +174,11 @@ file that was distributed with this source code.
                                     <a href="{{ url('homepage', {pid: Product.id }) }}">
                                         <img src="{{ asset(Product.main_list_image|no_image_product, 'save_image') }}" />
                                     </a>
-                                    <b>{{ Product.price02_max|number_format}}円(税込)</b>
+                                   
                                     <a href="{{ url('homepage', {pid: Product.id }) }}">
                                         <span>{{ Product.name }}</span>
-                                    </a>         
+                                    </a>
+                                    <b>{{ Product.price02_max|number_format}}円(税込)</b>         
                                 </li>
                             {% endfor %}
                             </ul>
@@ -192,10 +193,11 @@ file that was distributed with this source code.
                                 <li class="ec-shelfGrid__item">
                                     <a href="{{ url('homepage', {pid: Product.id }) }}">
                                         <img src="{{ asset(Product.main_list_image|no_image_product, 'save_image') }}" />
-                                    </a> <br>   
+                                    </a>  
                                     <a href="{{ url('homepage', {pid: Product.id }) }}">
                                         <span>{{ Product.name }}</span>
-                                    </a>           
+                                    </a>      
+                                    <b>{{ Product.price02_max|number_format}}円(税込)</b>         
                                 </li>
                             {% endfor %}
                             </ul>
