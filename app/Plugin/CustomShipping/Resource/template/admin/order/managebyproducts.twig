@@ -536,9 +536,9 @@ file that was distributed with this source code.
                                                    class="form-check-input"
                                                    value="{{ child.vars.value }}"{{ child.vars.checked ? ' checked="checked"' }}>
                                             <label class="form-check-label" for="{{ child.vars.id }}">{{ child.vars.label }}</label>
-                                            {# {%- if statusForm.vars.order_count[status_id].display -%}
-                                                (<a href="{{ url('admin_order_manage_by_products', { 'order_status_id': status_id }) }}">{{ statusForm.vars.order_count[status_id].count }}</a>)
-                                            {%- endif %} #}
+                                            {%- if statusForm.vars.order_count[status_id].display -%}
+                                                (<a href="{{ url('admin_order', { 'order_status_id': status_id }) }}">{{ statusForm.vars.orderitem_count[status_id].count }}</a>)
+                                            {%- endif %}
                                         </div>
                                     {% endfor %}
                                 </div>
@@ -556,17 +556,42 @@ file that was distributed with this source code.
                 </div>
             </div>
             <div class="c-subContents ec-collapse collapse{{ has_errors ? ' show' }}" id="searchDetail">
-                {# <div class="row">
+                <div class="row">
                     <div class="col">
                         <label class="col-form-label">{{ 'admin.order.orderer_name'|trans }}</label>
                         {{ form_widget(searchForm.name) }}
                         {{ form_errors(searchForm.name) }}
                     </div>
-                    
-                    
-                </div> #}
-                {# <div class="row">
-                   
+                    <div class="col">
+                        <div class="form-row">
+                            <div class="col-12">
+                                <p class="col-form-label">{{ 'admin.common.payment_method'|trans }}</p>
+                                {{ form_widget(searchForm.payment, { 'label_attr': { 'class': 'checkbox-inline'}}) }}
+                                {{ form_errors(searchForm.payment) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label class="col-form-label">{{ 'admin.order.orderer_kana'|trans }}</label>
+                        {{ form_widget(searchForm.kana) }}
+                        {{ form_errors(searchForm.kana) }}
+                    </div>
+                    <div class="col">
+                        <label class="col-form-label">{{ 'admin.order.order_date'|trans }}</label>
+                        <div class="form-row align-items-center">
+                            <div class="col">
+                                {{ form_widget(searchForm.order_datetime_start) }}
+                                {{ form_errors(searchForm.order_datetime_start) }}
+                            </div>
+                            <div class="col-auto text-center">{{ 'admin.common.separator__range'|trans }}</div>
+                            <div class="col">
+                                {{ form_widget(searchForm.order_datetime_end) }}
+                                {{ form_errors(searchForm.order_datetime_end) }}
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col">
@@ -574,15 +599,41 @@ file that was distributed with this source code.
                         {{ form_widget(searchForm.company_name) }}
                         {{ form_errors(searchForm.company_name) }}
                     </div>
-                    
-                </div> #}
+                    <div class="col">
+                        <label class="col-form-label">{{ 'admin.order.payment_date'|trans }}</label>
+                        <div class="form-row align-items-center">
+                            <div class="col">
+                                {{ form_widget(searchForm.payment_datetime_start) }}
+                                {{ form_errors(searchForm.payment_datetime_start) }}
+                            </div>
+                            <div class="col-auto text-center">{{ 'admin.common.separator__range'|trans }}</div>
+                            <div class="col">
+                                {{ form_widget(searchForm.payment_datetime_end) }}
+                                {{ form_errors(searchForm.payment_datetime_end) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col">
                         <label class="col-form-label">{{ 'admin.common.mail_address'|trans }}</label>
                         {{ form_widget(searchForm.email) }}
                         {{ form_errors(searchForm.email) }}
                     </div>
-                    
+                    <div class="col">
+                        <label class="col-form-label">{{ 'admin.common.update_date'|trans }}</label>
+                        <div class="form-row align-items-center">
+                            <div class="col">
+                                {{ form_widget(searchForm.update_datetime_start) }}
+                                {{ form_errors(searchForm.update_datetime_start) }}
+                            </div>
+                            <div class="col-auto text-center">{{ 'admin.common.separator__range'|trans }}</div>
+                            <div class="col">
+                                {{ form_widget(searchForm.update_datetime_end) }}
+                                {{ form_errors(searchForm.update_datetime_end) }}
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col">
@@ -590,7 +641,24 @@ file that was distributed with this source code.
                         {{ form_widget(searchForm.phone_number) }}
                         {{ form_errors(searchForm.phone_number) }}
                     </div>
-                    
+                    <div class="col">
+                        <label class="col-form-label">{{ 'admin.order.delivery_date'|trans }}</label>
+                        <div class="form-row align-items-center">
+                            <div class="col">
+                                <div class="input-group">
+                                    {{ form_widget(searchForm.shipping_delivery_datetime_start) }}
+                                    {{ form_errors(searchForm.shipping_delivery_datetime_start) }}
+                                </div>
+                            </div>
+                            <div class="col-auto text-center">{{ 'admin.common.separator__range'|trans }}</div>
+                            <div class="col">
+                                <div class="input-group">
+                                    {{ form_widget(searchForm.shipping_delivery_datetime_end) }}
+                                    {{ form_errors(searchForm.shipping_delivery_datetime_end) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col">
@@ -598,7 +666,24 @@ file that was distributed with this source code.
                         {{ form_widget(searchForm.order_no) }}
                         {{ form_errors(searchForm.order_no) }}
                     </div>
-                    
+                    <div class="col">
+                        <label class="col-form-label">{{ 'admin.order.purchase_price'|trans }}</label>
+                        <div class="form-row align-items-center">
+                            <div class="col">
+                                <div class="input-group">
+                                    {{ form_widget(searchForm.payment_total_start) }}
+                                    {{ form_errors(searchForm.payment_total_start) }}
+                                </div>
+                            </div>
+                            <div class="col-auto text-center">{{ 'admin.common.separator__range'|trans }}</div>
+                            <div class="col">
+                                <div class="input-group">
+                                    {{ form_widget(searchForm.payment_total_end) }}
+                                    {{ form_errors(searchForm.payment_total_end) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col">
@@ -617,7 +702,18 @@ file that was distributed with this source code.
                     </div>
                 </div>
 
-                
+                <div class="row mb-2">
+                    <div class="col">
+                        <div class="form-row">
+                            <div class="col-12">
+                                <p class="col-form-label">{{ 'admin.order.shipping_mail'|trans }}</p>
+                                {{ form_widget(searchForm.shipping_mail,  { 'label_attr': { 'class': 'checkbox-inline' }}) }}
+                                {{ form_errors(searchForm.shipping_mail) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col"></div>
+                </div>
 
                 {# エンティティ拡張の自動出力 #}
                 {% for f in searchForm if f.vars.eccube_form_options.auto_render %}
@@ -791,7 +887,7 @@ file that was distributed with this source code.
                                     <thead>
                                     <tr>
                                         <th class="border-top-0 pt-2 pb-2 text-center pl-3">
-                                            {# <input type="checkbox" id="toggle_check_all" name="filter" value="open"> #}
+                                            <input type="checkbox" id="toggle_check_all" name="filter" value="open">
                                         </th>
                                         <th class="border-top-0 pt-2 pb-2 text-center">{{ 'admin.order.shipping.number'|trans }}</th>
                                         <th class="border-top-0 pt-2 pb-2 text-center">{{ 'admin.order.order_no'|trans }}</th>
@@ -1227,6 +1323,13 @@ file that was distributed with this source code.
             $('input[id^="check_"]').on('change', function() {
                 toggleBtnBulk('input[id^="check_"]', '.btn-bulk-wrapper');
             });
+
+            let hide_statuses = [4,6,7,8]
+            for(var v = 0; v < hide_statuses.length; v++ ){
+                console.log(v);
+                $('#admin_search_order_item_status_'+hide_statuses[v]).parent().hide()
+            }
+
         })
 
     </script>

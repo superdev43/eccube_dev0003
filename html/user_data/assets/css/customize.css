@@ -361,6 +361,10 @@ body {
     
 }
 
+.ec-role .center-4-imgs li a span {
+    color: #000;
+    font-size: 1.4em;
+}
 .ec-role .center-6-imgs li a span {
     color: #000;
     font-size: 1em;

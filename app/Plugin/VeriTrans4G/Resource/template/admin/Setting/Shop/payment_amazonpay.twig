@@ -1,0 +1,39 @@
+{#
+Copyright (c) 2018 VeriTrans Inc., a Digital Garage company. All rights reserved.
+http://www.veritrans.co.jp/
+#}
+<script>
+$(function() {
+$('div.card.rounded.border-0.mb-4').append(
+'<div class="card rounded border-0 mb-4">'+
+'    <div class="card-header"><span>ベリトランス4G設定</span></div>'+
+'    <div class="card-body">'+
+'        <div class="row">'+
+'            <div class="col-3"><span>売上フラグ</span><span'+
+'                        class="badge badge-primary ml-1">必須</span></div>'+
+'            <div class="col mb-2">'+
+'                {{ form_widget(form.withCapture) }}<span class="text-danger errormsg">（上限100文字）</span>'+
+'                {% spaceless %}{{ form_errors(form.withCapture) }}{% endspaceless %}'+
+'                <p class="small text-danger">この情報はAlipay の決済ページに表示されます。</p>'+
+'            </div>'+
+'        </div>'+
+'        <div class="row">'+
+'            <div class="col-3"><span>配送先表示抑止フラグ</span><span'+
+'                        class="badge badge-primary ml-1">必須</span></div>'+
+'            <div class="col mb-2">'+
+'                {{ form_widget(form.suppressShippingAddressView) }}<span class="text-danger errormsg">（上限80文字）</span>'+
+'                {% spaceless %}{{ form_errors(form.suppressShippingAddressView) }}{% endspaceless %}'+
+'            </div>'+
+'        </div>'+
+'        <div class="row">'+
+'            <div class="col-3"><span>注文説明</span></div>'+
+'            <div class="col mb-2">'+
+'                {{ form_widget(form.noteToBuyer) }}<span class="text-danger errormsg">（上限50文字）</span>'+
+'                {% spaceless %}{{ form_errors(form.noteToBuyer) }}{% endspaceless %}'+
+'                <p class="small text-danger">ご注文完了画面とご注文完了メールに、支払いに関する案内文を入れる場合にはタイトルと本文を入れて下さい。(両方入っていない場合は有効になりません。)</p>'+
+'            </div>'+
+'        </div>'+'       
+'</div>'
+);
+});
+</script>

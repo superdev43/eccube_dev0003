@@ -72,8 +72,7 @@ class PaymentController extends AbstractController
         OrderRepository $orderRepository,
         OrderStatusRepository $orderStatusRepository,
         CartService $cartService
-    )
-    {
+    ) {
         $this->container = $container;
         $mdkService = $this->container->get('vt4g_plugin.service.vt4g_mdk');
         $mdkService->checkMdk();
@@ -135,6 +134,95 @@ class PaymentController extends AbstractController
         $method = "exec{$payCode}Process";
 
         return $this->$method($request, $payload);
+    }
+
+    /**
+     * 購入フロー決済画面
+     *
+     * @Route("/shopping/vt4g_payment_amazon", name="vt4g_shopping_payment_amazon")
+     * @param  Request $request リクエストデータ
+     * @return object           ビューレスポンス|レダイレクトレスポンス
+     */
+    public function amazon_pay(Request $request)
+    {
+        $payment_amazon = $request->get('payment_amazon_pay');
+        $order_id = $payment_amazon['orderNo'];
+        $Order = $this->orderRepository->find($order_id);
+        $amount = $Order->getPaymentTotal();
+        $is_with_capture = $payment_amazon['withCapture'];
+        $is_suppress_shipping_address_view = $payment_amazon['suppressShippingAddressView'];
+        $note_to_buyer = $payment_amazon['noteToBuyer'];
+        
+        $success_url = "http://127.0.0.1";
+        $cancel_url = "http://localhost";
+        $error_url = "http://localhost/error";
+        /**
+         * 要求電文パラメータ値の指定
+         */
+        $order_id = "dummy" . time();
+        $request_data = new \AmazonpayAuthorizeRequestDto();
+        $request_data->setOrderId($order_id);
+        $request_data->setAmount($amount);
+        $request_data->setWithCapture($is_with_capture);
+        $request_data->setSuppressShippingAddressView($is_suppress_shipping_address_view);
+        $request_data->setNoteToBuyer($note_to_buyer);
+        $request_data->setSuccessUrl($success_url);
+        $request_data->setCancelUrl($cancel_url);
+        $request_data->setErrorUrl($error_url);
+        $request_data->setAuthorizePushUrl("https://webhook.site/c3658fbc-8ba9-411a-a4b1-1ec12379b2e3");
+
+        /**
+         * 実施
+         */
+        $transaction = new \TGMDK_Transaction();
+        $response_data = $transaction->execute($request_data);
+
+
+
+
+
+
+
+        // $mode = $request->get('mode');
+        // $preOrderId = $cartService->getPreOrderId();
+        // if (!empty($preOrderId)) {
+        //     $order = $orderRepository->findOneBy(['pre_order_id' => $preOrderId]);
+        // } else {
+        //     // 結果通知でカートをクリアした後に戻ってくる場合があるのでポストパラメータから注文を取得
+        //     $memo01 = null;
+        //     if (!empty($request->get('OrderId'))) {
+        //         $memo01 = $request->get('OrderId');
+        //     } elseif (!empty($request->get('orderId'))) {
+        //         $memo01 = $request->get('orderId');
+        //     }
+
+        //     if (is_null($memo01)) {
+        //         $order = null;
+        //     } else {
+        //         $orderPayment = $this->em->getRepository(Vt4gOrderPayment::class)->findOneBy(['memo01' => $memo01]);
+        //         $order = $orderRepository->findOneBy(['id' => $orderPayment->getOrderId()]);
+        //     }
+        // }
+
+        // // 決済の入力チェック
+        // $result = $this->container->get('vt4g_plugin.service.payment_base')->checkPaymentData($cartService, $order);
+        // if ($result !== true) {
+        //     return $result;
+        // }
+
+        // $payment = $order->getPayment();
+        // $payId   = $this->util->getPayId($payment->getId());
+        // $payCode = $this->util->getPayCode($payId);
+        // $payload = [
+        //     'paymentType' => $payCode,
+        //     'mode'        => $mode,
+        //     'order'       => $order,
+        //     'paymentInfo' => $this->util->getPaymentMethodInfo($payment->getId()),
+        //     'user'        => $this->getUser()
+        // ];
+        // $method = "exec{$payCode}Process";
+
+        // return $this->$method($request, $payload);
     }
 
     /**
@@ -295,6 +383,128 @@ class PaymentController extends AbstractController
     }
 
     /**
+     * Amazon Pay決済処理
+     *
+     * @param  Request $request リクエストデータ
+     * @param  array   $payload 決済処理に使用するデータ
+     * @return object           リダイレクトレスポンス|ビューレスポンス
+     */
+    private function execAMAZONPayProcess($request, $payload)
+    {
+        $amazonpay = $this->container->get('vt4g_plugin.service.payment_amazonpay');
+        $error = [
+            'payment' => '',
+            'amazonpay'  => ''
+        ];
+        // // クレジットカード情報入力フォーム
+        $form = $amazonpay->createAmazonPayForm($payload['paymentInfo']);
+        // 入力フォーム送信時
+        if ('POST' === $request->getMethod()) {
+            switch ($payload['mode']) {
+                case 'amazonpay': // ベリトランス会員ID決済
+                    $result = $amazonpay->commitNormalPayment($request->request, $payload, $error);
+                    break;
+                default:
+                    return $amazonpay->makeErrorResponse();
+            }
+
+            if ($result) {
+                return $this->redirectToRoute('vt4g_shopping_payment_complete', ['no' => $payload['order']->getId()]);
+            }
+
+        }
+        // // ベリトランス会員ID決済入力フォーム
+        // $accountForm = $credit->createAccountForm($payload['paymentInfo']);
+        // // 再取引入力フォーム
+        // $oneClickForm = $credit->createOneClickForm($payload['paymentInfo']);
+
+        // $form->handleRequest($request);
+        // $accountForm->handleRequest($request);
+        // $oneClickForm->handleRequest($request);
+
+        // // フォームのバリデーション結果
+        // $isValid = true;
+        // if ($accountForm->isSubmitted()) {
+        //     $isValid = $accountForm->isValid();
+        // } else if ($oneClickForm->isSubmitted()) {
+        //     $isValid = $oneClickForm->isValid();
+        // }
+
+        // // 入力フォーム送信時
+        // if ($isValid && $request->getMethod() === 'POST') {
+        //     switch ($payload['mode']) {
+        //         case 'token':   // MDKトークン利用
+        //         case 'retrade': // 再取引
+        //         case 'account': // ベリトランス会員ID決済
+        //             $result = $credit->commitNormalPayment($request->request, $payload, $error);
+        //             break;
+        //         case 'comp': // 本人認証リダイレクト
+        //             $result = $credit->commitMpiPayment($request, $payload, $error);
+        //             break;
+        //         default:
+        //             return $credit->makeErrorResponse();
+        //     }
+
+        //     if ($result) {
+        //         return $this->redirectToRoute('vt4g_shopping_payment_complete', ['no' => $payload['order']->getId()]);
+        //     }
+
+        //     // 入力フォーム上にエラー表示の場合はロールバックを行わない
+        //     if (empty($error['credit'])) {
+        //         // ロールバック
+        //         $credit->rollback($payload['order']);
+        //     }
+        // }
+
+        $pluginSetting = $this->util->getPluginSetting();
+
+        // // ベリトランス会員ID決済の利用可否
+        // $useAccountPayment = $payload['paymentInfo']['one_click_flg'] === $this->vt4gConst['VT4G_CREDIT_ONE_CLICK']['VERITRANS_ID'];
+
+        // // 登録済みカード情報を取得
+        // $accountCards = $useAccountPayment && $this->isGranted('IS_AUTHENTICATED_FULLY') && !empty($payload['user']->vt4g_account_id)
+        //     ? $this->container->get('vt4g_plugin.service.vt4g_account_id')->getAccountCards($payload['user']->vt4g_account_id)
+        //     : [];
+        // // 登録済みカード情報が存在しない場合
+        // if (empty($accountCards)) {
+        //     $useAccountPayment = false;
+        // }
+
+        // $cardsMax = $payload['paymentInfo']['cardinfo_regist_max'] ?? $this->vt4gConst['VT4G_FORM']['DEFAULT']['CARDINFO_REGIST_MAX'];
+
+        // // 再取引の利用可否
+        // $canReTrade = $payload['paymentInfo']['one_click_flg'] === $this->vt4gConst['VT4G_CREDIT_ONE_CLICK']['RETRADE'];
+
+        // // 再取引用の注文情報を取得
+        // $reTradeCards = $canReTrade
+        //     ? $credit->getReTradeCards($payload['user'])
+        //     : [];
+        // // 再取引に使用可能なカード情報が存在しない場合
+        // if (empty($reTradeCards)) {
+        //     $canReTrade = false;
+        // }
+        return $this->render('VeriTrans4G/Resource/template/default/Shopping/vt4g_payment.twig', [
+            'paymentType'       => $payload['paymentType'],
+            'form'              => $form->createView(),
+            // 'accountForm'       => $accountForm->createView(),
+            // 'oneClickForm'      => $oneClickForm->createView(),
+            'error'             => $error,
+            'orderNo'           => $payload['order']->getId(),
+            'paymentInfo'       => $payload['paymentInfo'],
+            'title'             => $payload['order']->getPaymentMethod(),
+            // 'useAccountPayment' => $useAccountPayment,
+            // 'accountCards'      => $accountCards,
+            // 'canReTrade'        => $canReTrade,
+            // 'reTradeCards'      => $reTradeCards,
+            'tokenApiUrl'       => $this->vt4gConst['VT4G_PLUGIN_TOKEN_API_ENDPOINT'],
+            'tokenApiKey'       => $pluginSetting['token_api_key'],
+            'tokenJsPath'       => $this->util->getTokenJsPath(),
+            // 'cardRegistFlg'     => $payload['user'] != null && $payload['paymentInfo']['one_click_flg'] === $this->vt4gConst['VT4G_CREDIT_ONE_CLICK']['VERITRANS_ID'],
+            // 'isCardMaxOver'     => count($accountCards) >= $cardsMax,
+        ]);
+    }
+
+    /**
      * ATM決済処理
      *
      * @param  request $request リクエストデータ
@@ -314,7 +524,7 @@ class PaymentController extends AbstractController
             if ($mode == "next") {
                 $formData = $form->getData();
                 $result = $atm->atmCommit($payload['order'], $formData, $payload['paymentInfo'], $error);
-                if ($result){
+                if ($result) {
                     return $this->redirectToRoute('vt4g_shopping_payment_complete', ['no' => $payload['order']->getId()]);
                 }
                 // ロールバック
@@ -353,7 +563,7 @@ class PaymentController extends AbstractController
 
         // POST用リクエストパラメータ
         $result = $bank->bankCommit($payload['order'], $formData, $payload['paymentInfo'], $error);
-        if ($result == false){
+        if ($result == false) {
             // ロールバック
             $bank->rollback($payload['order']);
         }
@@ -394,7 +604,7 @@ class PaymentController extends AbstractController
             if ($mode == "next" && $form->isValid()) {
                 // POST用リクエストパラメータ
                 $result = $cvs->cvsCommit($payload['order'], $request->request, $payload['paymentInfo'], $error);
-                if ($result !== false){
+                if ($result !== false) {
                     return $this->redirectToRoute('vt4g_shopping_payment_complete', ['no' => $payload['order']->getId()]);
                 } else {
                     // ロールバック
@@ -427,7 +637,7 @@ class PaymentController extends AbstractController
         $error = [
             'payment' => '',
         ];
-        $requestHtml ='';
+        $requestHtml = '';
         $form = $alipay->createAlipayForm($payload['paymentInfo']);
         $form->handleRequest($request);
         $formData = $form->getData();
@@ -438,7 +648,7 @@ class PaymentController extends AbstractController
                 $result = $alipay->alipayCommit($payload['order'], $formData, $payload['paymentInfo'], $error);
                 if ($result !== false) {
                     $requestHtml = $result;
-                }else{
+                } else {
                     // ロールバック
                     $alipay->rollback($payload['order']);
                 }
@@ -500,9 +710,9 @@ class PaymentController extends AbstractController
             // 銀聯ネットから戻った場合
             if ($payload['mode'] == "complete") {
                 $result = $upop->upopComplete($request, $payload['order'], $error);
-                if ($result){
+                if ($result) {
                     return $this->redirectToRoute('vt4g_shopping_payment_complete', ['no' => $payload['order']->getId()]);
-                }else{
+                } else {
                     $upop->rollback($payload['order']);
                 }
             }
@@ -551,20 +761,19 @@ class PaymentController extends AbstractController
                     $rakuten->rollback($payload['order']);
                 }
             }
-
         }
 
         if ($request->getMethod() === 'GET') {
             // 楽天から成功で戻った場合
             if ($payload['mode'] == "success") {
                 $result = $rakuten->rakutenComplete($request, $payload['order'], $error);
-                if ($result){
+                if ($result) {
                     return $this->redirectToRoute('vt4g_shopping_payment_complete', ['no' => $payload['order']->getId()]);
-                }else{
+                } else {
                     $rakuten->rollback($payload['order']);
                 }
-            // 楽天からエラーで戻った場合
-            }elseif ($payload['mode'] == "error") {
+                // 楽天からエラーで戻った場合
+            } elseif ($payload['mode'] == "error") {
                 // エラー画面用のメッセージを設定してロールバック
                 $rakuten->getResponse($request, $payload['order'], $error);
                 $rakuten->rollback($payload['order']);
@@ -612,20 +821,19 @@ class PaymentController extends AbstractController
                     $recruit->rollback($payload['order']);
                 }
             }
-
         }
 
         if ($request->getMethod() === 'GET') {
             // リクルートから成功で戻った場合
             if ($payload['mode'] == "success") {
                 $result = $recruit->recruitComplete($request, $payload['order'], $error);
-                if ($result){
+                if ($result) {
                     return $this->redirectToRoute('vt4g_shopping_payment_complete', ['no' => $payload['order']->getId()]);
-                }else{
+                } else {
                     $recruit->rollback($payload['order']);
                 }
-            // リクルートからエラーで戻った場合
-            }elseif ($payload['mode'] == "error") {
+                // リクルートからエラーで戻った場合
+            } elseif ($payload['mode'] == "error") {
                 // エラー画面用のメッセージを設定してロールバック
                 $recruit->getResponse($request, $payload['order'], $error);
                 $recruit->rollback($payload['order']);
@@ -672,24 +880,23 @@ class PaymentController extends AbstractController
                     $line->rollback($payload['order']);
                 }
             }
-
         }
 
         if ($request->getMethod() === 'GET') {
             // LINEから成功で戻った場合
             if ($payload['mode'] == "success") {
                 $result = $line->linepayComplete($request, $payload['order'], $error);
-                if ($result){
+                if ($result) {
                     return $this->redirectToRoute('vt4g_shopping_payment_complete', ['no' => $payload['order']->getId()]);
-                }else{
+                } else {
                     $line->rollback($payload['order']);
                 }
-            // LINEからエラーで戻った場合
+                // LINEからエラーで戻った場合
             } elseif ($payload['mode'] == "error") {
                 // エラー画面用のメッセージを設定してロールバック
                 $line->getResponse($request, $payload['order'], $error);
                 $line->rollback($payload['order']);
-            // LINEからキャンセルで戻った場合
+                // LINEからキャンセルで戻った場合
             } elseif ($payload['mode'] == "cancel") {
                 // レスポンスをログに出力してご注文手続き画面へ
                 $line->getResponse($request, $payload['order'], $error);
@@ -735,16 +942,16 @@ class PaymentController extends AbstractController
         }
         if ($request->getMethod() === 'GET') {
             // paypalから成功で戻った場合
-            if($payload['mode'] == 'exec') {
+            if ($payload['mode'] == 'exec') {
                 $result = $paypal->PayPalComplete($request, $payload['order'], $error);
                 if ($result !== false) {
                     return $this->redirectToRoute('vt4g_shopping_payment_complete', ['no' => $payload['order']->getId()]);
-                }else{
+                } else {
                     // ロールバック
                     $paypal->rollback($payload['order']);
                 }
-            // paypalからキャンセルで戻った場合
-            } elseif($payload['mode'] == 'back') {
+                // paypalからキャンセルで戻った場合
+            } elseif ($payload['mode'] == 'back') {
                 return $this->redirectToRoute('vt4g_shopping_payment_back', ['no' => $payload['order']->getId()]);
             }
         }

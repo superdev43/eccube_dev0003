@@ -29,6 +29,7 @@ parameters:
         VT4G_PAYTYPEID_RECRUIT: 61
         VT4G_PAYTYPEID_LINEPAY: 62
         VT4G_PAYTYPEID_PAYPAL: 70
+        VT4G_PAYTYPEID_AMAZONPAY: 80
 
         VT4G_PAYNAME_PAYTYPEID_10: クレジットカード決済
         VT4G_PAYNAME_PAYTYPEID_12: 本人認証(クレジットカード決済)
@@ -41,6 +42,7 @@ parameters:
         VT4G_PAYNAME_PAYTYPEID_61: リクルートかんたん支払い
         VT4G_PAYNAME_PAYTYPEID_62: LINE Pay
         VT4G_PAYNAME_PAYTYPEID_70: PayPal決済
+        VT4G_PAYNAME_PAYTYPEID_80: Amazon Pay
         VT4G_REMOVED_PAYNAME_LABEL: (VT4Gプラグイン削除済み)
 
         VT4G_CODE_PAYTYPEID_10: Credit
@@ -53,6 +55,7 @@ parameters:
         VT4G_CODE_PAYTYPEID_61: Recruit
         VT4G_CODE_PAYTYPEID_62: LINEPay
         VT4G_CODE_PAYTYPEID_70: PayPal
+        VT4G_CODE_PAYTYPEID_80: AMAZONPay
 
         VT4G_METHOD_COMMON: CommonMethod
 
@@ -191,6 +194,13 @@ parameters:
                 - settleRate
                 - dummy
             VT4G_PAYTYPEID_ALIPAY:
+                - orderId
+                - txnType
+                - mstatus
+                - vResultCode
+                - centerTradeId
+                - dummy
+            VT4G_PAYTYPEID_AMAZONPAY:
                 - orderId
                 - txnType
                 - mstatus
@@ -449,6 +459,7 @@ parameters:
         RULE_MIN_PAYTYPEID_61: 1
         RULE_MIN_PAYTYPEID_62: 1
         RULE_MIN_PAYTYPEID_70: 1
+        RULE_MIN_PAYTYPEID_80: 1
         RULE_MAX_PAYTYPEID_10: 99999999
         RULE_MAX_PAYTYPEID_20: 299999
         RULE_MAX_PAYTYPEID_30: 2000000000
@@ -459,6 +470,7 @@ parameters:
         RULE_MAX_PAYTYPEID_61: 9999999
         RULE_MAX_PAYTYPEID_62: 9999999
         RULE_MAX_PAYTYPEID_70: 1000000
+        RULE_MAX_PAYTYPEID_80: 8888888
 
         ORDER_CSV_COLUMN_CONFIG:
             NAME: 注文番号

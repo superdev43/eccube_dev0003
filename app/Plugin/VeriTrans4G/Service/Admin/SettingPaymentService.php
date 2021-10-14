@@ -170,6 +170,22 @@ class SettingPaymentService
     }
 
     /**
+     * コンビニ支払の設定項目をセットします。
+     * @param object $form
+     * @param string $memo05 シリアライズされた設定値
+     * @return void
+     */
+    public function setAMAZONPayData($form, $memo05)
+    {
+        if (isset($memo05)) {
+            $data = unserialize($memo05);
+            $form['withCapture']->vars['value']           = $data['withCapture'];
+            $form['suppressShippingAddressView']->vars['value']  = $data['suppressShippingAddressView'];
+            $form['noteToBuyer']->vars['value']             = $data['noteToBuyer'];
+        }
+    }
+
+    /**
      * ネットバンク支払の設定項目をセットします。
      * @param object(FormView) $form
      * @param string(serialize) $memo05
@@ -322,6 +338,28 @@ class SettingPaymentService
                 'cardinfo_regist_default' => $formData['cardinfo_regist_default']->getData(),
                 'cardinfo_regist_max' => $formData['cardinfo_regist_max']->getData(),
             ]);
+            $Vt4gPayment->setMemo05($memo05);
+            $Vt4gPayment->setUpdateDate(new \DateTime());
+            $this->em->persist($Vt4gPayment);
+            $this->em->flush();
+        }
+    }
+
+    /**
+     * コンビニ支払の設定項目をplg_vt4g_payment_methodに登録します。
+     * @param Vt4gPaymentMethod $Vt4gPayment
+     * @param array $formData
+     * @return void
+     */
+    public function saveAMAZONPayData($Vt4gPayment, $formData)
+    {
+        if(isset($formData)){
+            $memo05 = serialize([
+                'withCapture'           => $formData['withCapture']->getData() ,
+                'suppressShippingAddressView'  => $formData['suppressShippingAddressView']->getData() ,
+                'noteToBuyer'             => $formData['noteToBuyer']->getData() ,
+            ]);
+
             $Vt4gPayment->setMemo05($memo05);
             $Vt4gPayment->setUpdateDate(new \DateTime());
             $this->em->persist($Vt4gPayment);

@@ -401,6 +401,7 @@ class BaseService
         $this->em->beginTransaction();
 
         $orderPayment = $this->util->getOrderPayment($order->getId());
+        // var_export($orderPayment);die;
 
         // 注文情報の確定(決済ステータスが値なしの場合のみ実行)
         if (empty($orderPayment) || empty($orderPayment->getMemo04())) {

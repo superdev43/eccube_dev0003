@@ -183,6 +183,7 @@ class PluginConfigType extends AbstractType
                 ],
                 'choices' => array(
                     $this->vt4gConst['VT4G_PAYNAME_PAYTYPEID_10'] => $this->vt4gConst['VT4G_PAYTYPEID_CREDIT'],
+                    $this->vt4gConst['VT4G_PAYNAME_PAYTYPEID_80'] => $this->vt4gConst['VT4G_PAYTYPEID_AMAZONPAY'],
                     $this->vt4gConst['VT4G_PAYNAME_PAYTYPEID_20'] => $this->vt4gConst['VT4G_PAYTYPEID_CVS'],
                     $this->vt4gConst['VT4G_PAYNAME_PAYTYPEID_30'] => $this->vt4gConst['VT4G_PAYTYPEID_BANK'],
                     $this->vt4gConst['VT4G_PAYNAME_PAYTYPEID_31'] => $this->vt4gConst['VT4G_PAYTYPEID_ATM'],

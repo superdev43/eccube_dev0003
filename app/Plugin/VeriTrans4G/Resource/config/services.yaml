@@ -49,6 +49,13 @@ services:
             - '@service_container'
             - '@eccube.purchase.flow.shopping'
 
+    vt4g_plugin.service.payment_amazonpay:
+        public: true
+        class: Plugin\VeriTrans4G\Service\Payment\AmazonPayService
+        arguments:
+            - '@service_container'
+            - '@eccube.purchase.flow.shopping'
+
     vt4g_plugin.service.payment_atm:
         public: true
         class: Plugin\VeriTrans4G\Service\Payment\ATMService

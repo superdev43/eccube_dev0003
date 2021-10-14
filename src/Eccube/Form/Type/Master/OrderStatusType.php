@@ -20,6 +20,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Eccube\Repository\OrderItemRepository;
 
 class OrderStatusType extends AbstractType
 {
@@ -29,13 +30,20 @@ class OrderStatusType extends AbstractType
     protected $orderRepository;
 
     /**
+     * @var OrderItemRepository
+     */
+    protected $orderItemRepository;
+
+    /**
      * OrderStatusType constructor.
      *
      * @param OrderRepository $orderRepository
+     * @param OrderItemRepository $orderItemRepository
      */
-    public function __construct(OrderRepository $orderRepository)
+    public function __construct(OrderRepository $orderRepository, OrderItemRepository $orderItemRepository)
     {
         $this->orderRepository = $orderRepository;
+        $this->orderItemRepository = $orderItemRepository;
     }
 
     /**
@@ -49,11 +57,15 @@ class OrderStatusType extends AbstractType
             $id = $OrderStatus->getId();
             if ($OrderStatus->isDisplayOrderCount()) {
                 $count = $this->orderRepository->countByOrderStatus($id);
+                $count_item = $this->orderItemRepository->countByOrderItemStatus($id);
+
                 $view->vars['order_count'][$id]['display'] = true;
                 $view->vars['order_count'][$id]['count'] = $count;
+                $view->vars['orderitem_count'][$id]['count'] = $count_item;
             } else {
                 $view->vars['order_count'][$id]['display'] = false;
                 $view->vars['order_count'][$id]['count'] = null;
+                $view->vars['orderitem_count'][$id]['count'] = null;
             }
         }
     }

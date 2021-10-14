@@ -61,6 +61,7 @@ class CreditService extends BaseService
      */
     public function commitNormalPayment($inputs, $payload, &$error)
     {
+        
         // 本人認証フラグ
         $isMpi = $payload['paymentInfo']['mpi_flg'];
         // ベリトランス会員ID決済の有効設定フラグ
@@ -93,6 +94,8 @@ class CreditService extends BaseService
             compact('doRegistCardinfo'),
             $payload
         );
+
+        
 
         // MDKリクエストを生成
         $mdkRequest = $this->makeMdkRequest($sources);
@@ -131,6 +134,7 @@ class CreditService extends BaseService
         $mdkTransaction = new \TGMDK_Transaction();
         $mdkResponse = $mdkTransaction->execute($mdkRequest);
 
+        
         return $this->handleMdkResponse($mdkResponse, $sources, $error);
     }
 
@@ -718,7 +722,8 @@ class CreditService extends BaseService
     {
         // レスポンス初期化
         $this->initPaymentResult();
-
+        
+        
         // レスポンス検証
         if (!isset($response)) {
             // システムエラー
@@ -1078,6 +1083,7 @@ class CreditService extends BaseService
 
         return true;
     }
+
 
     /**
      * 再取引決済 元取引IDのバリデーション

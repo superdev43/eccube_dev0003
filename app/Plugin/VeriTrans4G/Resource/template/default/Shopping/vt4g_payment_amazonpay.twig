@@ -1,0 +1,93 @@
+{#
+Copyright (c) 2018 VeriTrans Inc., a Digital Garage company. All rights reserved.
+http://www.veritrans.co.jp/
+#}
+{% extends 'default_frame.twig' %}
+
+{% form_theme form 'Form/form_div_layout.twig' %}
+
+{% block javascript %}
+    {{ include('VeriTrans4G/Resource/template/default/css/vt4g_css.twig') }}
+
+    <script src="{{ asset(tokenJsPath, 'plugin') }}"></script>
+    <script>
+        window.VeriTrans4G = window.VeriTrans4G || {};
+
+        VeriTrans4G.tokenApiUrl = "{{ tokenApiUrl }}";
+        VeriTrans4G.tokenApiKey = "{{ tokenApiKey }}";
+
+        $(function(){
+            $('#vt4g_btn_amazon').on('click', function(){
+                $('#vt4g_form_amazon').submit()
+            })
+        })
+
+    </script>
+{% endblock javascript %}
+
+{% block main %}
+   
+    <form method="post" action="{{ url('vt4g_shopping_payment') }}" id="vt4g_form_amazon" style="margin-bottom:3em;">
+        {{ form_widget(form._token) }}
+        <input type="hidden" name="mode" value="amazonpay">
+        <input type="hidden" name="token_id" value="">
+        <input type="hidden" name="token_expire_date" value="">
+
+        <div class="ec-off1Grid">
+            <div class="ec-off1Grid__cell">
+                <h2>{{ title }}</h2>
+
+                    <div class="ec-borderedDefs">
+                        
+                        <dl>
+                            <dt><label for="payment_credit_withCapture" class="ec-label">売上フラグ</label><span class="ec-required">必須</span></dt>
+                            <dd>
+                                <div class="ec-select {% if form.withCapture.vars.errors is not empty %}error{% endif %}">
+                                    {{ form_widget(form.withCapture, {'id':'payment_credit_withCapture'}) }}
+                                    {{ form_errors(form.withCapture) }}
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt><label for="payment_credit_suppressShippingAddressView" class="ec-label">配送先表示抑止フラグ</label><span class="ec-required">必須</span></dt>
+                            <dd>
+                                <div class="ec-select {% if form.suppressShippingAddressView.vars.errors is not empty %}error{% endif %}">
+                                    {{ form_widget(form.suppressShippingAddressView, {'id' : 'payment_credit_suppressShippingAddressView'}) }}
+                                    {{ form_errors(form.suppressShippingAddressView) }}
+                                </div>
+                            </dd>
+                        </dl>
+                        {# <dl>
+                            <dt><label for="noteToBuyer" class="ec-label">注文説明</label>
+                            <dd>
+                                <div class="ec-halfInput {% if form.noteToBuyer.vars.errors is not empty %}error{% endif %}">
+                                    {{ form_widget(form.noteToBuyer, {'id': 'noteToBuyer'}) }}
+                                    {{ form_errors(form.noteToBuyer) }}
+                                </div>
+                            </dd>
+                        </dl> #}
+                        <dl>
+                            <dt><label for="noteToBuyer" class="ec-label">注文説明</label>
+                            </dt><dd>
+                                <div class="ec-halfInput ">
+                                    <input type="text" id="noteToBuyer" name="payment_amazon_pay[noteToBuyer]">
+                                    
+                                </div>
+                            </dd>
+                        </dl>
+                    </div>
+            </div>
+        </div>
+        <input type="hidden" name="payment_amazon_pay[orderNo]" value={{ orderNo }} />
+        {% if error.payment is empty %}
+            <div class="ec-orderRole__actions">
+                <div class="ec-off4Grid">
+                    <div class="ec-off4Grid__cell">
+                        <p class="ec-para-normal"><button class="ec-blockBtn--action" id="vt4g_btn_amazon">お支払い</button></p>
+                        <a class="ec-blockBtn--cancel" id="vt4g_btn_token_back" href="{{ url('vt4g_shopping_payment_back', { 'no': orderNo }) }}">ご注文手続きに戻る</a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </form>
+{% endblock %}

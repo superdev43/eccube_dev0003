@@ -222,7 +222,6 @@ class PluginConfigService
         }
 
         $name = $this->vt4gConst['VT4G_PAYNAME_PAYTYPEID_'.$paymentTypeId] ?? '設定なし';
-
         $Vt4gPayment->setPayment($Payment);
 
         $Vt4gPayment->setPaymentId($id);
