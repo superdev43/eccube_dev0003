@@ -168,7 +168,11 @@ class ShoppingController extends AbstractShoppingController
                 if($OrderProductItem->getProduct()->shipping_charge == Null){
                     $sale_type_id = $OrderProductItem->getProductClass()->getSaleType()->getId();
                     $pref_id = $OrderProductItem->getOrder()->getPref()->getId();
-                    $delivery_id= $this->deliveryRepository->findOneBy(['SaleType'=>$sale_type_id]);
+                    // $delivery_id= $this->deliveryRepository->findOneBy(['SaleType'=>$sale_type_id]);
+                    $delivery_id = 1;
+                    if($OrderProductItem->getOrder()->getDeliveryMethodFlag() != null){
+                        $delivery_id = $OrderProductItem->getOrder()->getDeliveryMethodFlag();
+                    }
                     $delivery_fee = $this->deliveryFeeRepository->findOneBy([
                         'Delivery'=>$delivery_id,
                         'Pref'=>$pref_id
@@ -222,6 +226,7 @@ class ShoppingController extends AbstractShoppingController
      */
     public function redirectTo(Request $request, RouterInterface $router)
     {
+        $dlivery_method_flag = $request->get('_shopping_order')['Shippings'][0]['Delivery'];
         // ログイン状態のチェック.
         if ($this->orderHelper->isLoginRequired()) {
             log_info('[リダイレクト] 未ログインもしくはRememberMeログインのため, ログイン画面に遷移します.');
@@ -232,6 +237,12 @@ class ShoppingController extends AbstractShoppingController
         // 受注の存在チェック.
         $preOrderId = $this->cartService->getPreOrderId();
         $Order = $this->orderHelper->getPurchaseProcessingOrder($preOrderId);
+
+        $Order->setDeliveryMethodFlag($dlivery_method_flag);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($Order);
+        $em->flush();
+
         if (!$Order) {
             log_info('[リダイレクト] 購入処理中の受注が存在しません.');
 

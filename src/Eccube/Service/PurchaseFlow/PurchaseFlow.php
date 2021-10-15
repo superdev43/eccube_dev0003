@@ -317,7 +317,14 @@ class PurchaseFlow
                     if( $chargeItem->getProductClass()->getProduct()->shipping_charge == Null){
                         $sale_type_id =  $chargeItem->getProductClass()->getSaleType()->getId();
                         $pref_id =  $chargeItem->getOrder()->getPref()->getId();
-                        $delivery_id= $this->deliveryRepository->findOneBy(['SaleType'=>$sale_type_id]);
+
+                        $delivery_id = 1;
+                        if($chargeItem->getOrder()->getDeliveryMethodFlag() != null){
+                            $delivery_id = $chargeItem->getOrder()->getDeliveryMethodFlag();
+                        }
+                        // var_export($delivery_id);die;
+
+                        // $delivery_id= $this->deliveryRepository->findOneBy(['SaleType'=>$sale_type_id]);
                         $delivery_fee = $this->deliveryFeeRepository->findOneBy([
                             'Delivery'=>$delivery_id,
                             'Pref'=>$pref_id
@@ -387,7 +394,11 @@ class PurchaseFlow
                     if( $chargeItem->getProductClass()->getProduct()->shipping_charge == Null){
                         $sale_type_id =  $chargeItem->getProductClass()->getSaleType()->getId();
                         $pref_id =  $chargeItem->getOrder()->getPref()->getId();
-                        $delivery_id= $this->deliveryRepository->findOneBy(['SaleType'=>$sale_type_id]);
+                        // $delivery_id= $this->deliveryRepository->findOneBy(['SaleType'=>$sale_type_id]);
+                        $delivery_id = 1;
+                        if($chargeItem->getOrder()->getDeliveryMethodFlag() != null){
+                            $delivery_id = $chargeItem->getOrder()->getDeliveryMethodFlag();
+                        }
                         $delivery_fee = $this->deliveryFeeRepository->findOneBy([
                             'Delivery'=>$delivery_id,
                             'Pref'=>$pref_id

@@ -95,7 +95,11 @@ class ShippingType extends AbstractType
 
                 // 販売種別に紐づく配送業者を取得.
                 $Deliveries = $this->deliveryRepository->getDeliveries($SaleTypes);
-
+                
+                usort($Deliveries, function($a, $b){
+                    return $a->getId() - $b->getId();
+                });
+                // var_export($Deliveries[0]->getId());die;
                 // 2021.09.24 配送方法->通常送料のみ
                 $temps = [];
                 foreach ($OrderItems as $OrderItem) {

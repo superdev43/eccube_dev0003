@@ -24,6 +24,7 @@ use Eccube\Entity\DeliveryFee;
 use Eccube\Repository\DeliveryRepository;
 use Eccube\Repository\DeliveryFeeRepository;
 use Doctrine\ORM\EntityManager;
+use Customize\Entity\OrderTrait;
 
 
 /**
@@ -46,7 +47,7 @@ use Doctrine\ORM\EntityManager;
  */
 class Order extends \Eccube\Entity\AbstractEntity implements PurchaseInterface, ItemHolderInterface
 {
-    use NameTrait, PointTrait;
+    use NameTrait, PointTrait, OrderTrait;
 
     /**
      * @var EntityManager
@@ -483,7 +484,11 @@ class Order extends \Eccube\Entity\AbstractEntity implements PurchaseInterface, 
                 if($item_for_charge->getProduct()->shipping_charge == Null){
                     $sale_type_id = $item_for_charge->getProductClass()->getSaleType()->getId();
                     $pref_id = $item_for_charge->getOrder()->getPref()->getId();
-                    $delivery_id= $this->deliveryRepository->findOneBy(['SaleType'=>$sale_type_id]);
+                    // $delivery_id= $this->deliveryRepository->findOneBy(['SaleType'=>$sale_type_id]);
+                    $delivery_id = 1;
+                    if($item_for_charge->getOrder()->getDeliveryMethodFlag() != null){
+                        $delivery_id = $item_for_charge->getOrder()->getDeliveryMethodFlag();
+                    }
                     $delivery_fee = $this->deliveryFeeRepository->findOneBy([
                         'Delivery'=>$delivery_id,
                         'Pref'=>$pref_id
@@ -530,7 +535,11 @@ class Order extends \Eccube\Entity\AbstractEntity implements PurchaseInterface, 
                 if($Item->getProduct()->shipping_charge == Null){
                     $sale_type_id = $Item->getProductClass()->getSaleType()->getId();
                     $pref_id = $Item->getOrder()->getPref()->getId();
-                    $delivery_id= $this->deliveryRepository->findOneBy(['SaleType'=>$sale_type_id]);
+                    // $delivery_id= $this->deliveryRepository->findOneBy(['SaleType'=>$sale_type_id]);
+                    $delivery_id = 1;
+                    if($Item->getOrder()->getDeliveryMethodFlag() != null){
+                        $delivery_id = $Item->getOrder()->getDeliveryMethodFlag();
+                    }
                     $delivery_fee = $this->deliveryFeeRepository->findOneBy([
                         'Delivery'=>$delivery_id,
                         'Pref'=>$pref_id

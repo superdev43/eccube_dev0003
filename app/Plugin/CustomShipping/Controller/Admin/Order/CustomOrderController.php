@@ -600,7 +600,13 @@ class CustomOrderController extends AbstractController
                 if($OrderItems[$i]->getProduct()->shipping_charge == Null){
                     $sale_type_id = $OrderItems[$i]->getProductClass()->getSaleType()->getId();
                     $pref_id = $OrderItems[$i]->getOrder()->getPref()->getId();
-                    $delivery_id= $this->deliveryRepository->findOneBy(['SaleType'=>$sale_type_id]);
+                    // $delivery_id= $this->deliveryRepository->findOneBy(['SaleType'=>$sale_type_id]);
+                    
+                    $delivery_id = 1;
+                    if($OrderItems[$i]->getOrder()->getDeliveryMethodFlag() != null){
+                        $delivery_id = $OrderItems[$i]->getOrder()->getDeliveryMethodFlag();
+                    }
+
                     $delivery_fee = $this->deliveryFeeRepository->findOneBy([
                         'Delivery'=>$delivery_id,
                         'Pref'=>$pref_id
@@ -695,7 +701,11 @@ class CustomOrderController extends AbstractController
                     if($OrderItem->getProduct()->shipping_charge == Null){
                         $sale_type_id = $OrderItem->getProductClass()->getSaleType()->getId();
                         $pref_id = $OrderItem->getOrder()->getPref()->getId();
-                        $delivery_id= $this->deliveryRepository->findOneBy(['SaleType'=>$sale_type_id]);
+                        // $delivery_id= $this->deliveryRepository->findOneBy(['SaleType'=>$sale_type_id]);
+                        $delivery_id = 1;
+                        if($OrderItem->getOrder()->getDeliveryMethodFlag() != null){
+                            $delivery_id = $OrderItem->getOrder()->getDeliveryMethodFlag();
+                        }
                         $delivery_fee = $this->deliveryFeeRepository->findOneBy([
                             'Delivery'=>$delivery_id,
                             'Pref'=>$pref_id
@@ -794,7 +804,11 @@ class CustomOrderController extends AbstractController
             if($OrderItem->getProduct()->shipping_charge == Null){
                 $sale_type_id = $OrderItem->getProductClass()->getSaleType()->getId();
                 $pref_id = $OrderItem->getOrder()->getPref()->getId();
-                $delivery_id= $this->deliveryRepository->findOneBy(['SaleType'=>$sale_type_id]);
+                // $delivery_id= $this->deliveryRepository->findOneBy(['SaleType'=>$sale_type_id]);
+                $delivery_id = 1;
+                if($OrderItem->getOrder()->getDeliveryMethodFlag() != null){
+                    $delivery_id = $OrderItem->getOrder()->getDeliveryMethodFlag();
+                }
                 $delivery_fee = $this->deliveryFeeRepository->findOneBy([
                     'Delivery'=>$delivery_id,
                     'Pref'=>$pref_id

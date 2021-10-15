@@ -311,16 +311,16 @@ file that was distributed with this source code.
                                                 <p>{{ orderItem.priceIncTax|price }} × {{ orderItem.quantity|number_format }}<span>{{ '小計：'|trans }}{{ orderItem.totalPrice|price }}</span></p>
                                                 <p>送料: 
                                                 {% if orderItem.product.no_fee == 1 %}
-                                                {% set is_bandle = is_bandle + 1 %}
-                                                無料
-                                                {% else %}
-                                                    {% if orderItem.product.shipping_charge == null %}
-                                                        {{ orderItem.syn_delivery_fee_total|price }}
-                                                        
-                                                    {% else %}   
-                                                    {% set is_bandle = is_bandle + 1 %}                                                 
-                                                    {{orderItem.product.shipping_charge|price}}
-                                                    {% endif %}
+                                                    {% set is_bandle = is_bandle + 1 %}
+                                                    無料
+                                                    {% else %}
+                                                        {% if orderItem.product.shipping_charge == null %}
+                                                            {{ orderItem.syn_delivery_fee_total|price }}
+                                                            
+                                                        {% else %}   
+                                                        {% set is_bandle = is_bandle + 1 %}                                                 
+                                                        {{orderItem.product.shipping_charge|price}}
+                                                        {% endif %}
                                                 {% endif %}
                                             
                                             </p>
@@ -458,4 +458,15 @@ file that was distributed with this source code.
             </div>
         </div>
     </form>
+    <script>
+        $(function(){
+            let delivery_method_flag;
+            {% if Order.delivery_method_flag %}
+                delivery_method_flag = {{ Order.delivery_method_flag }}
+            {% else %}
+                delivery_method_flag = 1;
+            {% endif %}
+            $('#shopping_order_Shippings_0_Delivery').val(delivery_method_flag);
+        })
+    </script>
 {% endblock %}
