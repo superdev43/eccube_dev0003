@@ -44,8 +44,8 @@ class AmazonPayService extends BaseService
         $note_to_buyer = $inputs->get('payment_amazon_pay')['noteToBuyer'];
         
         $success_url = "http://localhost/eccube_shop/shopping/amazonpay/complete/".$payload['order']->getId();
-        $cancel_url = "http://localhost/eccube_shop/shopping/vt4g_payment";
-        $error_url = "http://localhost/eccube_shop/shopping/vt4g_payment";
+        $cancel_url = "http://localhost/eccube_shop/card";
+        $error_url = "http://localhost/eccube_shop/shopping/error";
         // カード情報登録フラグ
         $order_id = "amazonpay" . time();
 
@@ -112,6 +112,7 @@ class AmazonPayService extends BaseService
                     'withCapture' => $payload['paymentInfo']['withCapture']
                 ];
                 $this->setOrderPayment($payload['order'], $payment, [], [], 'Nan');
+                
                 $this->handleNormalResponse($response_data,$payload['order'], $error);
                 $this->em->commit();
                 $isMpi = $payload['paymentInfo']['mpi_flg'];
@@ -235,7 +236,7 @@ class AmazonPayService extends BaseService
         //         $this->saveAccountId($sources['user']->getId(), $accountId);
         //     }
 
-        $this->completeAmazonOrder($Order);
+        // $this->completeAmazonOrder($Order);
 
         //     // 受注完了処理
         //     if (!$isCompleted) {
@@ -254,8 +255,10 @@ class AmazonPayService extends BaseService
      * @param  array $order 注文データ
      * @return void
      */
-    public function completeAmazonOrder($order)
+    public function completeAmazonOrder($response_suc, $order)
     {
+        $this->paymentResult['isOK'] = true;
+        $this->paymentResult['orderId'] = $response_suc->get('orderId');
         if (!$this->paymentResult['isOK']) {
             return false;
         }
@@ -268,7 +271,6 @@ class AmazonPayService extends BaseService
         $this->setMailTitle($this->vt4gConst['VT4G_PAYNAME_PAYTYPEID_80']);
         $this->setMailInfo('決済取引ID', $this->paymentResult['orderId']);
         $paymentMethod = $this->util->getPaymentMethod($order->getPayment()->getId());
-
         $this->setMailAdminSetting($paymentMethod);
 
         // 決済変更ログ情報 (plg_vt4g_order_logテーブル)
@@ -283,40 +285,6 @@ class AmazonPayService extends BaseService
         $this->completeOrder($order, $payment, $this->logData, $this->mailData);
 
         return true;
-    }
-
-    /**
-     * 受注完了処理
-     *
-     * @param  Order  $order    注文データ
-     * @param  array  $payment  決済データ
-     * @param  array  $logData  ログ情報
-     * @param  array  $mailData メール情報
-     * @param  string $token    MDKトークン
-     * @return void
-     */
-    protected function completeOrder($order, $payment, $logData = [], $mailData = [], $token = '')
-    {
-        $this->em->beginTransaction();
-
-        // メッセージ追加(結果通知のときは画面を出さないので追加しない)
-        if (!$this->isPaymentRecv) {
-            $this->addOrderCompleteMessage($order);
-        }
-
-        // 受注更新
-        $this->updateOrder($order, $payment, $logData, $mailData, $token);
-
-        // カートを削除
-        $cartService = $this->container->get('Eccube\Service\CartService');
-        $cartService->clear();
-
-        $this->em->commit();
-
-        // メール送信
-        if ($this->shouldSendMail($order)) {
-            $this->sendOrderMail($order);
-        }
     }
 
 
@@ -336,12 +304,11 @@ class AmazonPayService extends BaseService
 
         $payId = $this->util->getPayId($order->getPayment()->getId());
         $payName = $this->util->getPayName($payId);
-        $payStatusName = $this->util->getPaymentStatusName($paymentResult['payStatus']);
+        // $payStatusName = $this->util->getPaymentStatusName($paymentResult['payStatus']);
 
         $this->setLogInfo('決済取引ID', $paymentResult['orderId']);
         $this->setLogInfo($payName, sprintf(
-            $this->isPaymentRecv ? trans('決済結果通知受信') : trans('成功'),
-            $payStatusName
+            $this->isPaymentRecv ? trans('決済結果通知受信') : trans('成功')
         ));
     }
 

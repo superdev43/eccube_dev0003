@@ -40,6 +40,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Eccube\Repository\DeliveryRepository;
 use Eccube\Repository\DeliveryFeeRepository;
+use Plugin\VeriTrans4G\Service\Payment\AmazonPayService;
 
 class ShoppingController extends AbstractShoppingController
 {
@@ -52,6 +53,11 @@ class ShoppingController extends AbstractShoppingController
      * @var DeliveryFeeRepository
      */
     protected $deliveryFeeRepository;
+
+    /**
+     * @var AmazonPayService
+     */
+    protected $amazonPayService;
 
     /**
      * @var CartService
@@ -79,7 +85,8 @@ class ShoppingController extends AbstractShoppingController
         OrderRepository $orderRepository,
         OrderHelper $orderHelper,
         DeliveryFeeRepository $deliveryFeeRepository,
-        DeliveryRepository $deliveryRepository
+        DeliveryRepository $deliveryRepository,
+        AmazonPayService $amazonPayService
     ) {
         $this->cartService = $cartService;
         $this->mailService = $mailService;
@@ -87,6 +94,7 @@ class ShoppingController extends AbstractShoppingController
         $this->orderHelper = $orderHelper;
         $this->deliveryFeeRepository = $deliveryFeeRepository;
         $this->deliveryRepository = $deliveryRepository;
+        $this->amazonPayService = $amazonPayService;
     }
 
     /**
@@ -524,6 +532,7 @@ class ShoppingController extends AbstractShoppingController
             'hasNextCart' => $hasNextCart,
         ];
     }
+
     /**
      * 購入完了画面を表示する.
      *
@@ -540,6 +549,8 @@ class ShoppingController extends AbstractShoppingController
 
             return $this->redirectToRoute('homepage');
         }
+
+        $this->amazonPayService->completeAmazonOrder($request,$Order);
 
 
         $event = new EventArgs(
