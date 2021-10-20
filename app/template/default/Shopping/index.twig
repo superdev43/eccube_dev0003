@@ -313,14 +313,14 @@ file that was distributed with this source code.
                                                 {% if orderItem.product.no_fee == 1 %}
                                                     {% set is_bandle = is_bandle + 1 %}
                                                     無料
-                                                    {% else %}
-                                                        {% if orderItem.product.shipping_charge == null %}
-                                                            {{ orderItem.syn_delivery_fee_total|price }}
-                                                            
-                                                        {% else %}   
-                                                        {% set is_bandle = is_bandle + 1 %}                                                 
-                                                        {{orderItem.product.shipping_charge|price}}
-                                                        {% endif %}
+                                                {% else %}
+                                                    {% if orderItem.product.shipping_charge == null %}
+                                                        {{ orderItem.syn_delivery_fee_total|price }}
+                                                        
+                                                    {% else %}   
+                                                    {% set is_bandle = is_bandle + 1 %}                                                 
+                                                    {{orderItem.product.shipping_charge|price}}
+                                                    {% endif %}
                                                 {% endif %}
                                             
                                             </p>

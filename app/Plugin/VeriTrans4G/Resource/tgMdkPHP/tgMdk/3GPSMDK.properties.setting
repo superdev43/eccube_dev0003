@@ -28,9 +28,9 @@ CA_CERT_FILE                   =
 ;PROXY_PASSWORD                 =
 
 ; マーチャントCCID。VeriTrans指定のものを設定して下さい。
-MERCHANT_CC_ID                 = A100000000000001069951cc
+MERCHANT_CC_ID                 = A100000000000001048465cc
 ; マーチャントパスワード。VeriTrans指定のものを設定して下さい。
-MERCHANT_SECRET_KEY            = ca7174bea6c9a07102fa990cfba330d0dad579a7c13a974fa7c3ec0ff66c1d6f
+MERCHANT_SECRET_KEY            = a330f339695acd8c30f7f7c8b89a59d1b4d8a941009fa5420ea7c3635ec091e3
 
 ; ##############################################################################
 ; 環境に関連する設定

@@ -329,6 +329,8 @@ class PaymentController extends AbstractController
             if (empty($error['credit'])) {
                 // ロールバック
                 $credit->rollback($payload['order']);
+            }else{
+                return $this->redirectToRoute('shopping_error');
             }
         }
 
