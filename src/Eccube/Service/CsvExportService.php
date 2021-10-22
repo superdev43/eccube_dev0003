@@ -615,6 +615,60 @@ class CsvExportService
     }
 
     /**
+     * CSV出力項目と比較し, 合致するデータを返す.
+     *
+     * @param \Eccube\Entity\Csv $Csv
+     * @param $entity
+     *
+     * @return string|null
+     */
+    public function getDataWithout(Csv $Csv, $entity)
+    {
+        // エンティティ名が一致するかどうかチェック.
+        $csvEntityName = str_replace('\\\\', '\\', $Csv->getEntityName());
+        $entityName = ClassUtils::getClass($entity);
+        if ($csvEntityName !== $entityName) {
+            return null;
+        }
+
+        // カラム名がエンティティに存在するかどうかをチェック.
+        if (!$entity->offsetExists($Csv->getFieldName())) {
+            return null;
+        }
+
+        // データを取得.
+        $data = $entity->offsetGet($Csv->getFieldName());
+        if($Csv->getFieldName() == 'payment_total' ){
+           $data = null;
+        }
+
+        // one to one の場合は, dtb_csv.reference_field_name, 合致する結果を取得する.
+        if ($data instanceof \Eccube\Entity\AbstractEntity) {
+            if (EntityUtil::isNotEmpty($data)) {
+                return $data->offsetGet($Csv->getReferenceFieldName());
+            }
+        } elseif ($data instanceof \Doctrine\Common\Collections\Collection) {
+            // one to manyの場合は, カンマ区切りに変換する.
+            $array = [];
+            foreach ($data as $elem) {
+                if (EntityUtil::isNotEmpty($elem)) {
+                    $array[] = $elem->offsetGet($Csv->getReferenceFieldName());
+                }
+            }
+
+            return implode($this->eccubeConfig['eccube_csv_export_multidata_separator'], $array);
+        } elseif ($data instanceof \DateTime) {
+            // datetimeの場合は文字列に変換する.
+            return $data->format($this->eccubeConfig['eccube_csv_export_date_format']);
+        } else {
+            // スカラ値の場合はそのまま.
+            return $data;
+        }
+
+        return null;
+    }
+
+    /**
      * 文字エンコーディングの変換を行うコールバック関数を返す.
      *
      * @return \Closure

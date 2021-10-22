@@ -72,6 +72,26 @@ class AddCartType extends AbstractType
         $Product = $options['product'];
         $this->Product = $Product;
         $ProductClasses = $Product->getProductClasses();
+        $class_category1_name = "common.select";
+        foreach($ProductClasses as $ProductClass){
+            if ($ProductClass->isVisible() == false) {
+                continue;
+            }
+            if($ProductClass->getClassCategory1()){
+
+                $class_category1_name = $ProductClass->getClassCategory1()->getClassName()->getName();
+            }
+        }
+        $class_category2_name = "common.select";
+        foreach($ProductClasses as $ProductClass){
+            if ($ProductClass->isVisible() == false) {
+                continue;
+            }
+            if($ProductClass->getClassCategory2()){
+
+                $class_category2_name = $ProductClass->getClassCategory2()->getClassName()->getName();
+            }
+        }
         $numberArray = [];
         for ($i = 2; $i < 101; $i++) {
             $numberArray[$i] = $i;
@@ -122,17 +142,18 @@ class AddCartType extends AbstractType
                     'choices_as_values' => true,
                 ]);
             if ($Product && $Product->getProductClasses()) {
+                
                 if (!is_null($Product->getClassName1())) {
                     $builder->add('classcategory_id1', ChoiceType::class, [
                         'label' => $Product->getClassName1(),
-                        'choices' => ['カラー' => '__unselected'] + $Product->getClassCategories1AsFlip(),
+                        'choices' => [$class_category1_name => '__unselected'] + $Product->getClassCategories1AsFlip(),
                         'mapped' => false,
                     ]);
                 }
                 if (!is_null($Product->getClassName2())) {
                     $builder->add('classcategory_id2', ChoiceType::class, [
                         'label' => $Product->getClassName2(),
-                        'choices' => ['サイズ' => '__unselected'],
+                        'choices' => ['common.select' => '__unselected'],
                         'mapped' => false,
                     ]);
                 }
@@ -145,7 +166,7 @@ class AddCartType extends AbstractType
                     if ($data['classcategory_id1']) {
                         $form->add('classcategory_id2', ChoiceType::class, [
                             'label' => $Product->getClassName2(),
-                            'choices' => ['サイズ' => '__unselected'] + $Product->getClassCategories2AsFlip($data['classcategory_id1']),
+                            'choices' => ['common.select' => '__unselected'] + $Product->getClassCategories2AsFlip($data['classcategory_id1']),
                             'mapped' => false,
                         ]);
                     }

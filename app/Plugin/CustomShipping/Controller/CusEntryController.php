@@ -354,9 +354,9 @@ class CusEntryController extends \Eccube\Controller\AbstractController
                     $end_date_type = new \DateTime('2021-11-20 17:52:17');
                     $end_date = $end_date_type->format('Ymd');
 
+                    // $request_data_acc->setCreateDate($start_date);
                     $request_data_acc = new \AccountAddRequestDto();
                     $request_data_acc->setAccountId($accountId);
-                    // $request_data_acc->setCreateDate($start_date);
                     $transaction_acc = new \TGMDK_Transaction();
                     $response_data_acc = $transaction_acc->execute($request_data_acc);
                     
@@ -368,19 +368,19 @@ class CusEntryController extends \Eccube\Controller\AbstractController
     
                         $request_data->setToken($card_info['credit_token']);
                         $request_data->setAccountId($accountId);
-                        // $request_data->setGroupId($pluginSetting['recurring_group_id']);
+                        $request_data->setGroupId($pluginSetting['recurring_group_id']);
                         // $request_data->setFinalCharge(0);
                         // $request_data->setSalesDay('20211021');
 
                         // var_export($request_data->getGroupId());die;
-                        $request_data->setGroupId('Veritrans_Dummy_02');
+                        // $request_data->setGroupId('Veritrans_Dummy_02');
                         // $request_data->setChargeType(1);//new
 
                         
-                        // $request_data->setStartDate($start_date);
-                        // $request_data->setEndDate($end_date);
-                        // $request_data->setOneTimeAmount($payment_amount);
-                        // $request_data->setAmount($payment_amount);
+                        $request_data->setStartDate($start_date);
+                        $request_data->setEndDate($end_date);
+                        $request_data->setOneTimeAmount($payment_amount);
+                        $request_data->setAmount($payment_amount);
                         // var_export($request_data);die;
     
                         /**

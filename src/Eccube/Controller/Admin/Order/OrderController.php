@@ -420,22 +420,21 @@ class OrderController extends AbstractController
                     // CSV出力項目と合致するデータを取得.
                     foreach ($Csvs as $Csv) {
                         // 受注データを検索.
-                        // var_export($Order->getPayment()->getMethod());die;
                         if($Csv->getDispName() == "代引金額" && $Order->getPaymentMethod() == "代金引換"){
-                            $ExportCsvRow->setData("");
-                        }else{
                             $ExportCsvRow->setData($csvService->getData($Csv, $Order));
+                        }else{
+                            $ExportCsvRow->setData($csvService->getDataWithout($Csv, $Order));
 
                         }
                         if ($ExportCsvRow->isDataNull()) {
                             // 受注データにない場合は, 受注明細を検索.
-                            if($Csv->getDispName() == "代引金額" && $OrderItem->getOrder()->getPaymentMethod() == "代金引換"){
-
-                                $ExportCsvRow->setData("");
-                            }else{
+                            // if($Csv->getDispName() == "代引金額" && $OrderItem->getOrder()->getPaymentMethod() == "代金引換"){
 
                                 $ExportCsvRow->setData($csvService->getData($Csv, $OrderItem));
-                            }
+                            // }else{
+                            //     $ExportCsvRow->setData("");
+
+                            // }
 
                         }
                         if ($ExportCsvRow->isDataNull() && $Shipping = $OrderItem->getShipping()) {
@@ -456,7 +455,6 @@ class OrderController extends AbstractController
 
                         $ExportCsvRow->pushData();
                     }
-
                     //$row[] = number_format(memory_get_usage(true));
                     // 出力.
                     $csvService->fputcsv($ExportCsvRow->getRow());
