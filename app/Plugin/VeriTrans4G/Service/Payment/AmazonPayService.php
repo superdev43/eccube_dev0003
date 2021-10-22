@@ -39,9 +39,9 @@ class AmazonPayService extends BaseService
        
         // 決済金額 (整数値で設定するため小数点以下切り捨て)
         $amount = floor($payload['order']->getPaymentTotal());
-        $is_with_capture = $inputs->get('payment_amazon_pay')['withCapture'];
-        $is_suppress_shipping_address_view = $inputs->get('payment_amazon_pay')['suppressShippingAddressView'];
-        $note_to_buyer = $inputs->get('payment_amazon_pay')['noteToBuyer'];
+        // $is_with_capture = $inputs->get('payment_amazon_pay')['withCapture'];
+        // $is_suppress_shipping_address_view = $inputs->get('payment_amazon_pay')['suppressShippingAddressView'];
+        // $note_to_buyer = $inputs->get('payment_amazon_pay')['noteToBuyer'];
         
         $success_url = "http://localhost/eccube_shop/shopping/amazonpay/complete/".$payload['order']->getId();
         $cancel_url = "http://localhost/eccube_shop/card";
@@ -52,9 +52,9 @@ class AmazonPayService extends BaseService
         $request_data = new \AmazonpayAuthorizeRequestDto();
         $request_data->setOrderId($order_id);
         $request_data->setAmount($amount);
-        $request_data->setWithCapture($is_with_capture);
-        $request_data->setSuppressShippingAddressView($is_suppress_shipping_address_view);
-        $request_data->setNoteToBuyer($note_to_buyer);
+        // $request_data->setWithCapture($is_with_capture);
+        // $request_data->setSuppressShippingAddressView($is_suppress_shipping_address_view);
+        // $request_data->setNoteToBuyer($note_to_buyer);
         $request_data->setSuccessUrl($success_url);
         $request_data->setCancelUrl($cancel_url);
         $request_data->setErrorUrl($error_url);

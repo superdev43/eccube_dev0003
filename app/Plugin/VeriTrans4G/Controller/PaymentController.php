@@ -400,8 +400,9 @@ class PaymentController extends AbstractController
         ];
         // // クレジットカード情報入力フォーム
         $form = $amazonpay->createAmazonPayForm($payload['paymentInfo']);
+        $payload['mode'] = 'amazonpay';
         // 入力フォーム送信時
-        if ('POST' === $request->getMethod()) {
+        if ($request->getMethod()) {
             switch ($payload['mode']) {
                 case 'amazonpay': // ベリトランス会員ID決済
                     $result = $amazonpay->commitNormalPayment($request->request, $payload, $error);
