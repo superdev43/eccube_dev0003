@@ -162,6 +162,7 @@ class ShoppingController extends AbstractShoppingController
         $Order->getProductOrderItems()[0]->getProduct()->shipping_charge;
         $OrderProductItems = $Order->getProductOrderItems();
         $orderShippingChargeSum = 0;
+        $withShippingCharge = 0;
         foreach ($OrderProductItems as $OrderProductItem) {
             if($OrderProductItem->getProduct()->no_fee != 1){
 
@@ -181,7 +182,7 @@ class ShoppingController extends AbstractShoppingController
                     $em = $this->getDoctrine()->getManager();
                     $em->persist($OrderProductItem);
                     $em->flush();
-                    $orderShippingChargeSum += $delivery_fee;
+                    $withShippingCharge = $delivery_fee;
                 }
                 else{
                     $OrderProductItem->setSynDeliveryFeeTotal($OrderProductItem->getProduct()->shipping_charge * $OrderProductItem->getQuantity());
@@ -197,6 +198,7 @@ class ShoppingController extends AbstractShoppingController
                 $em->flush();
             }
         }
+        $orderShippingChargeSum += $withShippingCharge;
 
         return [
             'form' => $form->createView(),

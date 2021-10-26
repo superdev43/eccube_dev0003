@@ -290,6 +290,7 @@ class PurchaseFlow
     protected function calculateTotal(ItemHolderInterface $itemHolder)
     {
         $shipping_charge_sum = 0;
+        $withShippingCharge = 0;
         $discount_sum = 0;
         if (!$itemHolder instanceof Order) {
             $shippingChargeCartItems = $itemHolder->getItems();
@@ -329,7 +330,7 @@ class PurchaseFlow
                             'Delivery'=>$delivery_id,
                             'Pref'=>$pref_id
                         ])->getFee();
-                        $shipping_charge_sum += $delivery_fee;
+                        $withShippingCharge = $delivery_fee;
                     }
                     else{
         
@@ -338,6 +339,7 @@ class PurchaseFlow
                 }
                
             }
+            $shipping_charge_sum += $withShippingCharge;
             $total = array_reduce($itemHolder->getProductOrderItems(), 
             function ($sum, ItemInterface $item) {
                 $sum += $item->getPriceIncTax() * $item->getQuantity();
@@ -377,6 +379,7 @@ class PurchaseFlow
     {
 
         $shipping_charge_sum = 0;
+        $withShippingCharge = 0;
         if (!$itemHolder instanceof Order) {
 
             $shippingChargeCartItems = $itemHolder->getItems();
@@ -403,7 +406,7 @@ class PurchaseFlow
                             'Delivery'=>$delivery_id,
                             'Pref'=>$pref_id
                         ])->getFee();
-                        $shipping_charge_sum += $delivery_fee;
+                        $withShippingCharge = $delivery_fee;
                     }
                     else{
         
@@ -412,6 +415,7 @@ class PurchaseFlow
                 }
             }
         }
+        $shipping_charge_sum += $withShippingCharge;
 
         $total = $itemHolder->getItems()
             ->getDeliveryFees()

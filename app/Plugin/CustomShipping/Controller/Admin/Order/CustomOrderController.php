@@ -592,6 +592,7 @@ class CustomOrderController extends AbstractController
             $OrderItems[] = $this->orderItemRepository->find($orderItemId);
         }
         $cus_shipping_charge = 0;
+        $withShippingCharge = 0;
         $cus_sub_total = 0;
 
         for ($i = 0; $i < count($OrderItems); $i++) {
@@ -611,7 +612,7 @@ class CustomOrderController extends AbstractController
                         'Delivery'=>$delivery_id,
                         'Pref'=>$pref_id
                     ])->getFee();
-                    $cus_shipping_charge += $delivery_fee;
+                    $withShippingCharge = $delivery_fee;
                 }
                 else{
     
@@ -621,6 +622,7 @@ class CustomOrderController extends AbstractController
 
             $cus_sub_total += $OrderItems[$i]->getTotalPrice();
         }
+        $cus_shipping_charge += $withShippingCharge;
         $cus_total = $cus_sub_total + $cus_shipping_charge + $OrderItems[0]->getOrder()->getCharge();
         $cus_total_by_tax = $cus_sub_total + $cus_shipping_charge + $OrderItems[0]->getOrder()->getCharge();
         $cus_payment_total = $cus_sub_total + $cus_shipping_charge + $OrderItems[0]->getOrder()->getCharge();

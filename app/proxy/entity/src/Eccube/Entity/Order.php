@@ -58,15 +58,15 @@ class Order extends \Eccube\Entity\AbstractEntity implements PurchaseInterface, 
      * @var DeliveryRepository
      */
     protected $deliveryRepository;
-    
+
     /**
      * @var DeliveryFeeRepository
      */
     protected $deliveryFeeRepository;
 
-    
 
-    
+
+
     /**
      * @var integer
      *
@@ -444,7 +444,6 @@ class Order extends \Eccube\Entity\AbstractEntity implements PurchaseInterface, 
         $this->OrderItems = new \Doctrine\Common\Collections\ArrayCollection();
         $this->Shippings = new \Doctrine\Common\Collections\ArrayCollection();
         $this->MailHistories = new \Doctrine\Common\Collections\ArrayCollection();
-        
     }
     /**
      * 課税対象の明細を返す.
@@ -471,35 +470,36 @@ class Order extends \Eccube\Entity\AbstractEntity implements PurchaseInterface, 
     public function getTaxableTotal()
     {
         $app = \Eccube\Application::getInstance();
-        
+
         $this->em = $app['orm.em'];
         $this->deliveryRepository = $this->em->getRepository(Delivery::class);
         $this->deliveryFeeRepository = $this->em->getRepository(DeliveryFee::class);
         $total = 0;
         $shippingChargeSum = 0;
+        $withShippingCharge = 0;
         $ProductOrderItems = $this->getProductOrderItems();
         foreach ($ProductOrderItems as $item_for_charge) {
-            if($item_for_charge->getProduct()->no_fee != 1){
+            if ($item_for_charge->getProduct()->no_fee != 1) {
 
-                if($item_for_charge->getProduct()->shipping_charge == Null){
+                if ($item_for_charge->getProduct()->shipping_charge == Null) {
                     $sale_type_id = $item_for_charge->getProductClass()->getSaleType()->getId();
                     $pref_id = $item_for_charge->getOrder()->getPref()->getId();
                     // $delivery_id= $this->deliveryRepository->findOneBy(['SaleType'=>$sale_type_id]);
                     $delivery_id = 1;
-                    if($item_for_charge->getOrder()->getDeliveryMethodFlag() != null){
+                    if ($item_for_charge->getOrder()->getDeliveryMethodFlag() != null) {
                         $delivery_id = $item_for_charge->getOrder()->getDeliveryMethodFlag();
                     }
                     $delivery_fee = $this->deliveryFeeRepository->findOneBy([
-                        'Delivery'=>$delivery_id,
-                        'Pref'=>$pref_id
+                        'Delivery' => $delivery_id,
+                        'Pref' => $pref_id
                     ])->getFee();
-                    $shippingChargeSum += $delivery_fee;
-                }
-                else{    
+                    $withShippingCharge = $delivery_fee;
+                } else {
                     $shippingChargeSum += $item_for_charge->getProduct()->shipping_charge * $item_for_charge->getQuantity();
                 }
             }
         }
+        $shippingChargeSum += $withShippingCharge;
         $total += $shippingChargeSum;
 
         //手数料
@@ -522,34 +522,41 @@ class Order extends \Eccube\Entity\AbstractEntity implements PurchaseInterface, 
     public function getTaxableTotalByTaxRate()
     {
         $app = \Eccube\Application::getInstance();
-        
+
         $this->em = $app['orm.em'];
         $this->deliveryRepository = $this->em->getRepository(Delivery::class);
         $this->deliveryFeeRepository = $this->em->getRepository(DeliveryFee::class);
         $total = [];
 
+        $flag = 0;
+        $withShippingCharge = 0;
         foreach ($this->getProductOrderItems() as $Item) {
             $cus_shipping_charge = 0;
-            if($Item->getProduct()->no_fee != 1){
+            if ($Item->getProduct()->no_fee != 1) {
 
-                if($Item->getProduct()->shipping_charge == Null){
+                if ($Item->getProduct()->shipping_charge == Null) {
                     $sale_type_id = $Item->getProductClass()->getSaleType()->getId();
                     $pref_id = $Item->getOrder()->getPref()->getId();
                     // $delivery_id= $this->deliveryRepository->findOneBy(['SaleType'=>$sale_type_id]);
                     $delivery_id = 1;
-                    if($Item->getOrder()->getDeliveryMethodFlag() != null){
+                    if ($Item->getOrder()->getDeliveryMethodFlag() != null) {
                         $delivery_id = $Item->getOrder()->getDeliveryMethodFlag();
                     }
                     $delivery_fee = $this->deliveryFeeRepository->findOneBy([
-                        'Delivery'=>$delivery_id,
-                        'Pref'=>$pref_id
+                        'Delivery' => $delivery_id,
+                        'Pref' => $pref_id
                     ])->getFee();
-                    $cus_shipping_charge += $delivery_fee;
-                }
-                else{
-    
+                    $withShippingCharge = $delivery_fee;
+                } else {
+
                     $cus_shipping_charge += $Item->getProduct()->shipping_charge * $Item->getQuantity();
                 }
+            }
+            if ($flag == 0) {
+                $cus_shipping_charge += $withShippingCharge;
+            }
+            if ($Item->getProduct()->no_fee != 1 && $Item->getProduct()->shipping_charge == Null) {
+                $flag++;
             }
             $totalPrice = $Item->getTotalPrice() +  $cus_shipping_charge;
             $taxRate = $Item->getTaxRate();
@@ -557,7 +564,7 @@ class Order extends \Eccube\Entity\AbstractEntity implements PurchaseInterface, 
                 ? $total[$taxRate] + $totalPrice
                 : $totalPrice;
         }
-        $total[$taxRate]+=$this->getCharge();
+        $total[$taxRate] += $this->getCharge();
         krsort($total);
 
         return $total;
@@ -1249,11 +1256,11 @@ class Order extends \Eccube\Entity\AbstractEntity implements PurchaseInterface, 
     public function getPaymentTotal()
     {
         //手数料
-        if($this->getCharge()){
+        if ($this->getCharge()) {
 
             return $this->payment_total + $this->getCharge();
-        }else{
-            
+        } else {
+
             return $this->payment_total;
         }
     }
