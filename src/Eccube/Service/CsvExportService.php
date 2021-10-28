@@ -36,6 +36,7 @@ use Eccube\Util\FormUtil;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Eccube\Repository\OrderItemRepository;
+use Plugin\CustomShipping\Repository\CusShippingRepository;
 
 
 class CsvExportService
@@ -89,6 +90,11 @@ class CsvExportService
      * @var CsvRepository
      */
     protected $csvRepository;
+
+    /**
+     * @var CusShippingRepository
+     */
+    protected $cusShippingRepository;
 
     /**
      * @var CusCsvRepository
@@ -157,7 +163,8 @@ class CsvExportService
         FormFactoryInterface $formFactory,
         CusCsv $CusCsvs,
         CusCsvRepository $cusCsvRepository,
-        OrderItemRepository $orderItemRepository
+        OrderItemRepository $orderItemRepository,
+        CusShippingRepository $cusShippingRepository
     ) {
         $this->entityManager = $entityManager;
         $this->csvRepository = $csvRepository;
@@ -171,6 +178,7 @@ class CsvExportService
         $this->CusCsvs = $CusCsvs;
         $this->cusCsvRepository = $cusCsvRepository;
         $this->orderItemRepository = $orderItemRepository;
+        $this->cusShippingRepository = $cusShippingRepository;
     }
 
     /**
@@ -381,19 +389,50 @@ class CsvExportService
             $OrderItemGroup[$itemId] = $this->orderItemRepository->findBy(['cus_shipping_id' => $shi_ids[$itemId]]);
             $OrderItem_sh = $OrderItemGroup[$itemId][0];
 
+            $Order = $this->orderRepository->find($OrderItem_sh->getOrder()->getId());
+            $OrderId = $Order->getId();
+            $Charge = $Order->getCharge();
+
+            $cusShippingItems = $this->cusShippingRepository->findBy([
+                'cus_order_id' => $OrderId
+            ]);
+            $cusShippingIds = [];
+            foreach ($cusShippingItems as $item) {
+                $cusShippingIds[] = $item->getId();
+            }
+            $minCusShippingId = min($cusShippingIds);
+
             $ProductNameList = [];
+            
             $price_p = 0;
+            $flag = 0;
             foreach ($OrderItemGroup[$itemId] as $OrderItem) {
                 array_push($ProductNameList, $OrderItem->getProductName());
                 if ($OrderItem->getSynDeliveryFeeTotal() != null) {
-                    $price_p += $OrderItem->getProductClass()->getPrice02() + $OrderItem->getSynDeliveryFeeTotal() + $OrderItem->getProductClass()->getPrice02() * $OrderItem->getTaxRate() / 100;
+                    if($OrderItem->getProductClass()->getProduct()->shipping_charge != null){
+                        $price_p += ($OrderItem->getPrice() + $OrderItem->getTax()) * $OrderItem->getQuantity() + $OrderItem->getSynDeliveryFeeTotal();
+                    }else{
+                
+                        if ($flag == 0) {
+                
+                            $price_p += ($OrderItem->getPrice() + $OrderItem->getTax()) * $OrderItem->getQuantity() + $OrderItem->getSynDeliveryFeeTotal();
+                            $flag = 1;
+                        } else {
+                            $price_p += ($OrderItem->getPrice() + $OrderItem->getTax()) * $OrderItem->getQuantity();
+                        }
+                    }
                 } else {
-                    $price_p += $OrderItem->getProductClass()->getPrice02() + $OrderItem->getProductClass()->getPrice02() * $OrderItem->getTaxRate() / 100;
+                    $price_p += ($OrderItem->getPrice() + $OrderItem->getTax()) * $OrderItem->getQuantity();
                 }
             }
             $price = "";
             if ($OrderItem_sh->getOrder()->getPaymentMethod() == '代金引換') {
-                $price = $price_p;
+                if ($minCusShippingId == $shi_ids[$itemId]) {
+                    $price = $price_p + $Charge;
+                } else {
+            
+                    $price = $price_p;
+                }
             }
             $ProductName = join("/", $ProductNameList);
             foreach ($OrderItemGroup[$itemId] as $item) {
@@ -490,9 +529,9 @@ class CsvExportService
 
         $price_p = 0;
         if ($OrderItem->getSynDeliveryFeeTotal() != null) {
-            $price_p += $OrderItem->getProductClass()->getPrice02() + $OrderItem->getSynDeliveryFeeTotal() + $OrderItem->getProductClass()->getPrice02() * $OrderItem->getTaxRate() / 100;
+            $price_p += ($OrderItem->getPrice() + $OrderItem->getTax()) * $OrderItem->getQuantity() + $OrderItem->getSynDeliveryFeeTotal();;
         } else {
-            $price_p += $OrderItem->getProductClass()->getPrice02() + $OrderItem->getProductClass()->getPrice02() * $OrderItem->getTaxRate() / 100;
+            $price_p += ($OrderItem->getPrice() + $OrderItem->getTax()) * $OrderItem->getQuantity();
         }
         $price = "";
         if ($OrderItem->getOrder()->getPaymentMethod() == '代金引換') {
@@ -521,21 +560,53 @@ class CsvExportService
 
         $OrderItems = $this->orderItemRepository->findBy(['cus_shipping_id' => $cusShippingId]);
         $OrderItem_one = $OrderItems[0];
+
+        $Order = $this->orderRepository->find($OrderItem_one->getOrder()->getId());
+        $OrderId = $Order->getId();
+        $Charge = $Order->getCharge();
+        $cusShippingItems = $this->cusShippingRepository->findBy([
+            'cus_order_id' => $OrderId
+        ]);
+        $cusShippingIds = [];
+        foreach ($cusShippingItems as $item) {
+            $cusShippingIds[] = $item->getId();
+        }
+
+        $minCusShippingId = min($cusShippingIds);
+
+
         $ProductNameList = [];
         $price_p = 0;
+        $flag = 0;
         foreach ($OrderItems as $OrderItem) {
             array_push($ProductNameList, $OrderItem->getProductName());
             if ($OrderItem->getSynDeliveryFeeTotal() != null) {
-                $price_p += $OrderItem->getProductClass()->getPrice02() + $OrderItem->getSynDeliveryFeeTotal() + $OrderItem->getProductClass()->getPrice02() * $OrderItem->getTaxRate() / 100;
+                if($OrderItem->getProductClass()->getProduct()->shipping_charge != null){
+                    $price_p += ($OrderItem->getPrice() + $OrderItem->getTax()) * $OrderItem->getQuantity() + $OrderItem->getSynDeliveryFeeTotal();
+                }else{
+
+                    if ($flag == 0) {
+    
+                        $price_p += ($OrderItem->getPrice() + $OrderItem->getTax()) * $OrderItem->getQuantity() + $OrderItem->getSynDeliveryFeeTotal();
+                        $flag = 1;
+                    } else {
+                        $price_p += ($OrderItem->getPrice() + $OrderItem->getTax()) * $OrderItem->getQuantity();
+                    }
+                }
             } else {
-                $price_p += $OrderItem->getProductClass()->getPrice02() + $OrderItem->getProductClass()->getPrice02() * $OrderItem->getTaxRate() / 100;
+                $price_p += ($OrderItem->getPrice() + $OrderItem->getTax()) * $OrderItem->getQuantity();
             }
         }
         $ProductName = join("/", $ProductNameList);
 
         $price = "";
         if ($OrderItem_one->getOrder()->getPaymentMethod() == '代金引換') {
-            $price = $price_p;
+            if ($minCusShippingId == $cusShippingId) {
+                $price = $price_p + $Charge;
+            } else {
+
+                $price = $price_p;
+            }
         }
 
 
@@ -587,6 +658,14 @@ class CsvExportService
 
         // データを取得.
         $data = $entity->offsetGet($Csv->getFieldName());
+        if ($Csv->getFieldName() == "price") {
+            if ($entity->getOrder()->getPaymentMethod() != '代金引換') {
+
+                $data = null;
+            } else {
+                $data = ($entity->getPrice() + $entity->getTax()) * $entity->getQuantity();
+            }
+        }
 
         // one to one の場合は, dtb_csv.reference_field_name, 合致する結果を取得する.
         if ($data instanceof \Eccube\Entity\AbstractEntity) {
@@ -638,9 +717,9 @@ class CsvExportService
 
         // データを取得.
         $data = $entity->offsetGet($Csv->getFieldName());
-        if($Csv->getFieldName() == 'payment_total' ){
-           $data = null;
-        }
+        // if($Csv->getFieldName() == 'price' ){
+        //    $data = null;
+        // }
 
         // one to one の場合は, dtb_csv.reference_field_name, 合致する結果を取得する.
         if ($data instanceof \Eccube\Entity\AbstractEntity) {

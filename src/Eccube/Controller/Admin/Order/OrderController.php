@@ -420,12 +420,12 @@ class OrderController extends AbstractController
                     // CSV出力項目と合致するデータを取得.
                     foreach ($Csvs as $Csv) {
                         // 受注データを検索.
-                        if($Csv->getDispName() == "代引金額" && $Order->getPaymentMethod() == "代金引換"){
+                        // if($Csv->getDispName() == "代引金額" && $Order->getPaymentMethod() == "代金引換"){
                             $ExportCsvRow->setData($csvService->getData($Csv, $Order));
-                        }else{
-                            $ExportCsvRow->setData($csvService->getDataWithout($Csv, $Order));
+                        // }else{
+                            // $ExportCsvRow->setData($csvService->getDataWithout($Csv, $Order));
 
-                        }
+                        // }
                         if ($ExportCsvRow->isDataNull()) {
                             // 受注データにない場合は, 受注明細を検索.
                             // if($Csv->getDispName() == "代引金額" && $OrderItem->getOrder()->getPaymentMethod() == "代金引換"){
@@ -452,7 +452,7 @@ class OrderController extends AbstractController
                             $request
                         );
                         $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_ORDER_CSV_EXPORT_ORDER, $event);
-
+                        
                         $ExportCsvRow->pushData();
                     }
                     //$row[] = number_format(memory_get_usage(true));
